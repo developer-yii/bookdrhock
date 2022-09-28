@@ -180,9 +180,9 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <div class="d-flex align-items-center justify-content-between">
-                                                <label for="popular_poll"
+                                                <label for="popular_tag"
                                                     class="control-label mb-0 pr-2">{{ __('Is that popular poll?') }}</label>
-                                                <input type="checkbox" name="popular_poll" id="popular_poll"
+                                                <input type="checkbox" name="popular_tag" id="popular_tag"
                                                     class="js-switch" data-color="#13dafe" />
                                             </div>
                                             <span class="help-block error-span"></span>
