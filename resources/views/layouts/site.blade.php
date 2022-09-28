@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/images/favicon.png') }}">
+    <title>{{ config('app.name', 'Bookdrhock') }}</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('plugins/bootstrap-extension/css/bootstrap-extension.css') }}" rel="stylesheet"
+        type="text/css">
+    <!-- toast CSS -->
+    <link href="{{ asset('plugins/toast-master/css/jquery.toast.css') }}" rel="stylesheet" type="text/css">
+    <!-- animation CSS -->
+    <link href="{{ asset('assets/css/animate.css') }}" rel="stylesheet" type="text/css">
+    @stack('extraStyle')
+    <!-- Custom Theme CSS -->
+    <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" type="text/css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}" type="text/css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+
+<body class="bg-transparent">
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="cssload-speeding-wheel"></div>
+    </div>
+
+    <header class="site-header">
+        <nav class="navbar navbar-expand-lg navbar-light shadow-sm bg-light fixed-top rounded-0 mb-0">
+            <div class="container">
+                <a class="logo d-flex align-items-center" href="{{ route('home') }}">
+                    <b><img src="{{ asset('assets/images/logo-dark.png') }}" width="40px" alt="home" /></b>
+                    <span class="hidden-xs">
+                        <img src="{{ asset('assets/images/text-dark.png') }}" width="135px" alt="home" />
+                    </span>
+                </a>
+                <button class="navbar-toggler navbar-toggler-right border-0" type="button" data-toggle="collapse"
+                    data-target="#navbar4">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbar4">
+                    <ul class="navbar-nav mr-auto pl-lg-4">
+                        <li class="nav-item px-lg-2 active"> <a class="nav-link" href="#"> <span
+                                    class="d-inline-block d-lg-none icon-width"><i
+                                        class="fas fa-home"></i></span>Home</a> </li>
+                        <li class="nav-item px-lg-2">
+                            <a class="nav-link" href="#"><span class="d-inline-block d-lg-none icon-width"><i
+                                        class="far fa-user"></i></i></span>Categories</a>
+                            <ul class="nav nav-second-level collapse">
+                                <li> <a href="index.html">Demographical</a> </li>
+                                <li> <a href="index2.html">Minimalistic</a> </li>
+                                <li> <a href="index3.html">Analitical</a> </li>
+                                <li> <a href="index4.html">Simpler</a> </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item px-lg-2"> <a class="nav-link" href="#"><span
+                                    class="d-inline-block d-lg-none icon-width"><i
+                                        class="fas fa-spa"></i></span>Polls</a> </li>
+                        <li class="nav-item px-lg-2"> <a class="nav-link" href="#"><span
+                                    class="d-inline-block d-lg-none icon-width"><i
+                                        class="far fa-user"></i></i></span>About</a> </li>
+                        <li class="nav-item px-lg-2"> <a class="nav-link" href="#"><span
+                                    class="d-inline-block d-lg-none icon-width"><i
+                                        class="far fa-envelope"></i></span>Contact</a> </li>
+                    </ul>
+                    <ul class="navbar-nav ml-auto mt-3 mt-lg-0">
+                        <li class="nav-item"> <a class="nav-link" href="#">
+                                <i class="fa fa-twitter"></i><span class="d-lg-none ml-3">Twitter</span>
+                            </a> </li>
+                        <li class="nav-item"> <a class="nav-link" href="#">
+                                <i class="fa fa-facebook"></i><span class="d-lg-none ml-3">Facebook</span>
+                            </a> </li>
+                        <li class="nav-item"> <a class="nav-link" href="#">
+                                <i class="fa fa-instagram"></i><span class="d-lg-none ml-3">Instagram</span>
+                            </a> </li>
+                        <li class="nav-item"> <a class="nav-link" href="#">
+                                <i class="fa fa-linkedin"></i><span class="d-lg-none ml-3">Linkedin</span>
+                            </a> </li>
+                    </ul>
+                    <ul class="nav navbar-top-links navbar-right pull-right">
+                        <li class="dropdown">
+                            <a class="dropdown-toggle profile-pic text-capitalize font-weight-bold"
+                                data-toggle="dropdown" href="#">
+                                admin amcodr </a>
+                            <ul class="dropdown-menu dropdown-user animated flipInY">
+                                <li><a href="#"><i class="ti-user"></i> My
+                                        Profile</a></li>
+                                <li><a href="#"><i class="ti-key"></i>
+                                        Change Password</a></li>
+                                <li>
+                                    <a href="#"
+                                        onclick="event.preventDefault();
+                                                         document.getElementById('logout-form').submit();">
+                                        <i class="fa fa-power-off"></i> Logout
+                                    </a>
+                                    <form id="logout-form" action="#" method="POST"
+                                        class="d-none">
+                                        <input type="hidden" name="_token"
+                                            value="IdEwb44YKPRHqwFRX8M647eUujIINrjv5Beu4Ln6">
+                                    </form>
+                                </li>
+                            </ul>
+                            <!-- /.dropdown-user -->
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main" class="main">
+        @yield('content')
+    </main>
+
+    <!-- Site footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <h6>About</h6>
+                    <p class="text-justify pr-5">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent
+                        porta
+                        eget purus vitae fringilla. Morbi porta at elit a efficitur. Nam facilisis tellus sed orci
+                        finibus maximus. Praesent eros metus, pretium tincidunt magna eu, consequat condimentum felis.
+                        Sed tempus tempor fermentum. Fusce lacinia sit amet massa nec convallis. Quisque tempus sit amet
+                        ex nec laoreet.</p>
+                </div>
+
+                <div class="col-xs-6 col-md-3">
+                    <h6>Categories</h6>
+                    <ul class="footer-links">
+                        <li><a href="#">Music</a></li>
+                        <li><a href="#">Politics </a></li>
+                        <li><a href="#">Entertainment </a></li>
+                    </ul>
+                </div>
+
+                <div class="col-xs-6 col-md-3">
+                    <h6>Quick Links</h6>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-sm-6 col-xs-12">
+                    <p class="copyright-text">{{ date('Y') }} {{ __('© Bookdrhock by') }} <a
+                            href="https://amcodr.com/" target="_blank">{{ __('Amcodr IT Solutions') }}</a>.</p>
+                </div>
+
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                    <ul class="social-icons">
+                        <li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
+                        <li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
+                        <li><a class="dribbble" href="#"><i class="fa fa-dribbble"></i></a></li>
+                        <li><a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="{{ asset('plugins/jquery/dist/jquery.min.js') }}" type="text/javascript"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{{ asset('assets/js/popper.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/js/bootstrap.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('plugins/bootstrap-extension/js/bootstrap-extension.min.js') }}" type="text/javascript"></script>
+    <!-- Menu Plugin JavaScript -->
+    <script src="{{ asset('plugins/sidebar-nav/dist/sidebar-nav.min.js') }}" type="text/javascript"></script>
+    <!--slimscroll JavaScript -->
+    <script src="{{ asset('assets/js/jquery.slimscroll.js') }}" type="text/javascript"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="{{ asset('assets/js/custom.min.js') }}" type="text/javascript"></script>
+    <!-- Toast Message JavaScript -->
+    <script src="{{ asset('plugins/toast-master/js/jquery.toast.js') }}" type="text/javascript"></script>
+    @if (session('flash-login-inactive'))
+        <script type="text/javascript">
+            $(document).ready(function() {
+                showMessage('error', 'Your account was inactivated!')
+            });
+        </script>
+    @endif
+    @stack('extraScript')
+</body>
+
+</html>
