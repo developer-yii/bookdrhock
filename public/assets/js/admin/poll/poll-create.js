@@ -32,12 +32,12 @@ $(document).ready(function () {
         });
     }
 
-    if ($("#popular_poll").length > 0) {
+    if ($("#popular_tag").length > 0) {
         // Switchery
-        new Switchery($('#popular_poll')[0], $('#popular_poll').data());
+        new Switchery($('#popular_tag')[0], $('#popular_tag').data());
     }
 
-    if ($("#popular_poll").length > 0) {
+    if ($("#poll-form").length > 0) {
         // Basic
         $('.dropify').dropify();
     }

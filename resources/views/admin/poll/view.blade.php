@@ -27,7 +27,7 @@
                                 <hr>
                             </div>
                             <div class="poll-timer text-center">
-                                <h5 class="text-uppercase">time left</h5>
+                                <h5 class="text-uppercase countdown-heading">time left</h5>
                                 <div class="clockdiv-container" id="clockdiv"
                                     data-startdatetime="{{ $poll->start_datetime }}"
                                     data-enddatetime="{{ $poll->end_datetime }}">
@@ -52,30 +52,40 @@
                             <div class="poll-options-main text-center mt-5">
                                 <p>You can choose more than one</p>
                                 <div class="option-container mt-5">
-                                    <div class="card-poll d-flex align-items-center mb-3">
-                                        <div class="image-div">
-                                            <img src="{{ @asset('assets/images/bodybg.jpg') }}" alt="body bg"
-                                                class="w-100">
+                                    @php
+                                        $pollOptions = [];
+                                        $pollOptionId = explode(',', $poll->option_id);
+                                        $pollOptionTitle = explode(',', $poll->option_title);
+                                        $pollOptionImage = explode(',', $poll->option_image);
+                                        for ($i = 0; $i <= count($pollOptionTitle) - 1; $i++) {
+                                            $pollOptions[$i]['id'] = $pollOptionId[$i];
+                                            $pollOptions[$i]['title'] = $pollOptionTitle[$i];
+                                            $pollOptions[$i]['image'] = $pollOptionImage[$i];
+                                        }
+                                    @endphp
+                                    @foreach ($pollOptions as $pollOption)
+                                        <div class="card-poll d-flex align-items-center mb-3">
+                                            <div class="image-div">
+                                                @if ($pollOption['image'] != 'null')
+                                                    <img src="{{ $poll->getImagePath($pollOption['image'], $poll->slug, 'poll_options') }}"
+                                                        alt="{{ $pollOption['title'] }}" class="w-100">
+                                                @else
+                                                    <img src="{{ @asset('assets/images/bodybg.jpg') }}"
+                                                        alt="{{ $pollOption['title'] }}" class="w-100">
+                                                @endif
+                                            </div>
+                                            <div class="title-div w-100 text-left">
+                                                <input type="hidden" name="option_id" class="option_id"
+                                                    value="{{ $pollOption['id'] }}">
+                                                <p class="m-0 pl-4">{{ $pollOption['title'] }}</p>
+                                            </div>
                                         </div>
-                                        <div class="title-div w-100 text-left">
-                                            <p class="m-0 pl-4">Title goes here</p>
-                                        </div>
-                                    </div>
-                                    <div class="card-poll d-flex align-items-center">
-                                        <div class="image-div">
-                                            <img src="{{ @asset('assets/images/bodybg.jpg') }}" alt="body bg"
-                                                class="w-100">
-                                        </div>
-                                        <div class="title-div w-100 text-left">
-                                            <p class="m-0 pl-4">Title goes here</p>
-                                        </div>
-                                    </div>
+                                    @endforeach
                                 </div>
+                                <div class="google-recaptcha-div">
+                                </div>
+                                <button class="btn btn-primary mt-5">Vote</button>
                             </div>
-                            <div class="google-recaptcha-div">
-
-                            </div>
-                            <button class="btn btn-primary d-block mt-5">Vote</button>
                         </div>
                     </div>
                 </div>
@@ -88,38 +98,52 @@
 @push('extraScript')
     <script>
         $(document).ready(function() {
-            $('.card-poll').on('click', function(e) {
-                e.preventDefault();
-                $(this).toggleClass('selected');
-            })
+            if ($('.card-poll').length > 0) {
+                $('.card-poll').on('click', function(e) {
+                    e.preventDefault();
+                    $(this).toggleClass('selected');
+                })
+            }
 
-            var deadline = new Date($('#clockdiv').data('enddatetime')).getTime();
-            var x = setInterval(function() {
-                var now = new Date().getTime();
-                var t = deadline - now;
-                var days = Math.floor(t / (1000 * 60 * 60 * 24));
-                var hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                var minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
-                var seconds = Math.floor((t % (1000 * 60)) / 1000);
-
-                document.getElementById("day").innerHTML = days.toString().length == 1 ? '0' + days :
-                    days;
-                document.getElementById("hour").innerHTML = hours.toString().length == 1 ? '0' + hours :
-                    hours;
-                document.getElementById("minute").innerHTML = minutes.toString().length == 1 ? '0' +
-                    minutes :
-                    minutes;
-                document.getElementById("second").innerHTML = (seconds.toString().length == 1) ? '0' +
-                    seconds :
-                    seconds;
-                if (t < 0) {
-                    clearInterval(x);
-                    document.getElementById("day").innerHTML = '00';
-                    document.getElementById("hour").innerHTML = '00';
-                    document.getElementById("minute").innerHTML = '00';
-                    document.getElementById("second").innerHTML = '00';
+            if ($('#clockdiv').length > 0) {
+                var deadline = headinText = '';
+                if (new Date() > new Date($('#clockdiv').data('startdatetime'))) {
+                    deadline = new Date($('#clockdiv').data('enddatetime')).getTime();
+                    headinText = "time left";
+                } else {
+                    deadline = new Date($('#clockdiv').data('startdatetime')).getTime();
+                    headinText = "comming soon";
+                    $('.poll-options-main').empty().append(
+                        '<button class="btn btn-primary m-0">view more</button>');
                 }
-            }, 1000);
+                $('.countdown-heading').text(headinText);
+                var x = setInterval(function() {
+                    var now = new Date().getTime();
+                    var t = deadline - now;
+                    var days = Math.floor(t / (1000 * 60 * 60 * 24));
+                    var hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((t % (1000 * 60)) / 1000);
+
+                    document.getElementById("day").innerHTML = days.toString().length == 1 ? '0' + days :
+                        days;
+                    document.getElementById("hour").innerHTML = hours.toString().length == 1 ? '0' + hours :
+                        hours;
+                    document.getElementById("minute").innerHTML = minutes.toString().length == 1 ? '0' +
+                        minutes :
+                        minutes;
+                    document.getElementById("second").innerHTML = (seconds.toString().length == 1) ? '0' +
+                        seconds :
+                        seconds;
+                    if (t < 0) {
+                        clearInterval(x);
+                        document.getElementById("day").innerHTML = '00';
+                        document.getElementById("hour").innerHTML = '00';
+                        document.getElementById("minute").innerHTML = '00';
+                        document.getElementById("second").innerHTML = '00';
+                    }
+                }, 1000);
+            }
 
         });
     </script>
