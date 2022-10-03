@@ -35,6 +35,7 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
+@php $poll_categories = \App\Model\PollCategory::all(); @endphp
 
 <body class="bg-transparent">
     <!-- Preloader -->
@@ -46,80 +47,79 @@
         <nav class="navbar navbar-expand-lg navbar-light shadow-sm bg-light fixed-top rounded-0 mb-0">
             <div class="container">
                 <a class="logo d-flex align-items-center" href="{{ route('home') }}">
-                    <b><img src="{{ asset('assets/images/logo-dark.png') }}" width="40px" alt="home" /></b>
-                    <span class="hidden-xs">
-                        <img src="{{ asset('assets/images/text-dark.png') }}" width="135px" alt="home" />
-                    </span>
+                    <img src="{{ asset('assets/images/logo-dark.png') }}" width="200px" alt="home" />
                 </a>
                 <button class="navbar-toggler navbar-toggler-right border-0" type="button" data-toggle="collapse"
                     data-target="#navbar4">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbar4">
-                    <ul class="navbar-nav mr-auto pl-lg-4">
-                        <li class="nav-item px-lg-2 active"> <a class="nav-link" href="#"> <span
+                    <ul class="navbar-nav mr-auto pl-lg-4 font-bold">
+                        <li class="nav-item px-lg-2 {{ request()->routeIs('home') ? 'active' : '' }}"> <a
+                                class="nav-link" href="{{ route('home') }}"> <span
                                     class="d-inline-block d-lg-none icon-width"><i
-                                        class="fas fa-home"></i></span>Home</a> </li>
-                        <li class="nav-item px-lg-2">
-                            <a class="nav-link" href="#"><span class="d-inline-block d-lg-none icon-width"><i
-                                        class="far fa-user"></i></i></span>Categories</a>
-                            <ul class="nav nav-second-level collapse">
-                                <li> <a href="index.html">Demographical</a> </li>
-                                <li> <a href="index2.html">Minimalistic</a> </li>
-                                <li> <a href="index3.html">Analitical</a> </li>
-                                <li> <a href="index4.html">Simpler</a> </li>
-                            </ul>
-                        </li>
+                                        class="fas fa-home"></i></span>{{ __('Home') }}</a> </li>
+                        @if (isset($poll_categories) && !empty($poll_categories) && count($poll_categories) > 0)
+                            <li class="nav-item px-lg-2 {{ request()->routeIs('poll.view') ? 'active' : '' }}">
+                                <a class="nav-link" href="#"><span class="d-inline-block d-lg-none icon-width"><i
+                                            class="far fa-user"></i></i></span>Polls</a>
+                                <ul class="nav nav-second-level collapse">
+                                    @foreach ($poll_categories as $poll_category)
+                                        <li> <a href="{{ route('poll.getCategoryView', str_replace(' ', '', $poll_category->slug)) }}"
+                                                class="text-capitalize">{{ $poll_category->name }}</a> </li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                        @endif
                         <li class="nav-item px-lg-2"> <a class="nav-link" href="#"><span
                                     class="d-inline-block d-lg-none icon-width"><i
-                                        class="fas fa-spa"></i></span>Polls</a> </li>
+                                        class="far fa-user"></i></i></span>{{ __('About') }}</a> </li>
                         <li class="nav-item px-lg-2"> <a class="nav-link" href="#"><span
                                     class="d-inline-block d-lg-none icon-width"><i
-                                        class="far fa-user"></i></i></span>About</a> </li>
-                        <li class="nav-item px-lg-2"> <a class="nav-link" href="#"><span
-                                    class="d-inline-block d-lg-none icon-width"><i
-                                        class="far fa-envelope"></i></span>Contact</a> </li>
+                                        class="far fa-envelope"></i></span>{{ __('Contact') }}</a> </li>
                     </ul>
                     <ul class="navbar-nav ml-auto mt-3 mt-lg-0">
                         <li class="nav-item"> <a class="nav-link" href="#">
-                                <i class="fa fa-twitter"></i><span class="d-lg-none ml-3">Twitter</span>
+                                <i class="fa fa-twitter"></i><span class="d-lg-none ml-3">{{ __('Twitter') }}</span>
                             </a> </li>
                         <li class="nav-item"> <a class="nav-link" href="#">
-                                <i class="fa fa-facebook"></i><span class="d-lg-none ml-3">Facebook</span>
+                                <i class="fa fa-facebook"></i><span class="d-lg-none ml-3">{{ __('Facebook') }}</span>
                             </a> </li>
                         <li class="nav-item"> <a class="nav-link" href="#">
-                                <i class="fa fa-instagram"></i><span class="d-lg-none ml-3">Instagram</span>
-                            </a> </li>
-                        <li class="nav-item"> <a class="nav-link" href="#">
-                                <i class="fa fa-linkedin"></i><span class="d-lg-none ml-3">Linkedin</span>
+                                <i class="fa fa-instagram"></i><span
+                                    class="d-lg-none ml-3">{{ __('Instagram') }}</span>
                             </a> </li>
                     </ul>
-                    <ul class="nav navbar-top-links navbar-right pull-right">
-                        <li class="dropdown">
-                            <a class="dropdown-toggle profile-pic text-capitalize font-weight-bold"
-                                data-toggle="dropdown" href="#">
-                                admin amcodr </a>
-                            <ul class="dropdown-menu dropdown-user animated flipInY">
-                                <li><a href="#"><i class="ti-user"></i> My
-                                        Profile</a></li>
-                                <li><a href="#"><i class="ti-key"></i>
-                                        Change Password</a></li>
-                                <li>
-                                    <a href="#"
-                                        onclick="event.preventDefault();
-                                                         document.getElementById('logout-form').submit();">
-                                        <i class="fa fa-power-off"></i> Logout
-                                    </a>
-                                    <form id="logout-form" action="#" method="POST"
-                                        class="d-none">
-                                        <input type="hidden" name="_token"
-                                            value="IdEwb44YKPRHqwFRX8M647eUujIINrjv5Beu4Ln6">
-                                    </form>
-                                </li>
-                            </ul>
-                            <!-- /.dropdown-user -->
-                        </li>
-                    </ul>
+                    @if (Auth::check() && Auth::user()->user_role == 1)
+                        <ul class="nav navbar-top-links navbar-right pull-right">
+                            <li class="dropdown">
+                                <a class="dropdown-toggle profile-pic text-capitalize font-weight-bold"
+                                    data-toggle="dropdown" href="#"><img
+                                        src="{{ @asset('assets/images/avatar.jpg') }}" alt="avtar" width="40px"
+                                        srcset=""></a>
+                                <ul class="dropdown-menu dropdown-user animated flipInY">
+                                    <li><a href="{{ route('admin') }}"><i class="icon-layers"></i>
+                                            {{ __('Dashboard') }}</a></li>
+                                    <li><a href="{{ route('userProfile') }}"><i class="ti-user"></i>
+                                            {{ __('My Profile') }}</a></li>
+                                    <li><a href="{{ route('userProfile.password') }}"><i class="ti-key"></i>
+                                            {{ __('Change Password') }}</a></li>
+                                    <li>
+                                        <a href="{{ route('logout') }}"
+                                            onclick="event.preventDefault();
+                                                                 document.getElementById('logout-form').submit();">
+                                            <i class="fa fa-power-off"></i> {{ __('Logout') }}
+                                        </a>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                            class="d-none">
+                                            @csrf
+                                        </form>
+                                    </li>
+                                </ul>
+                                <!-- /.dropdown-user -->
+                            </li>
+                        </ul>
+                    @endif
                 </div>
             </div>
         </nav>
@@ -134,28 +134,32 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-12 col-md-6">
-                    <h6>About</h6>
-                    <p class="text-justify pr-5">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent
-                        porta
-                        eget purus vitae fringilla. Morbi porta at elit a efficitur. Nam facilisis tellus sed orci
-                        finibus maximus. Praesent eros metus, pretium tincidunt magna eu, consequat condimentum felis.
-                        Sed tempus tempor fermentum. Fusce lacinia sit amet massa nec convallis. Quisque tempus sit amet
-                        ex nec laoreet.</p>
+                    <div class="footer-logo pb-4">
+                        <a class="logo d-flex align-items-center" href="{{ route('home') }}">
+                            <img src="{{ @asset('assets/images/logo.png') }}" width="200px" alt="home">
+                        </a>
+                    </div>
+                    <p class="text-justify pr-5">
+                        {{ __('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent porta eget purus vitae fringilla. Morbi porta at elit a efficitur. Nam facilisis tellus sed orci finibus maximus.') }}
+                    </p>
                 </div>
 
                 <div class="col-xs-6 col-md-3">
-                    <h6>Categories</h6>
+                    <h6>{{ __('Categories') }}</h6>
                     <ul class="footer-links">
-                        <li><a href="#">Music</a></li>
-                        <li><a href="#">Politics </a></li>
-                        <li><a href="#">Entertainment </a></li>
+                        @foreach ($poll_categories as $poll_category)
+                            <li {{ request()->routeIs('getCategoryView') ? 'active' : '' }}> <a
+                                    href="{{ route('poll.getCategoryView', str_replace(' ', '', $poll_category->slug)) }}"
+                                    class="text-capitalize">{{ $poll_category->name }}</a> </li>
+                        @endforeach
                     </ul>
                 </div>
 
                 <div class="col-xs-6 col-md-3">
-                    <h6>Quick Links</h6>
+                    <h6>{{ __('Quick Links') }}</h6>
                     <ul class="footer-links">
-                        <li><a href="#">Home</a></li>
+                        <li class="{{ request()->routeIs('home') ? 'active' : '' }}"><a href="{{ route('home') }}">
+                                {{ __('Home') }}</a></li>
                         <li><a href="#">About Us</a></li>
                         <li><a href="#">Contact Us</a></li>
                         <li><a href="#">Privacy Policy</a></li>
@@ -175,8 +179,7 @@
                     <ul class="social-icons">
                         <li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
                         <li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
-                        <li><a class="dribbble" href="#"><i class="fa fa-dribbble"></i></a></li>
-                        <li><a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a></li>
+                        <li><a class="instagram" href="#"><i class="fa fa-instagram"></i></a></li>
                     </ul>
                 </div>
             </div>
@@ -197,10 +200,19 @@
     <script src="{{ asset('assets/js/custom.min.js') }}" type="text/javascript"></script>
     <!-- Toast Message JavaScript -->
     <script src="{{ asset('plugins/toast-master/js/jquery.toast.js') }}" type="text/javascript"></script>
+    <!--Main custom JS -->
+    <script src="{{ asset('assets/js/main.js') }}" type="text/javascript"></script>
     @if (session('flash-login-inactive'))
         <script type="text/javascript">
             $(document).ready(function() {
                 showMessage('error', 'Your account was inactivated!')
+            });
+        </script>
+    @endif
+    @if (session('flash-poll-voted'))
+        <script type="text/javascript">
+            $(document).ready(function() {
+                showMessage('success', 'Poll voted successfully.');
             });
         </script>
     @endif

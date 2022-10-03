@@ -175,22 +175,32 @@ $(document).ready(function () {
             },
             error: function (error) {
                 if (error.responseJSON.errors) {
+                    first_input = "";
                     $.each(error.responseJSON.errors, function (key, value) {
                         if (key.includes("option.")) {
                             let main_key = key.split('.')[2];
                             let currunt_row = parseInt(key.split('.')[1]);
                             if (currunt_row == '0') {
-                                divId = '#option_' + main_key;
+                                divId = 'option_' + main_key;
                             } else {
-                                divId = '#option_' + main_key + '_' + currunt_row;
+                                divId = 'option_' + main_key + '_' + currunt_row;
                             }
-                            $('.options-container .option-card').find(divId).parents('.form-group').find(formErrorSpanClass).text(value);
-                            $('.options-container .option-card').find(divId).parents('.form-group').addClass('has-error');
+                            if (first_input == "") first_input = divId;
+                            $('.options-container .option-card').find('#' + divId).parents('.form-group').find(formErrorSpanClass).text(value);
+                            $('.options-container .option-card').find('#' + divId).parents('.form-group').addClass('has-error');
                         } else {
+                            if (first_input == "") first_input = key;
                             $('#' + key).parents('.form-group').find(formErrorSpanClass).text(value);
                             $('#' + key).parents('.form-group').addClass('has-error');
                         }
-                        sameHeightBoxes()
+                        sameHeightBoxes();
+                        if (first_input.includes("option_image")) {
+                            $('html, body').animate({
+                                scrollTop: $('#poll-form').find("#" + first_input).parents('.custom-image-upload-container').offset().top - 100
+                            }, 500);
+                        } else {
+                            $('#poll-form').find("#" + first_input).focus();
+                        }
                     });
                 } else {
                     console.log('Error', error);

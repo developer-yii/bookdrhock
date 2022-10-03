@@ -42,14 +42,23 @@
     <form action="#" method="POST" id="poll-form" enctype="multipart/form-data">
         <div class="row poll-form-container">
             <div class="col-xl-9 col-lg-8 col-md-8 col-sm-12 col-xs-12 right-box">
-                {{-- @if ($poll)
-                    <pre>
-                        @php print_r($poll); exit; @endphp
-                    </pre>
-                @endif --}}
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        {{ __('Edit poll') }}
+                        <div class="d-flex justify-content-between align-items-center">
+                            {{ __('Edit poll') }}
+                            <div class="button-container">
+                                <a href="{{ route('poll.view', $poll->slug) }}"
+                                    class="btn btn-info waves-effect waves-light" target="_blank">
+                                    <span>Preview</span>
+                                    <i class="icon-eye m-l-5"></i>
+                                </a>
+                                <a href="{{ route('poll.embedView', $poll->slug) }}"
+                                    class="btn btn-primary waves-effect waves-light" target="_blank">
+                                    <span>Embed link </span>
+                                    <i class="ti-link m-l-5"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                     <div class="panel-wrapper collapse in">
                         <div class="panel-body">
@@ -129,9 +138,9 @@
                                                     @foreach ($pollOptions as $pollOption)
                                                         <div class="option-card">
                                                             <input type="hidden"
-                                                                name="option[{{ ($loop->iteration - 1) }}][option_id]"
+                                                                name="option[{{ $loop->iteration - 1 }}][option_id]"
                                                                 value="{{ $pollOption['id'] }}"
-                                                                id="@if ($loop->first) option_id @else option_id_{{ ($loop->iteration - 1) }} @endif"
+                                                                id="@if ($loop->first) option_id @else option_id_{{ $loop->iteration - 1 }} @endif"
                                                                 class="option_id">
                                                             <div class="row h-100">
                                                                 <div class="option-card-form">
@@ -141,14 +150,14 @@
                                                                                 <div class="image-upload-wrap"
                                                                                     @if (isset($pollOption['image']) && !empty($pollOption['image']) && $pollOption['image'] != 'null') style="display: none" @endif>
                                                                                     <input type="hidden"
-                                                                                        name="option[{{ ($loop->iteration - 1) }}][set_image]"
+                                                                                        name="option[{{ $loop->iteration - 1 }}][set_image]"
                                                                                         value="{{ isset($pollOption['image']) && !empty($pollOption['image']) && $pollOption['image'] != 'null' ? $pollOption['image'] : '' }}"
                                                                                         class="set_image">
                                                                                     <input
                                                                                         class="form-control option_image file-upload-input"
                                                                                         type='file'
-                                                                                        id="@if ($loop->first) option_image @else option_image_{{ ($loop->iteration - 1) }} @endif"
-                                                                                        name="option[{{ ($loop->iteration - 1) }}][image]">
+                                                                                        id="@if ($loop->first) option_image @else option_image_{{ $loop->iteration - 1 }} @endif"
+                                                                                        name="option[{{ $loop->iteration - 1 }}][image]">
                                                                                     <div class="drag-text-message">
                                                                                         <i class="icon-cloud-upload"></i>
                                                                                         <p>Drag and drop a file or select
@@ -171,7 +180,7 @@
                                                                         <div class="form-group mb-0">
                                                                             <input type="text"
                                                                                 id="{{ $loop->first ? 'option_title' : 'option_title_' . ($loop->iteration - 1) }}"
-                                                                                name="option[{{ ($loop->iteration - 1) }}][title]"
+                                                                                name="option[{{ $loop->iteration - 1 }}][title]"
                                                                                 class="form-control option_title"
                                                                                 value="{{ $pollOption['title'] != 'null' ? $pollOption['title'] : '' }}"
                                                                                 placeholder="Option Title*">
@@ -253,9 +262,8 @@
                                         <div class="d-flex align-items-center justify-content-between">
                                             <label for="popular_tag"
                                                 class="control-label mb-0 pr-2">{{ __('Is that popular poll?') }}</label>
-                                            <input type="checkbox" name="popular_tag" id="popular_tag"
-                                                class="js-switch" data-color="#13dafe"
-                                                @if (isset($poll->popular_tag) && $poll->popular_tag) checked @endif>
+                                            <input type="checkbox" name="popular_tag" id="popular_tag" class="js-switch"
+                                                data-color="#13dafe" @if (isset($poll->popular_tag) && $poll->popular_tag) checked @endif>
                                         </div>
                                         <span class="help-block error-span"></span>
                                     </div>
@@ -281,19 +289,38 @@
                                     </div>
                                 </div>
                                 <!--row-->
-                                <!--row-->
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="control-label">{{ __('How many option user select?') }}</label>
-                                            <input id="option_select" type="text" value="{{ $poll->option_select }}"
-                                                name="option_select"
-                                                data-bts-button-down-class="btn btn-default btn-outline"
-                                                data-bts-button-up-class="btn btn-default btn-outline">
-                                        </div>
+                            @endif
+                            <!--row-->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="vote_schedule"
+                                            class="control-label">{{ __('User can vote again after') }}</label>
+                                        <select name="vote_schedule" id="vote_schedule"
+                                            class="custom-select width-equal col-12">
+                                            <option value="12" class="text-capitalize"
+                                                @if (isset($poll->vote_schedule) && $poll->vote_schedule == '12') selected @endif>
+                                                12 Hours</option>
+                                            <option value="24" class="text-capitalize"
+                                                @if (isset($poll->vote_schedule) && $poll->vote_schedule == '24') selected @endif>
+                                                24 Hours</option>
+                                        </select>
+                                        <span class="help-block error-span"></span>
                                     </div>
                                 </div>
-                            @endif
+                            </div>
+                            <!--row-->
+                            <!--row-->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="control-label">{{ __('How many option user select?') }}</label>
+                                        <input id="option_select" type="text" value="{{ $poll->option_select }}"
+                                            name="option_select" data-bts-button-down-class="btn btn-default btn-outline"
+                                            data-bts-button-up-class="btn btn-default btn-outline">
+                                    </div>
+                                </div>
+                            </div>
                             <!--row-->
                             @if (isset($captchaType) && !empty($captchaType))
                                 <!--row-->

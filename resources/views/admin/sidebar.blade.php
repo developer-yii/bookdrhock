@@ -9,9 +9,9 @@
             </li>
             @if (Auth::user()->user_role == 1)
                 <li
-                    class="{{ request()->routeIs('poll') || request()->routeIs('poll.createForm') || request()->routeIs('category') ? 'active' : '' }}">
+                    class="{{ request()->routeIs('poll') || request()->routeIs('poll.createForm') || request()->routeIs('poll.editForm') || request()->routeIs('category') ? 'active' : '' }}">
                     <a href="javascript:void(0)"
-                        class="waves-effect {{ request()->routeIs('poll') || request()->routeIs('poll.createForm') || request()->routeIs('category') ? 'active' : '' }}">
+                        class="waves-effect {{ request()->routeIs('poll') || request()->routeIs('poll.createForm') || request()->routeIs('poll.editForm') || request()->routeIs('category') ? 'active' : '' }}">
                         <i class="ti-bar-chart"></i><span class="hide-menu text-capitalize">
                             {{ __('polls') }} <span class="fa arrow"></span></span>
                     </a>
@@ -40,13 +40,13 @@
                             {{ __('insert code block') }} </span>
                     </a>
                 </li>
-                <li class="{{ request()->routeIs('setting') ? 'active' : '' }}">
+                {{-- <li class="{{ request()->routeIs('setting') ? 'active' : '' }}">
                     <a href="{{ route('setting') }}"
                         class="waves-effect {{ request()->routeIs('setting') ? 'active' : '' }}">
                         <i class="ti-panel"></i><span class="hide-menu text-capitalize">
                             {{ __('settings') }}</span>
                     </a>
-                </li>
+                </li> --}}
                 {{-- <li class="{{ request()->routeIs('user') ? 'active' : '' }}">
                     <a href="{{ route('user') }}"
                         class="waves-effect {{ request()->routeIs('user') ? 'active' : '' }}">

@@ -2,21 +2,29 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Setting;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Model\Codeblock;
 
 class CodeblockController extends Controller
 {
     public function index(Request $request)
     {
-        $codeblock = [];
-        return view('admin.codeblock.index', compact('codeblock'));
+        $header_codeblock = Codeblock::where('type', 'header')->first();
+        $footer_codeblock = Codeblock::where('type', 'footer')->first();
+        return view('admin.codeblock.index', compact('header_codeblock', 'footer_codeblock'));
     }
 
     public function createorupdate(Request $request)
     {
-        ddp($request->all());
+        $modelH = Codeblock::where('type', 'header')->first();
+        $modelH->codeblock = ($request->header_codeblock) ? $request->header_codeblock : null;
+        $modelH->save();
+
+        $modelF = Codeblock::where('type', 'footer')->first();
+        $modelF->codeblock = ($request->footer_codeblock) ? $request->footer_codeblock : null;
+        $modelF->save();
+
+        return redirect()->route('codeblock')->with('success', 'Codeblock updated successfully');
     }
 }

@@ -174,21 +174,21 @@
                     <div class="panel-heading">{{ __('information') }}</div>
                     <div class="panel-wrapper collapse in" aria-expanded="true">
                         <div class="panel-body">
-                            @if (isset($categories) && !empty($categories))
-                                <!--row-->
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <label for="popular_tag"
-                                                    class="control-label mb-0 pr-2">{{ __('Is that popular poll?') }}</label>
-                                                <input type="checkbox" name="popular_tag" id="popular_tag"
-                                                    class="js-switch" data-color="#13dafe" />
-                                            </div>
-                                            <span class="help-block error-span"></span>
+                            <!--row-->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <label for="popular_tag"
+                                                class="control-label mb-0 pr-2">{{ __('Is that popular poll?') }}</label>
+                                            <input type="checkbox" name="popular_tag" id="popular_tag" class="js-switch"
+                                                data-color="#13dafe" />
                                         </div>
+                                        <span class="help-block error-span"></span>
                                     </div>
                                 </div>
+                            </div>
+                            @if (isset($categories) && !empty($categories))
                                 <!--row-->
                                 <div class="row">
                                     <div class="col-md-12">
@@ -207,18 +207,36 @@
                                     </div>
                                 </div>
                                 <!--row-->
-                                <!--row-->
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="control-label">{{ __('How many option user select?') }}</label>
-                                            <input id="option_select" type="text" value="0" name="option_select"
-                                                data-bts-button-down-class="btn btn-default btn-outline"
-                                                data-bts-button-up-class="btn btn-default btn-outline">
-                                        </div>
+                            @endif
+                            <!--row-->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="vote_schedule"
+                                            class="control-label">{{ __('User can vote again after') }}</label>
+                                        <select name="vote_schedule" id="vote_schedule"
+                                            class="custom-select width-equal col-12">
+                                            <option value="12" class="text-capitalize">
+                                                12 Hours</option>
+                                            <option value="24" class="text-capitalize">
+                                                24 Hours</option>
+                                        </select>
+                                        <span class="help-block error-span"></span>
                                     </div>
                                 </div>
-                            @endif
+                            </div>
+                            <!--row-->
+                            <!--row-->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="control-label">{{ __('How many option user select?') }}</label>
+                                        <input id="option_select" type="text" value="0" name="option_select"
+                                            data-bts-button-down-class="btn btn-default btn-outline"
+                                            data-bts-button-up-class="btn btn-default btn-outline">
+                                    </div>
+                                </div>
+                            </div>
                             <!--row-->
                             @if (isset($captchaType) && !empty($captchaType))
                                 <!--row-->

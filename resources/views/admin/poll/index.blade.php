@@ -53,6 +53,68 @@
         </div>
     </div>
     <!-- /.row -->
+    <!-- poll modal content -->
+    <div id="poll-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="pollModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content b-none">
+                <div class="modal-header bg-inverse b-none rounded-0">
+                    <h4 class="modal-title text-white" id="pollModalLabel">{{ __('Add New User') }}</h4>
+                </div>
+                <div class="modal-body b-all p-4">
+                    <div class="poll-information">
+                        <input type="hidden" name="poll_id" id="poll_id" class="poll_id">
+                        <h2 class="text-center font-weight-bold">Poll Information</h2>
+                        <div class="table-responsive">
+                            <table class="table poll-info-table my-5">
+                                <tbody>
+                                    <tr>
+                                        <th>Title</th>
+                                        <td class="text-capitalize font-weight-normal title">test</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Category</th>
+                                        <td class="text-capitalize font-weight-normal category_name">test</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Start Datetime</th>
+                                        <td class="text-capitalize font-weight-normal start_datetime">test</td>
+                                    </tr>
+                                    <tr>
+                                        <th>End Datetime</th>
+                                        <td class="text-capitalize font-weight-normal end_datetime">test</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="poll-options">
+                        <h2 class="text-center font-weight-bold">Poll's option</h2>
+                        <div class="table-responsive">
+                            <table id="poll-option-datatable" class="table table-hover" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>{{ __('ID') }}</th>
+                                        <th>{{ __('Image') }}</th>
+                                        <th>{{ __('Title') }}</th>
+                                        <th>{{ __('Votes') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default waves-effect"
+                        id="model-cancle-btn">{{ __('Cancel') }}</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
 @endsection
 
 @push('extraScript')
@@ -67,6 +129,7 @@
         var routes = {
             indexUrl: "{{ route('poll') }}",
             addOrUpdateUrl: "{{ route('poll.createorupdate') }}",
+            getPollOptionsUrl: "{{ route('poll.options') }}",
             deleteUrl: "{{ route('poll.delete') }}"
         }
 

@@ -10,9 +10,8 @@ use Illuminate\Support\Facades\Artisan;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', 'Site\SiteController@index')->name('home');
+Route::get('/index', 'Site\SiteController@index')->name('home');
 
 Auth::routes(['register' => false]);
 
@@ -33,7 +32,8 @@ Route::prefix('admin')->middleware('auth')->namespace('Admin')->group(function (
                 Route::get('/create', 'PollController@createForm')->name('createForm');
                 Route::get('/edit/{id}', 'PollController@editForm')->name('editForm');
                 Route::post('/createorupdate', 'PollController@createorupdate')->name('createorupdate');
-                Route::delete('/delete', 'PollController@delete')->name('delete');;
+                Route::post('/poll-options', 'PollController@getPollOptions')->name('options');
+                Route::delete('/delete', 'PollController@delete')->name('delete');
             });
 
             // Category
@@ -43,7 +43,7 @@ Route::prefix('admin')->middleware('auth')->namespace('Admin')->group(function (
                 Route::name('category.')->group(function () {
                     Route::post('/createorupdate', 'PollCategoryController@categoryCreateorupdate')->name('createorupdate');
                     Route::post('/slug', 'PollCategoryController@getSlugUrl')->name('slug');
-                    Route::delete('/delete', 'PollCategoryController@categoryDelete')->name('delete');;
+                    Route::delete('/delete', 'PollCategoryController@categoryDelete')->name('delete');
                 });
             });
         });
@@ -54,12 +54,12 @@ Route::prefix('admin')->middleware('auth')->namespace('Admin')->group(function (
         //     Route::get('/', 'UserController@index')->name('user');
         //     Route::name('user.')->group(function () {
         //         Route::post('/createorupdate', 'UserController@createorupdate')->name('createorupdate');
-        //         Route::post('/updatestatus', 'UserController@userStatus')->name('userStatus');;
-        //         Route::delete('/delete', 'UserController@delete')->name('delete');;
+        //         Route::post('/updatestatus', 'UserController@userStatus')->name('userStatus');
+        //         Route::delete('/delete', 'UserController@delete')->name('delete');
         //     });
         // });
 
-        //Setting
+        //Codeblock
         Route::prefix('codeblock')->group(function () {
             Route::get('/index', 'CodeblockController@index')->name('codeblock');
             Route::get('/', 'CodeblockController@index')->name('codeblock');
@@ -69,13 +69,13 @@ Route::prefix('admin')->middleware('auth')->namespace('Admin')->group(function (
         });
 
         //Setting
-        Route::prefix('setting')->group(function () {
-            Route::get('/index', 'SettingController@index')->name('setting');
-            Route::get('/', 'SettingController@index')->name('setting');
-            Route::name('setting.')->group(function () {
-                Route::post('/createorupdate', 'SettingController@createorupdate')->name('createorupdate');
-            });
-        });
+        // Route::prefix('setting')->group(function () {
+        //     Route::get('/index', 'SettingController@index')->name('setting');
+        //     Route::get('/', 'SettingController@index')->name('setting');
+        //     Route::name('setting.')->group(function () {
+        //         Route::post('/createorupdate', 'SettingController@createorupdate')->name('createorupdate');
+        //     });
+        // });
     });
 
     // Common access routes
@@ -88,7 +88,12 @@ Route::prefix('admin')->middleware('auth')->namespace('Admin')->group(function (
     Route::post('/profile/password/update', 'UserProfileController@passwordUpdate')->name('userProfile.passwordUpdate');
 });
 
-Route::get('poll/{slug}', 'Admin\PollController@view')->name('poll.view');
+Route::prefix('poll')->name('poll.')->group(function () {
+    Route::get('/{slug}', 'Admin\PollController@view')->name('view');
+    Route::get('/category/{slug}', 'Site\SiteController@getCategoryView')->name('getCategoryView');
+    Route::get('/embed/{slug}', 'Admin\PollController@embedView')->name('embedView');
+    Route::post('/voting', 'Admin\PollController@Voting')->name('voting');
+});
 
 // Clear all cache
 Route::get('/clear', function () {

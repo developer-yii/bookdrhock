@@ -21,6 +21,7 @@ class CreatePollsTable extends Migration
             $table->timestamp('end_datetime')->nullable(false);
             $table->longText('description')->nullable(true);
             $table->string('category')->nullable(true);
+            $table->integer('vote_schedule')->default(12);
             $table->string('popular_tag')->default(false);
             $table->integer('captcha_type')->default('1');
             $table->integer('option_select')->default('0');
