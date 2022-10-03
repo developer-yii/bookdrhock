@@ -7,6 +7,7 @@ use App\Model\PollCategory;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Model\Poll;
 
 class PollCategoryController extends Controller
 {

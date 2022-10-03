@@ -1,4 +1,4 @@
-@extends('layouts.site')
+@extends('layouts.blank')
 
 @push('extraStyle')
     <!--alerts CSS -->
@@ -6,11 +6,11 @@
 @endpush
 
 @section('content')
-    @if (isset($header_codeblock) && !empty($header_codeblock) && !empty($header_codeblock->codeblock))
-        <div class="header-codeblock">
-            {!! $header_codeblock->codeblock !!}
-        </div>
-    @endif
+    {{-- <pre>
+            @php
+                print_r($poll);
+            @endphp
+        </pre> --}}
     <div class="container">
         <!--row -->
         <div class="row my-5">
@@ -18,15 +18,6 @@
                 <div class="row align-items-center justify-content-center">
                     <div class="col-md-8 col-xl-6 col-12">
                         <div class="bg-white card poll-view-card p-30 rounded-0 position-relative">
-                            @if (isset($userrole) && !empty($userrole) && $userrole == 1)
-                                <div class="edit-button position-absolute top right">
-                                    <a href="{{ route('poll.editForm', $poll->id) }}"
-                                        class="btn btn-info waves-effect waves-light">
-                                        <span>edit poll</span>
-                                        <i class=" ti-pencil-alt"></i>
-                                    </a>
-                                </div>
-                            @endif
                             <div class="poll-heading">
                                 <h1 class="text-center text-capitalize">{{ $poll->title }}</h1>
                                 <div class="text-center">{!! $poll->description !!}</div>
@@ -140,11 +131,6 @@
         </div>
         <!-- /.row -->
     </div>
-    @if (isset($footer_codeblock) && !empty($footer_codeblock) && !empty($footer_codeblock->codeblock))
-        <div class="header-codeblock">
-            {!! $footer_codeblock->codeblock !!}
-        </div>
-    @endif
 @endsection
 
 @push('extraScript')
@@ -158,7 +144,6 @@
         // Define variable for route path
         var routes = {
             indexUrl: "{{ route('poll') }}",
-            homeUrl: "{{ route('home') }}",
             votingUrl: "{{ route('poll.voting') }}"
         }
         var maximumVoteInNumber =

@@ -4,12 +4,18 @@ namespace App\Http\Controllers\Admin;
 
 use DataTables;
 use App\Model\Poll;
+use App\Model\PollVote;
+use App\Model\Codeblock;
+use App\Rules\ReCaptcha;
 use App\Model\PollOption;
 use App\Model\PollCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Kmlpandey77\MathCaptcha\Captcha;
 
 class PollController extends Controller
 {
@@ -84,14 +90,118 @@ class PollController extends Controller
             )
             ->first();
 
+        $header_codeblock = Codeblock::where('type', 'header')->first();
+        $footer_codeblock = Codeblock::where('type', 'footer')->first();
         $categories = PollCategory::all();
         $captchaType = Poll::$capthcaType;
 
-        if (isset($poll) && !empty($poll)) {
-            return view('admin.poll.view', compact('categories', 'captchaType', 'poll'));
+        if (Auth::user()) {
+            $userrole = Auth::user()->user_role;
         } else {
-            return redirect()->route('poll');
+            $userrole = '';
         }
+
+        app('mathcaptcha')->reset();
+
+        if (isset($poll) && !empty($poll)) {
+            return view('admin.poll.view', compact('categories', 'captchaType', 'poll', 'userrole', 'header_codeblock', 'footer_codeblock'));
+        } else {
+            return abort(404);
+        }
+    }
+
+    public function embedView($slug)
+    {
+        $poll = Poll::query()
+            ->where('polls.slug', $slug)
+            ->leftJoin('poll_options', 'poll_options.poll_id', '=', 'polls.id')
+            ->groupBy('polls.id')
+            ->select(
+                'polls.*',
+                DB::raw('group_concat(poll_options.id) as option_id'),
+                DB::raw('group_concat(IFNULL(poll_options.title, "null")) as option_title'),
+                DB::raw('group_concat(IFNULL(poll_options.image, "null")) as option_image')
+            )
+            ->first();
+
+        $categories = PollCategory::all();
+        $captchaType = Poll::$capthcaType;
+
+        app('mathcaptcha')->reset();
+
+        if (isset($poll) && !empty($poll)) {
+            return view('admin.poll.embedView', compact('categories', 'captchaType', 'poll'));
+        } else {
+            return abort(404);
+        }
+    }
+
+    public function Voting(Request $request)
+    {
+        $request->validate([
+            'selected_options' => 'required',
+            'mathcaptcha' => 'required_if:enabledmathcaptcha,==,"enabledmathcaptcha"|mathcaptcha',
+            'g-recaptcha-response' => ['required_if:enabledgooglecaptcha,==,"enabledgooglecaptcha"', new ReCaptcha]
+        ], [
+            'mathcaptcha.mathcaptcha' => 'Your answer is wrong.',
+            'mathcaptcha.required_if' => 'Please give answer.',
+            'g-recaptcha-response.required_if' => 'Please valid google recaptcha.'
+        ]);
+
+        $hours = 12;
+        if (isset($request->vote_schedule) && !empty($request->vote_schedule)) {
+            $hours = (int) $request->vote_schedule;
+        }
+
+        $curruntVotes = PollVote::query()
+            ->where('ip', $request->ip())
+            ->where('poll_id', $request->id)
+            ->where('created_at', '>', Carbon::now()->subHours($hours)->toDateTimeString())
+            ->orderBy('created_at', 'DESC')
+            ->get()
+            ->count();
+
+        if (isset($curruntVotes) && $curruntVotes < 1) {
+            foreach (explode(',', $request->selected_options) as $option) {
+                $model = new PollVote();
+                $model->user_id = (Auth::user()) ? Auth::user()->id : null;
+                $model->poll_id = $request->id;
+                $model->ip = $request->ip();
+                $model->poll_options = $option;
+                $model->save();
+            }
+
+            $request->session()->flash('flash-poll-voted');
+
+            return response()->json(['response' => 'success', 'message' => 'Your vote submitted successfully', 'data' => $model], 200);
+        } else {
+            return response()->json(['response' => 'error', 'message' => 'You can vote again after ' . $hours . ' hours', 'data' => $curruntVotes], 200);
+        }
+    }
+
+    public function getPollOptions(Request $request)
+    {
+        if (isset($request->poll_id) && !empty($request->poll_id) && $request->ajax()) {
+            $pollOptions = Poll::query()
+                ->select(
+                    'poll_options.*',
+                    DB::raw("count(poll_votes.poll_options) as votes"),
+                    'polls.slug as slug'
+                )
+                ->join('poll_options', 'poll_options.poll_id', '=', 'polls.id')
+                ->leftJoin('poll_votes', 'poll_votes.poll_options', '=', 'poll_options.id')
+                ->where('polls.id', $request->poll_id)
+                ->groupBy('poll_options.id')
+                ->get();
+
+            return DataTables::of($pollOptions)
+                ->editColumn('image', function ($row) {
+                    return isset($row->image) ? $row->getImagePath($row->image, $row->slug, 'poll_options') : "-";
+                })
+                ->escapeColumns([])
+                ->toJson();
+        }
+        die();
     }
 
     public function createorupdate(Request $request)
@@ -122,8 +232,8 @@ class PollController extends Controller
                 $fileName = '';
             }
 
-            if (isset($fileName) && !empty($fileName) && file_exists(public_path() . '/storage/poll/' . $slug . '/' . $fileName) && ((!isset($request->set_image) && empty($request->set_image)) || $request->hasFile('feature_image'))) {
-                unlink(public_path() . '/storage/poll/' . $slug . '/' . $fileName);
+            if (isset($fileName) && !empty($fileName) && !empty($modelP->getImageStoragePath($fileName, $slug, 'poll_feature_image')) && ((!isset($request->set_image) && empty($request->set_image)) || $request->hasFile('feature_image'))) {
+                unlink($modelP->getImageStoragePath($fileName, $slug, 'poll_feature_image'));
                 $fileName = '';
             }
 
@@ -138,6 +248,7 @@ class PollController extends Controller
             $modelP->end_datetime = date('Y-m-d H:i', strtotime($request->end_datetime));
             $modelP->description = $request->description;
             $modelP->category = $request->category;
+            $modelP->vote_schedule = $request->vote_schedule;
             $modelP->popular_tag = ($request->popular_tag == 'on') ? true : false;
             $modelP->captcha_type = $request->captcha_type;
             $modelP->option_select = $request->option_select;
@@ -151,8 +262,8 @@ class PollController extends Controller
                     ->get();
 
                 foreach ($removeOptions as $removeOption) {
-                    if (file_exists(public_path() . '/storage/poll/' . $slug . '/option_images\/' . $removeOption->image)) {
-                        unlink(public_path() . '/storage/poll/' . $slug . '/option_images\/' . $removeOption->image);
+                    if (!empty($modelP->getImageStoragePath($removeOption->image, $slug, 'poll_options'))) {
+                        unlink($modelP->getImageStoragePath($removeOption->image, $slug, 'poll_options'));
                     }
                 }
 
@@ -171,8 +282,8 @@ class PollController extends Controller
                     $fileNameO = '';
                 }
 
-                if (isset($fileNameO) && !empty($fileNameO) && file_exists(public_path() . '/storage/poll/' . $slug . '/option_images\/' . $fileNameO) && ((array_key_exists('image', $option) && isset($option['image']) && !empty($option['image'])) || (!isset($option['set_image']) && empty($option['set_image'])))) {
-                    unlink(public_path() . '/storage/poll/' . $slug . '/option_images\/' . $fileNameO);
+                if (isset($fileNameO) && !empty($fileNameO) && !empty($modelP->getImageStoragePath($fileNameO, $slug, 'poll_options')) && ((array_key_exists('image', $option) && isset($option['image']) && !empty($option['image'])) || (!isset($option['set_image']) && empty($option['set_image'])))) {
+                    unlink($modelP->getImageStoragePath($fileNameO, $slug, 'poll_options'));
                     $fileNameO = '';
                 }
 
@@ -183,7 +294,7 @@ class PollController extends Controller
 
                 $modelPO->poll_id = $modelP->id;
                 $modelPO->title = $option['title'];
-                $modelPO->image = $fileNameO;
+                $modelPO->image = (isset($fileNameO) && !empty($fileNameO)) ? $fileNameO : null;
                 $modelPO->save();
             }
         } else {

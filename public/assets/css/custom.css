@@ -385,6 +385,168 @@ header.site-header li.nav-item {
     position: relative;
 }
 
+/* Home page css strat */
+.home .banner {
+    height: 300px;
+    background-image: url(../images/homebg.jpg);
+    background-color: #000;
+    background-color: #000;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: relative;
+}
+
+.home .banner:before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #000;
+    opacity: 0.5;
+}
+
+.home .banner h1 {
+    z-index: 1;
+}
+
+/* Overlay Image Card */
+
+.poll-card {
+    position: relative;
+    text-align: left;
+}
+
+.poll-card img {
+    width: 100%;
+    height: 300px;
+    /* border-radius: 4px; */
+    object-fit: cover;
+    object-position: center;
+}
+
+.swiper .poll-card:after {
+    content: '';
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #000;
+    opacity: 0.6;
+    z-index: 1;
+    /* border-radius: 4px; */
+}
+
+.poll-card .card-content {
+    position: absolute;
+    top: 25px;
+    left: 20px;
+    z-index: 5;
+}
+
+.poll-card .card-content .card-title {
+    font-size: 25px;
+}
+
+.poll-card .card-content {
+    color: #fff;
+}
+
+.poll-card .card-link {
+    position: absolute;
+    bottom: 30px;
+    left: 20px;
+    z-index: 5;
+}
+
+.poll-card .card-content .card-text {
+    line-height: 1.5;
+    padding-bottom: 10px;
+}
+
+.latest-polls .swiper-container,
+.popular-polls .swiper-container {
+    position: relative;
+    width: 90vw;
+    height: 900px;
+}
+
+.latest-polls .swiper-container>.swiper-slide__content,
+.popular-polls .swiper-container>.swiper-slide__content {
+    position: absolute;
+    top: 0;
+}
+
+.latest-polls .swiper-slide,
+.popular-polls .swiper-slide {
+    width: 300px;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 200ms linear;
+    transform: scale(0.8);
+    opacity: 0.5;
+}
+
+.latest-polls .swiper-slide.swiper-slide-active,
+.popular-polls .swiper-slide.swiper-slide-active {
+    transform: scale(1);
+    opacity: 1;
+    z-index: 10;
+}
+
+.title-border,
+.title-border-center {
+    position: relative;
+}
+
+.title-border:after,
+.title-border-center:after {
+    content: '';
+    display: block;
+    position: absolute;
+    height: 2px;
+    background-color: #000;
+}
+
+.title-border:after {
+    width: 125%;
+    bottom: 0;
+    left: 0;
+}
+
+.title-border-center:after {
+    width: 12%;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.category-poll-div .card-container {
+    --auto-grid-min-size: 30rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--auto-grid-min-size), 1fr));
+    grid-gap: 3rem;
+}
+
+.category-poll-div .poll-card .content-container {
+    border: 1px solid #000;
+    /* border-radius: 0 0 4px 4px; */
+    padding: 15px;
+    border-top-width: 0;
+    width: 93%;
+    margin: auto;
+    background-color: azure;
+}
+
+.category-poll-div .card-container .image-container img {
+    box-shadow: 0 0 40px -10px rgb(0, 0, 0, 0.5);
+}
+
 /* poll page css start*/
 div.clockdiv-container {
     display: flex;
@@ -447,6 +609,50 @@ div.clockdiv-container>div {
 
 .option-container .card-poll.selected {
     background-color: #eceeef;
+}
+
+.option-container .card-poll .image-div img {
+    object-fit: contain;
+}
+
+.poll-view-card .edit-button {
+    top: 0;
+    right: 0;
+}
+
+#poll-vote-form .google-recaptcha-div .g-recaptcha>div {
+    margin: auto;
+}
+
+#poll-vote-form .math-recaptcha-div {
+    border: 1px solid #000;
+    padding: 15px;
+    background: #f6f6f6;
+    width: 60%;
+    margin: auto;
+}
+
+#poll-vote-form .google-recaptcha-div .form-group.has-error .g-recaptcha>div {
+    border: 1px solid #a94442;
+}
+
+.poll-information .poll-info-table tr th {
+    border: 1px solid #000;
+    text-align: end;
+    background-color: #f6f6f6;
+    color: #000;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 22px;
+    width: 50%;
+}
+
+.poll-information .poll-info-table tr td {
+    border: 1px solid #000;
+    color: #000;
+    font-size: 16px;
+    line-height: 22px;
+    width: 50%;
 }
 
 /*---------footer---------*/
@@ -624,6 +830,7 @@ div.clockdiv-container>div {
     .welcome-box h1 {
         font-size: 48px;
     }
+
 }
 
 @media (max-width:767px) {
@@ -635,6 +842,10 @@ div.clockdiv-container>div {
         font-weight: 600
     }
 
+    .poll-card img {
+        height: 230px;
+    }
+
     .site-footer {
         padding-bottom: 0
     }
@@ -644,11 +855,6 @@ div.clockdiv-container>div {
         text-align: center
     }
 }
-
-
-
-
-
 
 /*
 * welcom page css end

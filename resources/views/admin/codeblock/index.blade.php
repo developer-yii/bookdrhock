@@ -11,12 +11,12 @@
     <!--row -->
     <div class="row bg-title">
         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-            <h4 class="page-title text-capitalize">{{ __('settings') }}</h4>
+            <h4 class="page-title text-capitalize">{{ __('codeblock') }}</h4>
         </div>
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
             <ol class="breadcrumb">
                 <li><a href="{{ route('admin') }}">{{ __('Dashboard') }}</a></li>
-                <li class="active">{{ __('settings') }}</li>
+                <li class="active">{{ __('codeblock') }}</li>
             </ol>
         </div>
         <!-- /.col-lg-12 -->
@@ -27,36 +27,38 @@
         <div class="col-lg-12">
             <div class="white-box">
                 <div class="d-flex mb-5 justify-content-between">
-                    <h2 class="text-capitalize font-weight-bold m-0">{{ __('All settings') }}</h2>
+                    <h2 class="text-capitalize font-weight-bold m-0">{{ __('All codeblock') }}</h2>
                 </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        @if (isset($settings) && !empty($settings) && count($settings) > 0)
-                            @foreach ($settings as $setting)
-                                <div
-                                    class="d-flex align-items-center justify-content-between @if (!$loop->last) mb-5 @endif">
-                                    <div class="setting-info">
-                                        <h4 class="box-title mb-0">{{ $setting->name }}</h4>
-                                        @if (isset($setting->description) && !empty($setting->description))
-                                            <p class="text-muted font-13 mb-0">{{ $setting->description }}</p>
-                                        @endif
-                                    </div>
-                                    <div class="setting-btn">
-                                        <div class="{{ str_replace(' ', '-', strtolower($setting->name)) }}"
-                                            data-setting-id="{{ $setting->id }}">
-                                            <input type="checkbox"
-                                                name="{{ str_replace(' ', '_', strtolower($setting->name)) }}"
-                                                id="{{ str_replace(' ', '_', strtolower($setting->name)) }}"
-                                                class="js-switch setting-switch {{ str_replace(' ', '_', strtolower($setting->name)) }}"
-                                                data-color="#3d3b3b" data-size="large"
-                                                @if (isset($setting->setting) && !empty($setting->setting) && $setting->setting == 1) checked @endif />
-                                        </div>
-                                    </div>
+                <form action="{{ route('codeblock.createorupdate') }}" method="POST" id="insert-codeblock-form">
+                    @csrf
+                    @if (isset($header_codeblock) && !empty($header_codeblock))
+                        <!--row-->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="header_codeblock"
+                                        class="control-label">{{ __('Insert code below the header') }}</label>
+                                    <textarea name="header_codeblock" id="header_codeblock" class="form-control w-100" rows="10">{!! $header_codeblock->codeblock ? $header_codeblock->codeblock : '' !!}</textarea>
                                 </div>
-                            @endforeach
-                        @endif
-                    </div>
-                </div>
+                            </div>
+                        </div>
+                        <!--row-->
+                    @endif
+                    @if (isset($footer_codeblock) && !empty($footer_codeblock))
+                        <!--row-->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="footer_codeblock"
+                                        class="control-label">{{ __('Insert code above the footer') }}</label>
+                                    <textarea name="footer_codeblock" id="footer_codeblock" class="form-control w-100" rows="10">{!! $footer_codeblock->codeblock ? $footer_codeblock->codeblock : '' !!}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!--row-->
+                    @endif
+                    <button type="submit" class="btn btn-primary" id="addorupdate-codeblock">{{ __('Submit') }}</button>
+                </form>
             </div>
         </div>
     </div>
@@ -71,9 +73,16 @@
     <script type="text/javascript">
         // Define variable for route path
         var routes = {
-            indexUrl: "{{ route('setting') }}",
-            addOrUpdateUrl: "{{ route('setting.createorupdate') }}",
+            indexUrl: "{{ route('codeblock') }}",
+            addOrUpdateUrl: "{{ route('codeblock.createorupdate') }}",
         }
     </script>
-    <script src="{{ asset('assets/js/admin/setting.js') }}" type="text/javascript"></script>
+    @if ($message = Session::get('success'))
+        <script type="text/javascript">
+            $(document).ready(function() {
+                showMessage('success', "{{ $message }}")
+            })
+        </script>
+    @endif
+    <script src="{{ asset('assets/js/admin/codeblock.js') }}" type="text/javascript"></script>
 @endpush

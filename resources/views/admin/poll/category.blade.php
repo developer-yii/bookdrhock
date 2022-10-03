@@ -56,7 +56,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content b-none">
                 <div class="modal-header bg-inverse b-none rounded-0">
-                    <h4 class="modal-title text-white" id="categoryModalLabel">{{ __('Add New User') }}</h4>
+                    <h4 class="modal-title text-white" id="categoryModalLabel">{{ __('Add New Category') }}</h4>
                 </div>
                 <div class="modal-body b-all p-4">
                     <form action="#" method="POST" id="category-form">
@@ -94,7 +94,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="addorupdate-category">{{ __('Add User') }}</button>
+                    <button type="button" class="btn btn-primary"
+                        id="addorupdate-category">{{ __('Add Category') }}</button>
                     <button type="button" class="btn btn-default waves-effect"
                         id="model-cancle-btn">{{ __('Cancel') }}</button>
                 </div>

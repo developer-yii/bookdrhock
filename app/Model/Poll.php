@@ -36,4 +36,19 @@ class Poll extends Model
             return "";
         }
     }
+
+    public static function getImageStoragePath($filename = "", $foldername = "", $type = "poll_options")
+    {
+        if ($type == 'poll_feature_image') {
+            $path = $foldername;
+        } else {
+            $path = $foldername . "/option_images";
+        }
+        $oldfileExists = storage_path('app/public/poll/' . $path) . '/' . $filename;
+        if ($filename != "" && file_exists($oldfileExists)) {
+            return $oldfileExists;
+        } else {
+            return "";
+        }
+    }
 }
