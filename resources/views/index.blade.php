@@ -56,6 +56,9 @@
                                                 @if (isset($latest_poll->feature_image) && !empty($latest_poll->feature_image))
                                                     <img src="{{ $latest_poll->getImagePath($latest_poll->feature_image, $latest_poll->slug, 'poll_feature_image') }}"
                                                         alt="{{ $latest_poll->title }}" />
+                                                @else
+                                                    <img src="{{ @asset('assets/images/bodybg.jpg') }}"
+                                                        alt="{{ $latest_poll->title }}" />
                                                 @endif
                                             </div>
                                         </div>
@@ -113,6 +116,9 @@
                                                 @if (isset($popular_poll->feature_image) && !empty($popular_poll->feature_image))
                                                     <img src="{{ $popular_poll->getImagePath($popular_poll->feature_image, $popular_poll->slug, 'poll_feature_image') }}"
                                                         alt="{{ $popular_poll->title }}" />
+                                                @else
+                                                    <img src="{{ @asset('assets/images/bodybg.jpg') }}"
+                                                        alt="{{ $popular_poll->title }}" />
                                                 @endif
                                             </div>
                                         </div>
@@ -144,8 +150,13 @@
                                             <div class="poll-card">
                                                 <div class="image-container">
                                                     <a href="{{ route('poll.view', $poll->slug) }}">
-                                                        <img src="{{ $poll->getImagePath($poll->feature_image, $poll->slug, 'poll_feature_image') }}"
-                                                            alt="{{ $poll->title }}" />
+                                                        @if (isset($poll->feature_image) && !empty($poll->feature_image))
+                                                            <img src="{{ $poll->getImagePath($poll->feature_image, $poll->slug, 'poll_feature_image') }}"
+                                                                alt="{{ $poll->title }}" />
+                                                        @else
+                                                            <img src="{{ @asset('assets/images/bodybg.jpg') }}"
+                                                                alt="{{ $poll->title }}" />
+                                                        @endif
                                                     </a>
                                                 </div>
                                                 <div class="content-container">
@@ -154,7 +165,8 @@
                                                             class="text-dark">{{ $poll->title }}</a>
                                                     </h3>
                                                     <a href="{{ route('poll.view', $poll->slug) }}"
-                                                        class="btn btn-primary mt-3">View poll</a>
+                                                        class="btn btn-primary mt-3">View
+                                                        poll</a>
                                                 </div>
                                             </div>
                                         @endforeach
