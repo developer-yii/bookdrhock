@@ -130,7 +130,7 @@ class PollController extends Controller
         app('mathcaptcha')->reset();
 
         if (isset($poll) && !empty($poll)) {
-            return view('admin.poll.embedView', compact('categories', 'captchaType', 'poll'));
+            return view('poll.embedView', compact('categories', 'captchaType', 'poll'));
         } else {
             return abort(404);
         }
