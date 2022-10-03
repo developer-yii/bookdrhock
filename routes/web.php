@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Artisan;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', 'Site\SiteController@index')->name('home');
 Route::get('/index', 'Site\SiteController@index')->name('home');
+Route::get('/', 'Site\SiteController@index')->name('home');
 
 Auth::routes(['register' => false]);
 
