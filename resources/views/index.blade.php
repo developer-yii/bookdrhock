@@ -15,10 +15,10 @@
                 </div>
             </div>
         </div>
-        <div class="latest-poll-div">
-            <div class="container py-5 my-5">
+        <div class="latest-poll-div py-5 my-5">
+            <div class="container">
                 <div class="row">
-                    <div class="col-md-12 mb-5">
+                    <div class="col-md-12 mb-5 mb-sm-0">
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="title">
                                 <h2 class="text-capitalize text-blue text-center font-bold title-border">latest polls</h2>
@@ -32,6 +32,12 @@
                                 @endif
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid m-0 p-0">
+                <div class="row">
+                    <div class="col-md-12">
                         @if (isset($latest_polls) && !empty($latest_polls) && count($latest_polls) > 0)
                             <div class="swiper latest-polls pt-4 mt-5" data-count="{{ count($latest_polls) }}">
                                 <div class="swiper-wrapper">
@@ -43,7 +49,7 @@
                                                         {{ $latest_poll->title }}</h3>
                                                     @if (isset($latest_poll->description) && !empty($latest_poll->description))
                                                         <div class="card-text">
-                                                            {!! Str::limit($latest_poll->description, 25) !!}
+                                                            {!! Str::limit(Str::replaceArray('&nbsp;', [''], strip_tags($latest_poll->description)), 100) !!}
                                                         </div>
                                                     @endif
                                                 </div>
@@ -74,10 +80,10 @@
                 </div>
             </div>
         </div>
-        <div class="popular-poll-div bg-light">
-            <div class="container py-5 my-5">
+        <div class="popular-poll-div bg-light py-5 my-5">
+            <div class="container">
                 <div class="row">
-                    <div class="col-md-12 mb-5">
+                    <div class="col-md-12 mb-5 mb-sm-0">
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="title">
                                 <h2 class="text-capitalize text-blue text-center font-bold title-border">popular polls
@@ -92,6 +98,12 @@
                                 @endif
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid m-0 p-0">
+                <div class="row">
+                    <div class="col-md-12">
                         @if (isset($popular_polls) && !empty($popular_polls) && count($popular_polls) > 0)
                             <div class="swiper popular-polls pt-4 mt-5" data-count="{{ count($popular_polls) }}">
                                 <div class="swiper-wrapper">
@@ -103,7 +115,7 @@
                                                         {{ $popular_poll->title }}</h3>
                                                     @if (isset($popular_poll->description) && !empty($popular_poll->description))
                                                         <div class="card-text">
-                                                            {!! Str::limit($popular_poll->description, 25) !!}
+                                                            {!! Str::limit(Str::replaceArray('&nbsp;', [''], strip_tags($popular_poll->description)), 100) !!}
                                                         </div>
                                                     @endif
                                                 </div>
@@ -159,14 +171,24 @@
                                                         @endif
                                                     </a>
                                                 </div>
-                                                <div class="content-container">
-                                                    <h3 class="m-0 text-capitalize">
+                                                <div
+                                                    class="content-container equal-height-box d-flex flex-column justify-content-between">
+                                                    <div class="box-title">
+                                                        <h3 class="m-0 text-capitalize font-bold">
+                                                            <a href="{{ route('poll.view', $poll->slug) }}"
+                                                                class="">{{ $poll->title }}</a>
+                                                        </h3>
+                                                        @if (isset($poll->description) && !empty($poll->description))
+                                                            <div class="card-text mt-3">
+                                                                {!! Str::limit(Str::replaceArray('&nbsp;', [''], strip_tags($poll->description)), 100) !!}
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                    <div class="boc-btn mt-4">
                                                         <a href="{{ route('poll.view', $poll->slug) }}"
-                                                            class="text-dark">{{ $poll->title }}</a>
-                                                    </h3>
-                                                    <a href="{{ route('poll.view', $poll->slug) }}"
-                                                        class="btn btn-primary mt-3">View
-                                                        poll</a>
+                                                            class="btn btn-primary">View
+                                                            poll</a>
+                                                    </div>
                                                 </div>
                                             </div>
                                         @endforeach

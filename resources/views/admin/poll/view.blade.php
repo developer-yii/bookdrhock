@@ -6,11 +6,6 @@
 @endpush
 
 @section('content')
-    @if (isset($header_codeblock) && !empty($header_codeblock) && !empty($header_codeblock->codeblock))
-        <div class="header-codeblock">
-            {!! $header_codeblock->codeblock !!}
-        </div>
-    @endif
     <div class="container">
         <!--row -->
         <div class="row my-5">
@@ -140,11 +135,6 @@
         </div>
         <!-- /.row -->
     </div>
-    @if (isset($footer_codeblock) && !empty($footer_codeblock) && !empty($footer_codeblock->codeblock))
-        <div class="header-codeblock">
-            {!! $footer_codeblock->codeblock !!}
-        </div>
-    @endif
 @endsection
 
 @push('extraScript')

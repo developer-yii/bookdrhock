@@ -125,9 +125,23 @@
         </nav>
     </header>
 
+    @php $header_codeblock = \App\Model\Codeblock::where('type', 'header')->first(); @endphp
+    @if (isset($header_codeblock) && !empty($header_codeblock) && !empty($header_codeblock->codeblock))
+        <div class="header-codeblock">
+            {!! $header_codeblock->codeblock !!}
+        </div>
+    @endif
+
     <main id="main" class="main">
         @yield('content')
     </main>
+
+    @php $footer_codeblock = \App\Model\Codeblock::where('type', 'footer')->first(); @endphp
+    @if (isset($footer_codeblock) && !empty($footer_codeblock) && !empty($footer_codeblock->codeblock))
+        <div class="header-codeblock">
+            {!! $footer_codeblock->codeblock !!}
+        </div>
+    @endif
 
     <!-- Site footer -->
     <footer class="site-footer">

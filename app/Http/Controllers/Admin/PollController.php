@@ -90,8 +90,6 @@ class PollController extends Controller
             )
             ->first();
 
-        $header_codeblock = Codeblock::where('type', 'header')->first();
-        $footer_codeblock = Codeblock::where('type', 'footer')->first();
         $categories = PollCategory::all();
         $captchaType = Poll::$capthcaType;
 
@@ -104,7 +102,7 @@ class PollController extends Controller
         app('mathcaptcha')->reset();
 
         if (isset($poll) && !empty($poll)) {
-            return view('admin.poll.view', compact('categories', 'captchaType', 'poll', 'userrole', 'header_codeblock', 'footer_codeblock'));
+            return view('admin.poll.view', compact('categories', 'captchaType', 'poll', 'userrole'));
         } else {
             return abort(404);
         }

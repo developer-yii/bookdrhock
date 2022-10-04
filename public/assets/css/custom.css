@@ -129,6 +129,10 @@ span.input-group-btn:last-child button {
     font-family: 'Poppins', sans-serif;
 }
 
+.btn {
+    text-transform: uppercase;
+}
+
 /*
 * Custom classes end
 */
@@ -386,7 +390,8 @@ header.site-header li.nav-item {
 }
 
 /* Home page css strat */
-.home .banner {
+.home .banner,
+.category-single .banner {
     height: 300px;
     background-image: url(../images/homebg.jpg);
     background-color: #000;
@@ -397,7 +402,8 @@ header.site-header li.nav-item {
     position: relative;
 }
 
-.home .banner:before {
+.home .banner:before,
+.category-single .banner:before {
     content: '';
     width: 100%;
     height: 100%;
@@ -408,7 +414,8 @@ header.site-header li.nav-item {
     opacity: 0.5;
 }
 
-.home .banner h1 {
+.home .banner h1,
+.category-single .banner h1 {
     z-index: 1;
 }
 
@@ -445,6 +452,7 @@ header.site-header li.nav-item {
     top: 25px;
     left: 20px;
     z-index: 5;
+    padding-right: 15px;
 }
 
 .poll-card .card-content .card-title {
@@ -480,7 +488,7 @@ header.site-header li.nav-item {
     top: 0;
 }
 
-.latest-polls .swiper-slide,
+/* .latest-polls .swiper-slide,
 .popular-polls .swiper-slide {
     width: 300px;
     height: auto;
@@ -490,14 +498,16 @@ header.site-header li.nav-item {
     transition: all 200ms linear;
     transform: scale(0.8);
     opacity: 0.5;
-}
+} */
 
-.latest-polls .swiper-slide.swiper-slide-active,
+/* .latest-polls .swiper-slide.swiper-slide-active,
+.latest-polls .swiper-slide.swiper-slide-next,
+.latest-polls .swiper-slide.swiper-slide-prev,
 .popular-polls .swiper-slide.swiper-slide-active {
     transform: scale(1);
     opacity: 1;
     z-index: 10;
-}
+} */
 
 .title-border,
 .title-border-center {
@@ -545,6 +555,11 @@ header.site-header li.nav-item {
 
 .category-poll-div .card-container .image-container img {
     box-shadow: 0 0 40px -10px rgb(0, 0, 0, 0.5);
+}
+
+.category-poll-div .card-container,
+.category-poll-div .card-container .box-title a {
+    color: #000;
 }
 
 /* poll page css start*/
@@ -843,7 +858,7 @@ div.clockdiv-container>div {
     }
 
     .poll-card img {
-        height: 230px;
+        height: 300px;
     }
 
     .site-footer {
