@@ -44,7 +44,7 @@ jQuery(document).ready(function ($) {
             });
         } else {
             var latestPolls = new Swiper(".latest-polls", {
-                spaceBetween: 1,
+                spaceBetween: 20,
                 slidesPerView: 2.5,
                 centeredSlides: true,
                 loop: true,
@@ -58,10 +58,13 @@ jQuery(document).ready(function ($) {
                         slidesPerView: 1
                     },
                     500: {
-                        slidesPerView: 1.6
+                        slidesPerView: 1.5
                     },
                     992: {
-                        slidesPerView: 2.6
+                        slidesPerView: 3.2
+                    },
+                    1400: {
+                        slidesPerView: 4.2
                     }
                 }
             });
@@ -83,7 +86,7 @@ jQuery(document).ready(function ($) {
             });
         } else {
             var popularPolls = new Swiper(".popular-polls", {
-                spaceBetween: 1,
+                spaceBetween: 20,
                 slidesPerView: 2.5,
                 centeredSlides: true,
                 loop: true,
@@ -97,16 +100,43 @@ jQuery(document).ready(function ($) {
                         slidesPerView: 1
                     },
                     500: {
-                        slidesPerView: 1.6
+                        slidesPerView: 1.5
                     },
                     992: {
-                        slidesPerView: 2.6
+                        slidesPerView: 3.2
+                    },
+                    1400: {
+                        slidesPerView: 4.2
                     }
                 }
             });
         }
     }
+
+    if ($(".equal-height-box").length > 0) {
+        sameHeightBoxes();
+    }
+
+    $(window).on('resize', function () {
+        if ($(".equal-height-box").length > 0) {
+            sameHeightBoxes();
+        }
+    })
 });
+
+function sameHeightBoxes() {
+    $(".equal-height-box").each(function () {
+        $(this).removeAttr("style")
+    });
+
+    var maxHeight = Math.max.apply(null, $(".equal-height-box").map(function () {
+        return $(this).outerHeight();
+    }).get());
+
+    $(".equal-height-box").each(function () {
+        $(this).css('height', maxHeight + 'px')
+    })
+}
 
 function readURL(input) {
     var fileTypes = ['jpg', 'jpeg', 'png'];

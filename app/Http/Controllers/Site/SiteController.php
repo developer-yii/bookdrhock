@@ -43,12 +43,18 @@ class SiteController extends Controller
 
     public function getCategoryView($slug)
     {
-        $polls = PollCategory::query()
-            ->join('polls', 'polls.category', 'poll_categories.id')
-            ->select('polls.*')
-            ->where('poll_categories.slug', $slug)
-            ->get();
+        $category = PollCategory::query()
+            ->where('slug', $slug)
+            ->first();
 
-        return view('site.category', compact('polls', 'slug'));
+
+        $polls = [];
+        if (isset($category) && !empty($category)) {
+            $polls = Poll::query()
+                ->where('category', $category->id)
+                ->get();
+        }
+
+        return view('site.category', compact('polls', 'category'));
     }
 }
