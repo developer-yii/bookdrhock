@@ -81,7 +81,7 @@
                                     <div class="form-group">
                                         <label for="slug" class="control-label">{{ __('Permalink') }}</label>
                                         <div class="slug-group d-flex align-items-center">
-                                            <p class="m-0 pr-2">{{ URL::to('/') }}/poll/category/</p>
+                                            <p class="m-0 pr-2">{{ URL::to('/') }}/category/</p>
                                             <input type="text" id="slug" name="slug" class="form-control"
                                                 value="{{ old('slug') }}">
                                         </div>

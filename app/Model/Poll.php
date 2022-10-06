@@ -16,10 +16,16 @@ class Poll extends Model
      */
     protected $table = 'polls';
 
-    public static $capthcaType = [
+    public static $recaptcha = [
         '0' => 'No captcha',
         '1' => 'Google recaptcha',
         '2' => 'Maths captcha',
+    ];
+
+    public static $voteHours = [
+        '6' => '6 Hours',
+        '12' => '12 Hours',
+        '24' => '24 Hours'
     ];
 
     public static function getImagePath($filename = "", $foldername = "", $type = "poll_options")

@@ -17,7 +17,7 @@ class CheckAdminPermission
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::user()->user_role != 1) {
+        if (empty(Auth::user()) || Auth::user() == null || Auth::user()->user_role != 1) {
             return redirect(RouteServiceProvider::HOME);
         }
 

@@ -47,12 +47,12 @@
                         <div class="d-flex justify-content-between align-items-center">
                             {{ __('Edit poll') }}
                             <div class="button-container">
-                                <a href="{{ route('poll.view', $poll->slug) }}"
+                                <a href="{{ route('poll.view', $poll[0]->slug) }}"
                                     class="btn btn-info waves-effect waves-light" target="_blank">
                                     <span>Preview</span>
                                     <i class="icon-eye m-l-5"></i>
                                 </a>
-                                <a href="{{ route('poll.embedView', $poll->slug) }}"
+                                <a href="{{ route('poll.embedView', $poll[0]->slug) }}"
                                     class="btn btn-primary waves-effect waves-light" target="_blank">
                                     <span>Embed link </span>
                                     <i class="ti-link m-l-5"></i>
@@ -64,14 +64,14 @@
                         <div class="panel-body">
                             <div class="form-container">
                                 <div class="form-body">
-                                    <input type="hidden" name="id" id="id" value="{{ $poll->id }}">
+                                    <input type="hidden" name="id" id="id" value="{{ $poll[0]->id }}">
                                     <!--row-->
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="title" class="control-label">{{ __('Title*') }}</label>
                                                 <input type="text" id="title" name="title" class="form-control"
-                                                    value="{{ $poll->title }}">
+                                                    value="{{ $poll[0]->title }}">
                                                 <span class="help-block error-span"></span>
                                             </div>
                                         </div>
@@ -84,7 +84,7 @@
                                                     class="control-label">{{ __('Start Datetime*') }}</label>
                                                 <input type="text" class="form-control datetimepicker-custom"
                                                     id="start_datetime"
-                                                    value="{{ date('d-m-Y h:i a', strtotime($poll->start_datetime)) }}"
+                                                    value="{{ date('d-m-Y h:i a', strtotime($poll[0]->start_datetime)) }}"
                                                     name="start_datetime" data-date-container='#datepicker_container'>
                                                 <span class="help-block error-span"></span>
                                             </div>
@@ -95,7 +95,7 @@
                                                     class="control-label">{{ __('End Datetime*') }}</label>
                                                 <input type="text" class="form-control datetimepicker-custom"
                                                     id="end_datetime"
-                                                    value="{{ date('d-m-Y h:i a', strtotime($poll->end_datetime)) }}"
+                                                    value="{{ date('d-m-Y h:i a', strtotime($poll[0]->end_datetime)) }}"
                                                     name="end_datetime" data-date-container='#datepicker_container'>
                                                 <span class="help-block error-span"></span>
                                             </div>
@@ -107,7 +107,7 @@
                                             <div class="form-group">
                                                 <label for="description"
                                                     class="control-label">{{ __('Description') }}</label>
-                                                <textarea type="text" id="description" name="description ckeditor" class="form-control">{{ $poll->description }}</textarea>
+                                                <textarea type="text" id="description" name="description ckeditor" class="form-control">{{ $poll[0]->description }}</textarea>
                                                 <span class="help-block error-span"></span>
                                             </div>
                                         </div>
@@ -123,23 +123,12 @@
                                         <div class="col-md-12">
                                             <div class="options-container">
                                                 <div class="remove-options-ids-container d-none"></div>
-                                                @php
-                                                    $pollOptions = [];
-                                                    $pollOptionId = explode(',', $poll->option_id);
-                                                    $pollOptionTitle = explode(',', $poll->option_title);
-                                                    $pollOptionImage = explode(',', $poll->option_image);
-                                                    for ($i = 0; $i <= count($pollOptionTitle) - 1; $i++) {
-                                                        $pollOptions[$i]['id'] = $pollOptionId[$i];
-                                                        $pollOptions[$i]['title'] = $pollOptionTitle[$i];
-                                                        $pollOptions[$i]['image'] = $pollOptionImage[$i];
-                                                    }
-                                                @endphp
-                                                @if (isset($pollOptions) && !empty($pollOptions))
-                                                    @foreach ($pollOptions as $pollOption)
+                                                @if (isset($poll) && !empty($poll))
+                                                    @foreach ($poll as $pollOption)
                                                         <div class="option-card">
                                                             <input type="hidden"
                                                                 name="option[{{ $loop->iteration - 1 }}][option_id]"
-                                                                value="{{ $pollOption['id'] }}"
+                                                                value="{{ $pollOption->option_id }}"
                                                                 id="@if ($loop->first) option_id @else option_id_{{ $loop->iteration - 1 }} @endif"
                                                                 class="option_id">
                                                             <div class="row h-100">
@@ -148,10 +137,10 @@
                                                                         <div class="form-group mb-3">
                                                                             <div class="custom-image-upload-container">
                                                                                 <div class="image-upload-wrap"
-                                                                                    @if (isset($pollOption['image']) && !empty($pollOption['image']) && $pollOption['image'] != 'null') style="display: none" @endif>
+                                                                                    @if (isset($pollOption->option_image) && !empty($pollOption->option_image) && $pollOption->option_image != 'null') style="display: none" @endif>
                                                                                     <input type="hidden"
                                                                                         name="option[{{ $loop->iteration - 1 }}][set_image]"
-                                                                                        value="{{ isset($pollOption['image']) && !empty($pollOption['image']) && $pollOption['image'] != 'null' ? $pollOption['image'] : '' }}"
+                                                                                        value="{{ isset($pollOption->option_image) && !empty($pollOption->option_image) && $pollOption->option_image != 'null' ? $pollOption->option_image : '' }}"
                                                                                         class="set_image">
                                                                                     <input
                                                                                         class="form-control option_image file-upload-input"
@@ -165,9 +154,9 @@
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="file-upload-content"
-                                                                                    @if (isset($pollOption['image']) && !empty($pollOption['image']) && $pollOption['image'] != 'null') style="display: flex" @endif>
+                                                                                    @if (isset($pollOption->option_image) && !empty($pollOption->option_image) && $pollOption->option_image != 'null') style="display: flex" @endif>
                                                                                     <img class="file-upload-image"
-                                                                                        src="{{ isset($pollOption['image']) && !empty($pollOption['image']) && $pollOption['image'] != 'null' ? $poll->getImagePath($pollOption['image'], $poll->slug, 'poll_options') : '' }}"
+                                                                                        src="{{ isset($pollOption->option_image) && !empty($pollOption->option_image) && $pollOption->option_image != 'null' ? $poll[0]->getImagePath($pollOption->option_image, $poll[0]->slug, 'poll_options') : '' }}"
                                                                                         alt="upload image" />
                                                                                     <i
                                                                                         class="fa fa-times-circle remove-image"></i>
@@ -182,7 +171,7 @@
                                                                                 id="{{ $loop->first ? 'option_title' : 'option_title_' . ($loop->iteration - 1) }}"
                                                                                 name="option[{{ $loop->iteration - 1 }}][title]"
                                                                                 class="form-control option_title"
-                                                                                value="{{ $pollOption['title'] != 'null' ? $pollOption['title'] : '' }}"
+                                                                                value="{{ $pollOption->option_title != 'null' ? $pollOption->option_title : '' }}"
                                                                                 placeholder="Option Title*">
                                                                             <span class="help-block error-span"></span>
                                                                         </div>
@@ -263,7 +252,7 @@
                                             <label for="popular_tag"
                                                 class="control-label mb-0 pr-2">{{ __('Is that popular poll?') }}</label>
                                             <input type="checkbox" name="popular_tag" id="popular_tag" class="js-switch"
-                                                data-color="#13dafe" @if (isset($poll->popular_tag) && $poll->popular_tag) checked @endif>
+                                                data-color="#13dafe" @if (isset($poll[0]->popular_tag) && $poll[0]->popular_tag) checked @endif>
                                         </div>
                                         <span class="help-block error-span"></span>
                                     </div>
@@ -280,8 +269,29 @@
                                                 <option value="">{{ __('Uncategorized') }}</option>
                                                 @foreach ($categories as $category)
                                                     <option value="{{ $category->id }}" class="text-capitalize"
-                                                        @if (isset($poll->category) && $poll->category == $category->id) selected @endif>
+                                                        @if (isset($poll[0]->category) && $poll[0]->category == $category->id) selected @endif>
                                                         {{ $category->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            <span class="help-block error-span"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--row-->
+                            @endif
+                            @if (isset($voteHours) && !empty($voteHours))
+                                <!--row-->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="vote_schedule"
+                                                class="control-label">{{ __('User can vote again after') }}</label>
+                                            <select name="vote_schedule" id="vote_schedule"
+                                                class="custom-select width-equal col-12">
+                                                @foreach ($voteHours as $voteHours_key => $voteHours_value)
+                                                    <option value="{{ $voteHours_key }}" class="text-capitalize"
+                                                        @if (isset($poll[0]->vote_schedule) && $poll[0]->vote_schedule == $voteHours_key) selected @endif>
+                                                        {{ $voteHours_value }}</option>
                                                 @endforeach
                                             </select>
                                             <span class="help-block error-span"></span>
@@ -294,35 +304,15 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="vote_schedule"
-                                            class="control-label">{{ __('User can vote again after') }}</label>
-                                        <select name="vote_schedule" id="vote_schedule"
-                                            class="custom-select width-equal col-12">
-                                            <option value="12" class="text-capitalize"
-                                                @if (isset($poll->vote_schedule) && $poll->vote_schedule == '12') selected @endif>
-                                                12 Hours</option>
-                                            <option value="24" class="text-capitalize"
-                                                @if (isset($poll->vote_schedule) && $poll->vote_schedule == '24') selected @endif>
-                                                24 Hours</option>
-                                        </select>
-                                        <span class="help-block error-span"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--row-->
-                            <!--row-->
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
                                         <label class="control-label">{{ __('How many option user select?') }}</label>
-                                        <input id="option_select" type="text" value="{{ $poll->option_select }}"
+                                        <input id="option_select" type="text" value="{{ $poll[0]->option_select }}"
                                             name="option_select" data-bts-button-down-class="btn btn-default btn-outline"
                                             data-bts-button-up-class="btn btn-default btn-outline">
                                     </div>
                                 </div>
                             </div>
                             <!--row-->
-                            @if (isset($captchaType) && !empty($captchaType))
+                            @if (isset($recaptcha) && !empty($recaptcha))
                                 <!--row-->
                                 <div class="row">
                                     <div class="col-md-12">
@@ -331,10 +321,10 @@
                                                 class="control-label">{{ __('Captcha Type') }}</label>
                                             <select name="captcha_type" id="captcha_type"
                                                 class="custom-select width-equal col-12">
-                                                @foreach ($captchaType as $captcha_key => $captcha_value)
-                                                    <option value="{{ $captcha_key }}" class="text-capitalize"
-                                                        @if (isset($poll->captcha_type) && $poll->captcha_type == $captcha_key) selected @endif>
-                                                        {{ $captcha_value }}</option>
+                                                @foreach ($recaptcha as $recaptcha_key => $recaptcha_value)
+                                                    <option value="{{ $recaptcha_key }}" class="text-capitalize"
+                                                        @if (isset($poll[0]->recaptcha_type) && $poll[0]->recaptcha_type == $recaptcha_key) selected @endif>
+                                                        {{ $recaptcha_value }}</option>
                                                 @endforeach
                                             </select>
                                             <span class="help-block error-span"></span>
@@ -349,9 +339,9 @@
                                         <label for="feature_image">{{ __('Feature Image') }}</label>
                                         <div class="custom-image-upload-container">
                                             <div class="image-upload-wrap"
-                                                @if (isset($poll->feature_image) && !empty($poll->feature_image)) style="display: none" @endif>
+                                                @if (isset($poll[0]->feature_image) && !empty($poll[0]->feature_image)) style="display: none" @endif>
                                                 <input type="hidden" class="set_image" name="set_image"
-                                                    value="{{ $poll->feature_image }}">
+                                                    value="{{ $poll[0]->feature_image }}">
                                                 <input class="form-control file-upload-input" type='file'
                                                     id="feature_image" name="feature_image">
                                                 <div class="drag-text-message">
@@ -360,9 +350,9 @@
                                                 </div>
                                             </div>
                                             <div class="file-upload-content"
-                                                @if (isset($poll->feature_image) && !empty($poll->feature_image)) style="display: flex" @endif>
+                                                @if (isset($poll[0]->feature_image) && !empty($poll[0]->feature_image)) style="display: flex" @endif>
                                                 <img class="file-upload-image"
-                                                    src="{{ isset($poll->feature_image) && !empty($poll->feature_image) ? $poll->getImagePath($poll->feature_image, $poll->slug, 'poll_feature_image') : '' }}"
+                                                    src="{{ isset($poll[0]->feature_image) && !empty($poll[0]->feature_image) ? $poll[0]->getImagePath($poll[0]->feature_image, $poll[0]->slug, 'poll_feature_image') : '' }}"
                                                     alt="upload image" />
                                                 <i class="fa fa-times-circle remove-image"></i>
                                             </div>

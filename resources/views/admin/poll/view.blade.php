@@ -15,7 +15,7 @@
                         <div class="bg-white card poll-view-card p-30 rounded-0 position-relative">
                             @if (isset($userrole) && !empty($userrole) && $userrole == 1)
                                 <div class="edit-button position-absolute top right">
-                                    <a href="{{ route('poll.editForm', $poll->id) }}"
+                                    <a href="{{ route('poll.editForm', $poll[0]->id) }}"
                                         class="btn btn-info waves-effect waves-light">
                                         <span>edit poll</span>
                                         <i class=" ti-pencil-alt"></i>
@@ -23,15 +23,15 @@
                                 </div>
                             @endif
                             <div class="poll-heading">
-                                <h1 class="text-center text-capitalize">{{ $poll->title }}</h1>
-                                <div class="text-center">{!! $poll->description !!}</div>
+                                <h1 class="text-center text-capitalize">{{ $poll[0]->title }}</h1>
+                                <div class="text-center">{!! $poll[0]->description !!}</div>
                                 <hr>
                             </div>
                             <div class="poll-timer text-center">
                                 <h5 class="text-uppercase countdown-heading">time left</h5>
                                 <div class="clockdiv-container" id="clockdiv"
-                                    data-startdatetime="{{ $poll->start_datetime }}"
-                                    data-enddatetime="{{ $poll->end_datetime }}">
+                                    data-startdatetime="{{ $poll[0]->start_datetime }}"
+                                    data-enddatetime="{{ $poll[0]->end_datetime }}">
                                     <div class="time-box bg-success text-light font-bold">
                                         <span class="days" id="day">00</span>
                                         <div>Days</div>
@@ -51,52 +51,48 @@
                                 </div>
                             </div>
                             <form action="#" method="POST" id="poll-vote-form" class="form-horizontal">
-                                <input type="hidden" name="id" id="id" value="{{ $poll->id }}">
+                                <input type="hidden" name="id" id="id" value="{{ $poll[0]->id }}">
                                 <input type="hidden" name="vote_schedule" id="vote_schedule"
-                                    value="{{ $poll->vote_schedule }}">
+                                    value="{{ $poll[0]->vote_schedule }}">
                                 <div class="poll-options-main text-center mt-5">
-                                    @if (isset($poll->option_select) &&
-                                        !empty($poll->option_select) &&
-                                        count(explode(',', $poll->option_id)) > $poll->option_select)
-                                        <p>You can choose {{ convert_number($poll->option_select) }} option</p>
+                                    @if (isset($poll[0]->option_select) &&
+                                        !empty($poll[0]->option_select) &&
+                                        count(explode(',', $poll[0]->option_id)) > $poll[0]->option_select)
+                                        <p>You can choose {{ convert_number($poll[0]->option_select) }} option</p>
                                     @else
                                         <p>You can choose more than one</p>
                                     @endif
                                     <div class="option-container mt-5">
-                                        @php
-                                            $pollOptions = [];
-                                            $pollOptionId = explode(',', $poll->option_id);
-                                            $pollOptionTitle = explode(',', $poll->option_title);
-                                            $pollOptionImage = explode(',', $poll->option_image);
-                                            for ($i = 0; $i <= count($pollOptionTitle) - 1; $i++) {
-                                                $pollOptions[$i]['id'] = $pollOptionId[$i];
-                                                $pollOptions[$i]['title'] = $pollOptionTitle[$i];
-                                                $pollOptions[$i]['image'] = $pollOptionImage[$i];
-                                            }
-                                        @endphp
-                                        @foreach ($pollOptions as $pollOption)
+                                        @foreach ($poll as $pollOption)
                                             <div class="card-poll d-flex align-items-center mb-3">
                                                 <input type="hidden" class="option_id"
                                                     name="option_id_{{ $loop->iteration }}"
-                                                    id="option_id_{{ $loop->iteration }}" value="{{ $pollOption['id'] }}">
+                                                    id="option_id_{{ $loop->iteration }}"
+                                                    value="{{ $pollOption->option_id }}">
                                                 <div class="image-div">
-                                                    @if ($pollOption['image'] != 'null')
-                                                        <img src="{{ $poll->getImagePath($pollOption['image'], $poll->slug, 'poll_options') }}"
-                                                            alt="{{ $pollOption['title'] }}" class="w-100">
+                                                    @if (isset($pollOption->option_image) && !empty($pollOption->option_image))
+                                                        <img src="{{ $pollOption->getImagePath($pollOption->option_image, $poll[0]->slug, 'poll_options') }}"
+                                                            alt="{{ $pollOption->option_title }}" class="w-100">
                                                     @else
                                                         <img src="{{ @asset('assets/images/bodybg.jpg') }}"
-                                                            alt="{{ $pollOption['title'] }}" class="w-100">
+                                                            alt="{{ $pollOption->option_title }}" class="w-100">
                                                     @endif
                                                 </div>
                                                 <div class="title-div w-100 text-left">
                                                     <input type="hidden" name="option_id" class="option_id"
-                                                        value="{{ $pollOption['id'] }}">
-                                                    <p class="m-0 pl-4">{{ $pollOption['title'] }}</p>
+                                                        value="{{ $pollOption->option_id }}">
+                                                    <p class="m-0 pl-4">{{ $pollOption->option_title }}</p>
+                                                </div>
+                                                <div class="total-votebox position-absolute">
+                                                    <img src="{{ @asset('assets/images/voting-box.png') }}"
+                                                        alt="Voting Box" class="w-100">
+                                                    <p>{{ strlen($pollOption->votes) > 1 ? $pollOption->votes : '0' . $pollOption->votes }}
+                                                    </p>
                                                 </div>
                                             </div>
                                         @endforeach
                                     </div>
-                                    @if (isset($poll->captcha_type) && !empty($poll->captcha_type) && $poll->captcha_type == 1)
+                                    @if (isset($poll[0]->captcha_type) && !empty($poll[0]->captcha_type) && $poll[0]->captcha_type == 1)
                                         <div class="google-recaptcha-div mt-5">
                                             <div class="form-group">
                                                 <input type="hidden" name="enabledgooglecaptcha" id="enabledgooglecaptcha"
@@ -106,7 +102,7 @@
                                                 <span class="help-block error-span"></span>
                                             </div>
                                         </div>
-                                    @elseif(isset($poll->captcha_type) && !empty($poll->captcha_type) && $poll->captcha_type == 2)
+                                    @elseif(isset($poll[0]->captcha_type) && !empty($poll[0]->captcha_type) && $poll[0]->captcha_type == 2)
                                         <div class="form-group">
                                             <input type="hidden" name="enabledmathcaptcha" id="enabledmathcaptcha"
                                                 class="enabledmathcaptcha" value="enabledmathcaptcha">
@@ -152,9 +148,9 @@
             votingUrl: "{{ route('poll.voting') }}"
         }
         var maximumVoteInNumber =
-            {{ isset($poll->option_select) && !empty($poll->option_select) && $poll->option_select > 0 ? $poll->option_select : 0 }}
+            {{ isset($poll[0]->option_select) && !empty($poll[0]->option_select) && $poll[0]->option_select > 0 ? $poll[0]->option_select : 0 }}
         var maximumVoteInWord =
-            "{{ isset($poll->option_select) && !empty($poll->option_select) && $poll->option_select > 0 ? convert_number($poll->option_select) : 0 }}"
+            "{{ isset($poll[0]->option_select) && !empty($poll[0]->option_select) && $poll[0]->option_select > 0 ? convert_number($poll[0]->option_select) : 0 }}"
     </script>
     <script src="{{ asset('assets/js/admin/poll/poll-view.js') }}" type="text/javascript"></script>
 @endpush
