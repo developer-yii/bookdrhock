@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use DataTables;
 use App\Model\Poll;
 use App\Model\PollVote;
-use App\Model\Codeblock;
 use App\Rules\ReCaptcha;
 use App\Model\PollOption;
 use App\Model\PollCategory;
@@ -15,7 +14,6 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-use Kmlpandey77\MathCaptcha\Captcha;
 
 class PollController extends Controller
 {
@@ -48,29 +46,45 @@ class PollController extends Controller
     public function createForm(Request $request)
     {
         $categories = PollCategory::all();
-        $captchaType = Poll::$capthcaType;
-        return view('admin.poll.create', compact('categories', 'captchaType'));
+        $recaptcha = Poll::$recaptcha;
+        $voteHours = Poll::$voteHours;
+        return view('admin.poll.create', compact('categories', 'recaptcha', 'voteHours'));
     }
 
     public function editForm($id)
     {
+        // $poll = Poll::query()
+        //     ->where('polls.id', $id)
+        //     ->leftJoin('poll_options', 'poll_options.poll_id', '=', 'polls.id')
+        //     ->groupBy('polls.id')
+        //     ->select(
+        //         'polls.*',
+        //         DB::raw('group_concat(poll_options.id) as option_id'),
+        //         DB::raw('group_concat(IFNULL(poll_options.title, "null")) as option_title'),
+        //         DB::raw('group_concat(IFNULL(poll_options.image, "null")) as option_image')
+        //     )
+        //     ->first();
+
         $poll = Poll::query()
-            ->where('polls.id', $id)
-            ->leftJoin('poll_options', 'poll_options.poll_id', '=', 'polls.id')
-            ->groupBy('polls.id')
             ->select(
                 'polls.*',
-                DB::raw('group_concat(poll_options.id) as option_id'),
-                DB::raw('group_concat(IFNULL(poll_options.title, "null")) as option_title'),
-                DB::raw('group_concat(IFNULL(poll_options.image, "null")) as option_image')
+                'poll_options.id as option_id',
+                'poll_options.title as option_title',
+                'poll_options.image as option_image',
+                DB::raw("count(poll_votes.poll_options) as votes")
             )
-            ->first();
+            ->join('poll_options', 'poll_options.poll_id', '=', 'polls.id')
+            ->leftJoin('poll_votes', 'poll_votes.poll_options', '=', 'poll_options.id')
+            ->where('polls.id', $id)
+            ->groupBy('poll_options.id')
+            ->get();
 
         $categories = PollCategory::all();
-        $captchaType = Poll::$capthcaType;
+        $recaptcha = Poll::$recaptcha;
+        $voteHours = Poll::$voteHours;
 
         if (isset($poll) && !empty($poll)) {
-            return view('admin.poll.edit', compact('categories', 'captchaType', 'poll'));
+            return view('admin.poll.edit', compact('categories', 'recaptcha', 'poll', 'voteHours'));
         } else {
             return redirect()->route('poll');
         }
@@ -79,30 +93,25 @@ class PollController extends Controller
     public function view($slug)
     {
         $poll = Poll::query()
-            ->where('polls.slug', $slug)
-            ->leftJoin('poll_options', 'poll_options.poll_id', '=', 'polls.id')
-            ->groupBy('polls.id')
             ->select(
                 'polls.*',
-                DB::raw('group_concat(poll_options.id) as option_id'),
-                DB::raw('group_concat(IFNULL(poll_options.title, "null")) as option_title'),
-                DB::raw('group_concat(IFNULL(poll_options.image, "null")) as option_image')
+                'poll_options.id as option_id',
+                'poll_options.title as option_title',
+                'poll_options.image as option_image',
+                DB::raw("count(poll_votes.poll_options) as votes")
             )
-            ->first();
+            ->join('poll_options', 'poll_options.poll_id', '=', 'polls.id')
+            ->leftJoin('poll_votes', 'poll_votes.poll_options', '=', 'poll_options.id')
+            ->where('polls.slug', $slug)
+            ->groupBy('poll_options.id')
+            ->get();
 
-        $categories = PollCategory::all();
-        $captchaType = Poll::$capthcaType;
-
-        if (Auth::user()) {
-            $userrole = Auth::user()->user_role;
-        } else {
-            $userrole = '';
-        }
+        $userrole = Auth::user() ? Auth::user()->user_role : '';
 
         app('mathcaptcha')->reset();
 
         if (isset($poll) && !empty($poll)) {
-            return view('admin.poll.view', compact('categories', 'captchaType', 'poll', 'userrole'));
+            return view('admin.poll.view', compact('poll', 'userrole'));
         } else {
             return abort(404);
         }
@@ -111,24 +120,25 @@ class PollController extends Controller
     public function embedView($slug)
     {
         $poll = Poll::query()
-            ->where('polls.slug', $slug)
-            ->leftJoin('poll_options', 'poll_options.poll_id', '=', 'polls.id')
-            ->groupBy('polls.id')
             ->select(
                 'polls.*',
-                DB::raw('group_concat(poll_options.id) as option_id'),
-                DB::raw('group_concat(IFNULL(poll_options.title, "null")) as option_title'),
-                DB::raw('group_concat(IFNULL(poll_options.image, "null")) as option_image')
+                'poll_options.id as option_id',
+                'poll_options.title as option_title',
+                'poll_options.image as option_image',
+                DB::raw("count(poll_votes.poll_options) as votes")
             )
-            ->first();
+            ->join('poll_options', 'poll_options.poll_id', '=', 'polls.id')
+            ->leftJoin('poll_votes', 'poll_votes.poll_options', '=', 'poll_options.id')
+            ->where('polls.slug', $slug)
+            ->groupBy('poll_options.id')
+            ->get();
 
         $categories = PollCategory::all();
-        $captchaType = Poll::$capthcaType;
 
         app('mathcaptcha')->reset();
 
         if (isset($poll) && !empty($poll)) {
-            return view('admin.poll.embedview', compact('categories', 'captchaType', 'poll'));
+            return view('admin.poll.embedview', compact('categories', 'poll'));
         } else {
             return abort(404);
         }

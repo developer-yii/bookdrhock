@@ -389,9 +389,27 @@ header.site-header li.nav-item {
     position: relative;
 }
 
+header.site-header .frontside-header .dropdown-toggle::after {
+    display: none;
+}
+
+header.site-header .frontside-header .dropdown-toggle,
+header.site-header .frontside-header .profile-pic img {
+    padding: 0;
+    margin: 0;
+}
+
+header.site-header .menu-right-div a.dropdown-toggle.profile-pic:hover {
+    background: transparent;
+}
+
+
 /* Home page css strat */
 .home .banner,
-.category-single .banner {
+.category-single .banner,
+.about .banner,
+.contact .banner,
+.privacypolicy .banner {
     height: 300px;
     background-image: url(../images/homebg.jpg);
     background-color: #000;
@@ -403,7 +421,10 @@ header.site-header li.nav-item {
 }
 
 .home .banner:before,
-.category-single .banner:before {
+.category-single .banner:before,
+.about .banner:before,
+.contact .banner:before,
+.privacypolicy .banner:before {
     content: '';
     width: 100%;
     height: 100%;
@@ -415,7 +436,10 @@ header.site-header li.nav-item {
 }
 
 .home .banner h1,
-.category-single .banner h1 {
+.category-single .banner h1,
+.about .banner h1,
+.contact .banner h1,
+.privacypolicy .banner h1 {
     z-index: 1;
 }
 
@@ -488,26 +512,35 @@ header.site-header li.nav-item {
     top: 0;
 }
 
-/* .latest-polls .swiper-slide,
-.popular-polls .swiper-slide {
-    width: 300px;
-    height: auto;
+.poll-options-main .total-votebox {
+    width: 70px;
+    height: 30px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    transition: all 200ms linear;
-    transform: scale(0.8);
-    opacity: 0.5;
-} */
+    border: 1px solid #03a9f3;
+    background-color: #03a9f3;
+    padding: 20px 10px;
+    bottom: 5px;
+    right: 5px;
+}
 
-/* .latest-polls .swiper-slide.swiper-slide-active,
-.latest-polls .swiper-slide.swiper-slide-next,
-.latest-polls .swiper-slide.swiper-slide-prev,
-.popular-polls .swiper-slide.swiper-slide-active {
-    transform: scale(1);
-    opacity: 1;
-    z-index: 10;
-} */
+.poll-options-main .total-votebox img {
+    width: 20px !important;
+    height: auto !important;
+}
+
+.poll-options-main .total-votebox p {
+    margin: 0;
+    padding-left: 10px;
+    color: #fff;
+}
+
+.poll-options-main .title-div p {
+    font-size: 18px;
+    font-weight: 400;
+    color: #000;
+    line-height: 26px;
+}
 
 .title-border,
 .title-border-center {
@@ -627,7 +660,7 @@ div.clockdiv-container>div {
 }
 
 .option-container .card-poll .image-div img {
-    object-fit: contain;
+    object-fit: cover;
 }
 
 .poll-view-card .edit-button {
@@ -678,6 +711,11 @@ div.clockdiv-container>div {
     font-size: 15px;
     line-height: 24px;
     color: #737373;
+}
+
+.footer-links li.active {
+    font-weight: bold;
+    opacity: 1;
 }
 
 .site-footer hr {
@@ -837,6 +875,53 @@ div.clockdiv-container>div {
     .site-footer [class^=col-] {
         margin-bottom: 30px
     }
+
+    .navbar-header .navbar-toggle {
+        float: left;
+    }
+
+    .menu-right-div {
+        width: auto !important;
+    }
+
+    .menu-right-div .navbar-collapse {
+        display: none !important;
+    }
+
+    .menu-right-div div.navbar-collapse.show,
+    .menu-right-div div.navbar-collapse.collapsing {
+        position: absolute !important;
+        width: 80%;
+        height: auto;
+        top: 48px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #fff;
+        padding: 20px;
+    }
+
+    .navbar-collapse ul.navbar-nav {
+        width: 100%;
+    }
+
+    header.site-header li.nav-item>ul.nav.nav-second-level {
+        visibility: visible;
+        opacity: 1;
+        transform: unset;
+        position: relative;
+        width: 100%;
+        box-shadow: none;
+        padding: 0 25px 10px 25px;
+    }
+
+    header.site-header .frontside-header.navbar-top-links>li>a {
+        min-height: unset;
+        line-height: unset;
+    }
+
+    header.site-header .frontside-header .profile-pic img {
+        padding-left: 05px;
+    }
 }
 
 @media (max-width:768px) {
@@ -869,6 +954,11 @@ div.clockdiv-container>div {
     .site-footer .social-icons {
         text-align: center
     }
+
+    .top-left-part img {
+        width: 150px;
+        padding-top: 7px;
+    }
 }
 
 /*
@@ -881,6 +971,15 @@ div.clockdiv-container>div {
 @media (min-width: 768px) {
     .authlayout-container footer.footer {
         left: 0px;
+    }
+
+    .menu-right-div .navbar-collapse.collapse,
+    .menu-right-div div.navbar-collapse.collapsing {
+        display: none !important;
+    }
+
+    .menu-right-div .navbar-collapse.collapse.show {
+        display: block !important;
     }
 }
 

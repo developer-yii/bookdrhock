@@ -57,4 +57,19 @@ class SiteController extends Controller
 
         return view('site.category', compact('polls', 'category'));
     }
+
+    public function about()
+    {
+        return view('site.about');
+    }
+
+    public function contact()
+    {
+        return view('site.contact');
+    }
+
+    public function privacyPolicy()
+    {
+        return view('site.privacypolicy');
+    }
 }

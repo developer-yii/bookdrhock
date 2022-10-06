@@ -208,24 +208,26 @@
                                 </div>
                                 <!--row-->
                             @endif
-                            <!--row-->
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="vote_schedule"
-                                            class="control-label">{{ __('User can vote again after') }}</label>
-                                        <select name="vote_schedule" id="vote_schedule"
-                                            class="custom-select width-equal col-12">
-                                            <option value="12" class="text-capitalize">
-                                                12 Hours</option>
-                                            <option value="24" class="text-capitalize">
-                                                24 Hours</option>
-                                        </select>
-                                        <span class="help-block error-span"></span>
+                            @if (isset($voteHours) && !empty($voteHours))
+                                <!--row-->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="vote_schedule"
+                                                class="control-label">{{ __('User can vote again after') }}</label>
+                                            <select name="vote_schedule" id="vote_schedule"
+                                                class="custom-select width-equal col-12">
+                                                @foreach ($voteHours as $voteHours_key => $voteHours_value)
+                                                    <option value="{{ $voteHours_key }}" class="text-capitalize">
+                                                        {{ $voteHours_value }}</option>
+                                                @endforeach
+                                            </select>
+                                            <span class="help-block error-span"></span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!--row-->
+                                <!--row-->
+                            @endif
                             <!--row-->
                             <div class="row">
                                 <div class="col-md-12">
@@ -238,7 +240,7 @@
                                 </div>
                             </div>
                             <!--row-->
-                            @if (isset($captchaType) && !empty($captchaType))
+                            @if (isset($recaptcha) && !empty($recaptcha))
                                 <!--row-->
                                 <div class="row">
                                     <div class="col-md-12">
@@ -247,9 +249,9 @@
                                                 class="control-label">{{ __('Captcha Type') }}</label>
                                             <select name="captcha_type" id="captcha_type"
                                                 class="custom-select width-equal col-12">
-                                                @foreach ($captchaType as $captcha_key => $captcha_value)
-                                                    <option value="{{ $captcha_key }}" class="text-capitalize">
-                                                        {{ $captcha_value }}</option>
+                                                @foreach ($recaptcha as $recaptcha_key => $recaptcha_value)
+                                                    <option value="{{ $recaptcha_key }}" class="text-capitalize">
+                                                        {{ $recaptcha_value }}</option>
                                                 @endforeach
                                             </select>
                                             <span class="help-block error-span"></span>

@@ -88,11 +88,19 @@ Route::prefix('admin')->middleware('auth')->namespace('Admin')->group(function (
     Route::post('/profile/password/update', 'UserProfileController@passwordUpdate')->name('userProfile.passwordUpdate');
 });
 
-Route::prefix('poll')->name('poll.')->group(function () {
-    Route::get('/{slug}', 'Admin\PollController@view')->name('view');
-    Route::get('/category/{slug}', 'Site\SiteController@getCategoryView')->name('getCategoryView');
-    Route::get('/embed/{slug}', 'Admin\PollController@embedView')->name('embedView');
-    Route::post('/voting', 'Admin\PollController@Voting')->name('voting');
+Route::prefix('poll')->namespace('Admin')->name('poll.')->group(function () {
+    Route::get('/{slug}', 'PollController@view')->name('view');
+    Route::middleware('CheckAdminPermission')->group(function () {
+        Route::get('/embed/{slug}', 'PollController@embedView')->name('embedView');
+    });
+    Route::post('/voting', 'PollController@Voting')->name('voting');
+});
+
+Route::name('site.')->namespace('Site')->group(function () {
+    Route::get('/category/{slug}', 'SiteController@getCategoryView')->name('getCategoryView');
+    Route::get('/about', 'SiteController@about')->name('about');
+    Route::get('/contact', 'SiteController@contact')->name('contact');
+    Route::get('/privacy-policy', 'SiteController@privacyPolicy')->name('privacyPolicy');
 });
 
 // Clear all cache

@@ -49,53 +49,61 @@
                 <a class="logo d-flex align-items-center" href="{{ route('home') }}">
                     <img src="{{ asset('assets/images/logo-dark.png') }}" width="200px" alt="home" />
                 </a>
-                <button class="navbar-toggler navbar-toggler-right border-0" type="button" data-toggle="collapse"
-                    data-target="#navbar4">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbar4">
-                    <ul class="navbar-nav mr-auto pl-lg-4 font-bold">
-                        <li class="nav-item px-lg-2 {{ request()->routeIs('home') ? 'active' : '' }}"> <a
-                                class="nav-link" href="{{ route('home') }}"> <span
-                                    class="d-inline-block d-lg-none icon-width"><i
-                                        class="fas fa-home"></i></span>{{ __('Home') }}</a> </li>
-                        @if (isset($poll_categories) && !empty($poll_categories) && count($poll_categories) > 0)
-                            <li class="nav-item px-lg-2 {{ request()->routeIs('poll.view') ? 'active' : '' }}">
-                                <a class="nav-link" href="#"><span class="d-inline-block d-lg-none icon-width"><i
-                                            class="far fa-user"></i></i></span>Polls</a>
-                                <ul class="nav nav-second-level collapse">
-                                    @foreach ($poll_categories as $poll_category)
-                                        <li> <a href="{{ route('poll.getCategoryView', str_replace(' ', '', $poll_category->slug)) }}"
-                                                class="text-capitalize">{{ $poll_category->name }}</a> </li>
-                                    @endforeach
-                                </ul>
+                <div class="menu-right-div d-flex align-content-center justify-content-between w-100">
+                    <button class="navbar-toggler navbar-toggler-right border-0" type="button" data-toggle="collapse"
+                        data-target="#navbar4">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse" id="navbar4">
+                        <ul class="navbar-nav mr-auto pl-lg-4 font-bold">
+                            <li class="nav-item px-lg-2 {{ request()->routeIs('home') ? 'active' : '' }}"> <a
+                                    class="nav-link" href="{{ route('home') }}"> <span
+                                        class="d-inline-block d-lg-none icon-width"><i
+                                            class="ti-arrow-circle-right pr-3"></i></span>{{ __('Home') }}</a> </li>
+                            @if (isset($poll_categories) && !empty($poll_categories) && count($poll_categories) > 0)
+                                <li class="nav-item px-lg-2 {{ request()->routeIs('poll.view') ? 'active' : '' }}">
+                                    <a class="nav-link" href="#"><span
+                                            class="d-inline-block d-lg-none icon-width"><i
+                                                class="ti-arrow-circle-right pr-3"></i></i></span>Polls</a>
+                                    <ul class="nav nav-second-level collapse">
+                                        @foreach ($poll_categories as $poll_category)
+                                            <li> <a href="{{ route('site.getCategoryView', str_replace(' ', '', $poll_category->slug)) }}"
+                                                    class="text-capitalize">{{ $poll_category->name }}</a> </li>
+                                        @endforeach
+                                    </ul>
+                                </li>
+                            @endif
+                            <li class="nav-item px-lg-2 {{ request()->routeIs('site.about') ? 'active' : '' }}"> <a
+                                    class="nav-link" href="{{ route('site.about') }}"><span
+                                        class="d-inline-block d-lg-none icon-width"><i
+                                            class="ti-arrow-circle-right pr-3"></i></i></span>{{ __('About') }}</a>
                             </li>
-                        @endif
-                        <li class="nav-item px-lg-2"> <a class="nav-link" href="#"><span
-                                    class="d-inline-block d-lg-none icon-width"><i
-                                        class="far fa-user"></i></i></span>{{ __('About') }}</a> </li>
-                        <li class="nav-item px-lg-2"> <a class="nav-link" href="#"><span
-                                    class="d-inline-block d-lg-none icon-width"><i
-                                        class="far fa-envelope"></i></span>{{ __('Contact') }}</a> </li>
-                    </ul>
-                    <ul class="navbar-nav ml-auto mt-3 mt-lg-0">
-                        <li class="nav-item"> <a class="nav-link" href="#">
-                                <i class="fa fa-twitter"></i><span class="d-lg-none ml-3">{{ __('Twitter') }}</span>
-                            </a> </li>
-                        <li class="nav-item"> <a class="nav-link" href="#">
-                                <i class="fa fa-facebook"></i><span class="d-lg-none ml-3">{{ __('Facebook') }}</span>
-                            </a> </li>
-                        <li class="nav-item"> <a class="nav-link" href="#">
-                                <i class="fa fa-instagram"></i><span
-                                    class="d-lg-none ml-3">{{ __('Instagram') }}</span>
-                            </a> </li>
-                    </ul>
+                            <li class="nav-item px-lg-2 {{ request()->routeIs('site.contact') ? 'active' : '' }}"> <a
+                                    class="nav-link" href="{{ route('site.contact') }}"><span
+                                        class="d-inline-block d-lg-none icon-width"><i
+                                            class="ti-arrow-circle-right pr-3"></i></span>{{ __('Contact') }}</a> </li>
+                        </ul>
+                        <ul class="navbar-nav ml-auto mt-3 mt-lg-0">
+                            <li class="nav-item"> <a class="nav-link" href="#">
+                                    <i class="fa fa-twitter"></i><span
+                                        class="d-lg-none ml-3">{{ __('Twitter') }}</span>
+                                </a> </li>
+                            <li class="nav-item"> <a class="nav-link" href="#">
+                                    <i class="fa fa-facebook"></i><span
+                                        class="d-lg-none ml-3">{{ __('Facebook') }}</span>
+                                </a> </li>
+                            <li class="nav-item"> <a class="nav-link" href="#">
+                                    <i class="fa fa-instagram"></i><span
+                                        class="d-lg-none ml-3">{{ __('Instagram') }}</span>
+                                </a> </li>
+                        </ul>
+                    </div>
                     @if (Auth::check() && Auth::user()->user_role == 1)
-                        <ul class="nav navbar-top-links navbar-right pull-right">
+                        <ul class="nav navbar-top-links navbar-right pull-right frontside-header">
                             <li class="dropdown">
                                 <a class="dropdown-toggle profile-pic text-capitalize font-weight-bold"
                                     data-toggle="dropdown" href="#"><img
-                                        src="{{ @asset('assets/images/avatar.jpg') }}" alt="avtar" width="40px"
+                                        src="{{ @asset('assets/images/avatar.png') }}" alt="avtar" width="30px"
                                         srcset=""></a>
                                 <ul class="dropdown-menu dropdown-user animated flipInY">
                                     <li><a href="{{ route('admin') }}"><i class="icon-layers"></i>
@@ -163,7 +171,7 @@
                     <ul class="footer-links">
                         @foreach ($poll_categories as $poll_category)
                             <li {{ request()->routeIs('getCategoryView') ? 'active' : '' }}> <a
-                                    href="{{ route('poll.getCategoryView', str_replace(' ', '', $poll_category->slug)) }}"
+                                    href="{{ route('site.getCategoryView', str_replace(' ', '', $poll_category->slug)) }}"
                                     class="text-capitalize">{{ $poll_category->name }}</a> </li>
                         @endforeach
                     </ul>
@@ -174,9 +182,12 @@
                     <ul class="footer-links">
                         <li class="{{ request()->routeIs('home') ? 'active' : '' }}"><a href="{{ route('home') }}">
                                 {{ __('Home') }}</a></li>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
+                        <li class="{{ request()->routeIs('site.about') ? 'active' : '' }}"><a
+                                href="{{ route('site.about') }}">About Us</a></li>
+                        <li class="{{ request()->routeIs('site.contact') ? 'active' : '' }}"><a
+                                href="{{ route('site.contact') }}">Contact Us</a></li>
+                        <li class="{{ request()->routeIs('site.privacyPolicy') ? 'active' : '' }}"><a
+                                href="{{ route('site.privacyPolicy') }}">Privacy Policy</a></li>
                     </ul>
                 </div>
             </div>
