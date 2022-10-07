@@ -4,6 +4,13 @@ $(document).ready(function () {
         modalId = '#poll-modal',
         modalCancleBtnId = '#model-cancle-btn',
         viewBtnId = '#view-poll',
+        voteAddBtnId = '#poll-option-addvote',
+        pollOptionTableDiv = '.option-poll-table',
+        pollOptionVoteeditFormDiv = '.option-poll-add',
+        pollOptionTableShowBtn = '#optionlistTable',
+        pollOptionVoteChangeBtn = '#votechange-poll',
+        formErrorSpanClass = '.error-span',
+        pollOptionVoteChangeForm = '#poll-option-votechange-form',
         table = $('#poll-datatable').DataTable({
             processing: true,
             serverSide: true,
@@ -60,6 +67,7 @@ $(document).ready(function () {
         e.preventDefault();
         $('#poll-modal #poll_id').val('');
         $(modalId).modal('hide');
+        $(formErrorSpanClass).text('');
     })
 
     var pollOptionDatatable = "";
@@ -75,7 +83,6 @@ $(document).ready(function () {
                 url: routes.getPollOptionsUrl,
                 type: 'POST',
                 data: function (d) {
-                    // d.search = $('input[type="search"]').val();
                     d.poll_id = pollId;
                 },
             },
@@ -105,7 +112,21 @@ $(document).ready(function () {
                 {
                     data: 'votes',
                     name: 'votes'
-                }
+                },
+                {
+                    data: null,
+                    name: 'action',
+                    render: function (data, type, full, meta) {
+                        let html = '<h4 class="m-0">' +
+                            '<a href="javascript:void(0)" class="btn btn-primary m-1 mt-0 mr-4"  id="poll-option-addvote" data-pollid="' + data.id + '"><i class="fa fa-plus-circle pr-2"></i>Add vote</a>' +
+                            '</h4>';
+                        return html;
+                    },
+                    className: 'align-middle',
+                    width: '18%',
+                    orderable: false,
+                    searchable: false
+                },
             ]
         });
     }
@@ -114,7 +135,6 @@ $(document).ready(function () {
     $(document).on('click', viewBtnId, function (e) {
         e.preventDefault();
         $(modalId).find('.modal-title').text('View Poll');
-        console.log(table.row($(this).parents('tr')).data());
         $.each(table.row($(this).parents('tr')).data(), function (key, value) {
             if (key == 'id') {
                 $('#poll-modal #poll_id').val(value);
@@ -124,7 +144,62 @@ $(document).ready(function () {
         })
         $(modalId).modal('show');
         $(modalId).modal('handleUpdate')
+        $(pollOptionTableDiv).show();
+        $(pollOptionVoteeditFormDiv).hide();
+        $(pollOptionVoteChangeForm)[0].reset();
+        $(formErrorSpanClass).text('');
         viewPollOptionDatatable(table.row($(this).parents('tr')).data().id);
+    })
+
+    // Poll option vote change form
+    $(document).on('click', voteAddBtnId, function (e) {
+        e.preventDefault();
+        $(pollOptionTableDiv).hide();
+        $(pollOptionVoteeditFormDiv).show();
+        $(pollOptionVoteChangeForm)[0].reset();
+        $(formErrorSpanClass).text('');
+        $.each(pollOptionDatatable.row($(this).parents('tr')).data(), function (key, value) {
+            $(pollOptionVoteChangeForm).find('#' + key).val(value);
+        })
+    })
+
+    // Poll option table show
+    $(document).on('click', pollOptionTableShowBtn, function (e) {
+        e.preventDefault();
+        $(pollOptionTableDiv).show();
+        $(pollOptionVoteChangeForm)[0].reset();
+        $(pollOptionVoteeditFormDiv).hide();
+        $(formErrorSpanClass).text('');
+    })
+
+    // Poll option vote update
+    $(document).on('click', pollOptionVoteChangeBtn, function (e) {
+        e.preventDefault();
+        $(formErrorSpanClass).text('');
+        $.ajax({
+            url: routes.votechangePollOptionsUrl,
+            method: 'POST',
+            data: new FormData($(pollOptionVoteChangeForm)['0']),
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if (response.response == 'error') {
+                    showMessage('error', response.message)
+                } else {
+                    $(pollOptionVoteChangeForm)[0].reset();
+                    pollOptionDatatable.draw();
+                    $(pollOptionTableDiv).show();
+                    $(pollOptionVoteeditFormDiv).hide();
+                    showMessage('success', response.message)
+                }
+            },
+            error: function (error) {
+                $.each(error.responseJSON.errors, function (key, value) {
+                    $('#' + key).parents('.form-group').find(formErrorSpanClass).text(value);
+                    $('#' + key).parents('.form-group').addClass('has-error');
+                });
+            }
+        })
     })
 
     //Delete Poll

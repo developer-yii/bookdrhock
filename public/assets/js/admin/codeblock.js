@@ -27,7 +27,6 @@ $(document).ready(function () {
                 setting: weeklyEmail
             },
             success: function (response) {
-                console.log(response);
                 if ("code" in response && response.code == 400) {
                     $.toast({
                         heading: response.message,
