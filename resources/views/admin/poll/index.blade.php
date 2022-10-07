@@ -66,7 +66,7 @@
                         <input type="hidden" name="poll_id" id="poll_id" class="poll_id">
                         <h2 class="text-center font-weight-bold">Poll Information</h2>
                         <div class="table-responsive">
-                            <table class="table poll-info-table my-5">
+                            <table class="table poll-info-table my-3 mb-5">
                                 <tbody>
                                     <tr>
                                         <th>Title</th>
@@ -90,7 +90,7 @@
                     </div>
                     <div class="poll-options">
                         <h2 class="text-center font-weight-bold">Poll's option</h2>
-                        <div class="table-responsive">
+                        <div class="option-poll-table table-responsive">
                             <table id="poll-option-datatable" class="table table-hover" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
@@ -98,10 +98,55 @@
                                         <th>{{ __('Image') }}</th>
                                         <th>{{ __('Title') }}</th>
                                         <th>{{ __('Votes') }}</th>
+                                        <th>{{ __('Action') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
                             </table>
+                        </div>
+                        <div class="option-poll-add">
+                            <form action="#" method="POST" id="poll-option-votechange-form">
+                                <input type="hidden" name="id" value="" id="id">
+                                <input type="hidden" name="poll_id" value="" id="poll_id">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="title" class="control-label">Title*</label>
+                                            <input type="text" name="title" id="title" value=""
+                                                class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="add_remove" class="control-label">Add or remove*</label>
+                                            <select name="add_remove" id="add_remove"
+                                                class="custom-select width-equal col-12">
+                                                <option value="add">Add</option>
+                                                <option value="remove">Remove</option>
+                                            </select>
+                                            <span class="help-block error-span"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="vote" class="control-label">Vote*</label>
+                                            <input type="text" name="vote" id="vote" value=""
+                                                class="form-control">
+                                            <span class="help-block error-span"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 d-flex align-items-center justify-content-between">
+                                        <button type="button" class="btn btn-primary"
+                                            id="votechange-poll">Submit</button>
+                                        <button type="button" class="btn btn-secondary" id="optionlistTable">Back to
+                                            list</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -130,6 +175,7 @@
             indexUrl: "{{ route('poll') }}",
             addOrUpdateUrl: "{{ route('poll.createorupdate') }}",
             getPollOptionsUrl: "{{ route('poll.options') }}",
+            votechangePollOptionsUrl: "{{ route('poll.votechangePollOptions') }}",
             deleteUrl: "{{ route('poll.delete') }}"
         }
 

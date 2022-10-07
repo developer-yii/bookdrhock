@@ -1,9 +1,14 @@
 $(document).ready(function () {
-    if ($('.card-poll').length > 0) {
-        $('.card-poll').on('click', function (e) {
+    if ($('.option-container-details .card-poll').length > 0) {
+        $('.option-container-details .card-poll').on('click', function (e) {
             e.preventDefault();
-            if (maximumVoteInNumber > 0 && $('.card-poll.selected').length == maximumVoteInNumber && !$(this).hasClass('selected')) {
-                showMessage('error', 'You can choose ' + maximumVoteInWord + ' option only')
+            if (maximumVoteInNumber > 0 && $('.option-container-details .card-poll.selected').length == maximumVoteInNumber && !$(this).hasClass('selected')) {
+                if (maximumVoteInNumber == 1) {
+                    $('.option-container-details .card-poll').removeClass('selected');
+                    $(this).addClass('selected');
+                } else {
+                    showMessage('error', 'You can choose ' + maximumVoteInWord + ' option only')
+                }
             } else {
                 $(this).toggleClass('selected');
             }
@@ -69,10 +74,10 @@ $(document).ready(function () {
     // Add or Update Poll
     $(vottingBtnId).on('click', function (e) {
         e.preventDefault();
-        if ($('.card-poll.selected').length > 0) {
+        if ($('.option-container-details .card-poll.selected').length > 0) {
             let formData = new FormData($(formId)['0']);
             let selectOptions = [];
-            $(".card-poll.selected").each(function () {
+            $(".option-container-details .card-poll.selected").each(function () {
                 selectOptions.push($(this).find('input.option_id').val());
             });
             formData.append('selected_options', selectOptions);
@@ -89,7 +94,7 @@ $(document).ready(function () {
                         location.reload();
                     } else if (response.response == 'error') {
                         $(formId)[0].reset();
-                        $('.card-poll.selected').removeClass('selected');
+                        $('.option-container-details .card-poll.selected').removeClass('selected');
                         showMessage('error', response.message);
                     } else {
                         showMessage('error', 'something is wrong!');

@@ -53,25 +53,13 @@ class PollController extends Controller
 
     public function editForm($id)
     {
-        // $poll = Poll::query()
-        //     ->where('polls.id', $id)
-        //     ->leftJoin('poll_options', 'poll_options.poll_id', '=', 'polls.id')
-        //     ->groupBy('polls.id')
-        //     ->select(
-        //         'polls.*',
-        //         DB::raw('group_concat(poll_options.id) as option_id'),
-        //         DB::raw('group_concat(IFNULL(poll_options.title, "null")) as option_title'),
-        //         DB::raw('group_concat(IFNULL(poll_options.image, "null")) as option_image')
-        //     )
-        //     ->first();
-
         $poll = Poll::query()
             ->select(
                 'polls.*',
                 'poll_options.id as option_id',
                 'poll_options.title as option_title',
                 'poll_options.image as option_image',
-                DB::raw("count(poll_votes.poll_options) as votes")
+                DB::raw("(count(poll_votes.poll_options) + poll_options.admin_vote) as votes")
             )
             ->join('poll_options', 'poll_options.poll_id', '=', 'polls.id')
             ->leftJoin('poll_votes', 'poll_votes.poll_options', '=', 'poll_options.id')
@@ -98,7 +86,7 @@ class PollController extends Controller
                 'poll_options.id as option_id',
                 'poll_options.title as option_title',
                 'poll_options.image as option_image',
-                DB::raw("count(poll_votes.poll_options) as votes")
+                DB::raw("(count(poll_votes.poll_options) + poll_options.admin_vote) as votes")
             )
             ->join('poll_options', 'poll_options.poll_id', '=', 'polls.id')
             ->leftJoin('poll_votes', 'poll_votes.poll_options', '=', 'poll_options.id')
@@ -107,13 +95,59 @@ class PollController extends Controller
             ->get();
 
         $userrole = Auth::user() ? Auth::user()->user_role : '';
-
+        $type = 'details';
         app('mathcaptcha')->reset();
 
         if (isset($poll) && !empty($poll)) {
-            return view('admin.poll.view', compact('poll', 'userrole'));
+            return view('admin.poll.view', compact('poll', 'userrole', 'type'));
         } else {
             return abort(404);
+        }
+    }
+
+    public function viewResults($slug)
+    {
+        $poll = Poll::query()
+            ->select(
+                'polls.*',
+                'poll_options.id as option_id',
+                'poll_options.title as option_title',
+                'poll_options.image as option_image',
+                DB::raw("(count(poll_votes.poll_options) + poll_options.admin_vote) as votes")
+            )
+            ->join('poll_options', 'poll_options.poll_id', '=', 'polls.id')
+            ->leftJoin('poll_votes', 'poll_votes.poll_options', '=', 'poll_options.id')
+            ->where('polls.slug', $slug)
+            ->groupBy('poll_options.id')
+            ->orderBy('votes', 'desc')
+            ->get();
+
+        $userrole = Auth::user() ? Auth::user()->user_role : '';
+        $type = 'results';
+        app('mathcaptcha')->reset();
+
+        if (isset($poll) && !empty($poll)) {
+            return view('admin.poll.view', compact('poll', 'userrole', 'type'));
+        } else {
+            return abort(404);
+        }
+    }
+
+    public function votechangePollOptions(Request $request)
+    {
+        if (isset($request->id) && !empty($request->id) && isset($request->title) && !empty(isset($request->title))) {
+            $request->validate([
+                'vote' => 'required|numeric',
+                'add_remove' => 'required'
+            ]);
+
+            $model = PollOption::find($request->id);
+            $model->admin_vote = ($request->add_remove == 'add') ? ($model->admin_vote + $request->vote) : ($model->admin_vote - $request->vote);
+            $model->save();
+
+            return response()->json(['response' => 'success', 'message' => 'Option vote update successfully.',], 200);
+        } else {
+            return response()->json(['response' => 'error', 'message' => 'Something went wrong please reload!',], 200);
         }
     }
 
@@ -125,7 +159,7 @@ class PollController extends Controller
                 'poll_options.id as option_id',
                 'poll_options.title as option_title',
                 'poll_options.image as option_image',
-                DB::raw("count(poll_votes.poll_options) as votes")
+                DB::raw("(count(poll_votes.poll_options) + poll_options.admin_vote) as votes")
             )
             ->join('poll_options', 'poll_options.poll_id', '=', 'polls.id')
             ->leftJoin('poll_votes', 'poll_votes.poll_options', '=', 'poll_options.id')
@@ -193,7 +227,7 @@ class PollController extends Controller
             $pollOptions = Poll::query()
                 ->select(
                     'poll_options.*',
-                    DB::raw("count(poll_votes.poll_options) as votes"),
+                    DB::raw("(count(poll_votes.poll_options) + poll_options.admin_vote) as votes"),
                     'polls.slug as slug'
                 )
                 ->join('poll_options', 'poll_options.poll_id', '=', 'polls.id')

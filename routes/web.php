@@ -33,6 +33,7 @@ Route::prefix('admin')->middleware('auth')->namespace('Admin')->group(function (
                 Route::get('/edit/{id}', 'PollController@editForm')->name('editForm');
                 Route::post('/createorupdate', 'PollController@createorupdate')->name('createorupdate');
                 Route::post('/poll-options', 'PollController@getPollOptions')->name('options');
+                Route::post('/poll-options-votechange', 'PollController@votechangePollOptions')->name('votechangePollOptions');
                 Route::delete('/delete', 'PollController@delete')->name('delete');
             });
 
@@ -90,9 +91,8 @@ Route::prefix('admin')->middleware('auth')->namespace('Admin')->group(function (
 
 Route::prefix('poll')->namespace('Admin')->name('poll.')->group(function () {
     Route::get('/{slug}', 'PollController@view')->name('view');
-    Route::middleware('CheckAdminPermission')->group(function () {
-        Route::get('/embed/{slug}', 'PollController@embedView')->name('embedView');
-    });
+    Route::get('/{slug}/results', 'PollController@viewResults')->name('viewResults');
+    Route::get('/embed/{slug}', 'PollController@embedView')->name('embedView');
     Route::post('/voting', 'PollController@Voting')->name('voting');
 });
 

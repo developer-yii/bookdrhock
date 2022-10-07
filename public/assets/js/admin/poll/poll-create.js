@@ -145,7 +145,7 @@ $(document).ready(function () {
 
     let formId = '#poll-form',
         formErrorSpanClass = '.error-span',
-        pollFormActionInput = '#poll_form_action',
+        embedCodeCopyBtn = '#embed-iframde-code-copy',
         addOrUpdateBtnId = '#addorupdate-poll';
 
     $(formId).bind("keypress", function (e) {
@@ -154,6 +154,13 @@ $(document).ready(function () {
             return false;
         }
     });
+
+    $(embedCodeCopyBtn).on('click', function (e) {
+        e.preventDefault();
+        var copyText = $(this).find('#iframe').val();
+        navigator.clipboard.writeText(copyText);
+        showMessage('success', 'Iframe code copied successfully!')
+    })
 
     // Add or Update Poll
     $(addOrUpdateBtnId).on('click', function (e) {

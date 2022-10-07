@@ -52,9 +52,11 @@
                                     <span>Preview</span>
                                     <i class="icon-eye m-l-5"></i>
                                 </a>
-                                <a href="{{ route('poll.embedView', $poll[0]->slug) }}"
-                                    class="btn btn-primary waves-effect waves-light" target="_blank">
-                                    <span>Embed link </span>
+                                <a href="javascript:void(0)" class="btn btn-primary waves-effect waves-light"
+                                    target="_blank" id="embed-iframde-code-copy">
+                                    <input type="hidden" name="iframe" id="iframe"
+                                        value="<iframe src='{{ route('poll.embedView', $poll[0]->slug) }}' style='width:600px;height:600px;border:0;'></iframe>">
+                                    <span>Embed iframe</span>
                                     <i class="ti-link m-l-5"></i>
                                 </a>
                             </div>
