@@ -30,6 +30,7 @@
 @if (isset($type) && !empty($type) && $type == 'details')
     <form action="#" method="POST" id="poll-vote-form" class="form-horizontal">
         <input type="hidden" name="id" id="id" value="{{ $poll[0]->id }}">
+        <input type="hidden" name="slug" id="slug" value="{{ $poll[0]->slug }}">
         <input type="hidden" name="vote_schedule" id="vote_schedule" value="{{ $poll[0]->vote_schedule }}">
 @endif
 <div class="poll-options-main text-center  @if (isset($type) && !empty($type) && $type == 'details') mt-5 @endif">

@@ -91,7 +91,7 @@ $(document).ready(function () {
                 processData: false,
                 success: function (response) {
                     if (response.response == 'success') {
-                        location.reload();
+                        pollResultRedirect(response.slug);
                     } else if (response.response == 'error') {
                         $(formId)[0].reset();
                         $('.option-container-details .card-poll.selected').removeClass('selected');

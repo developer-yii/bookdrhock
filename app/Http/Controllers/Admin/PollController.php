@@ -215,7 +215,7 @@ class PollController extends Controller
 
             $request->session()->flash('flash-poll-voted');
 
-            return response()->json(['response' => 'success', 'message' => 'Your vote submitted successfully', 'data' => $model], 200);
+            return response()->json(['response' => 'success', 'message' => 'Your vote submitted successfully', 'data' => $model, 'slug' => $request->slug], 200);
         } else {
             return response()->json(['response' => 'error', 'message' => 'You can vote again after ' . $hours . ' hours', 'data' => $curruntVotes], 200);
         }

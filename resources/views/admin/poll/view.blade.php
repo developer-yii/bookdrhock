@@ -47,6 +47,13 @@
             homeUrl: "{{ route('home') }}",
             votingUrl: "{{ route('poll.voting') }}"
         }
+
+        function pollResultRedirect(slug) {
+            url = "{{ route('poll.viewResults', ':slug') }}";
+            url = url.replace(':slug', slug);
+            window.location.href = url;
+        }
+
         var maximumVoteInNumber =
             {{ isset($poll[0]->option_select) && !empty($poll[0]->option_select) && $poll[0]->option_select > 0 ? $poll[0]->option_select : 0 }}
         var maximumVoteInWord =
