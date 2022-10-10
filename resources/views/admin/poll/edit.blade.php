@@ -306,6 +306,18 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
+                                        <label class="control-label" for="vote_add">{{ __('User can vote') }}</label>
+                                        <input id="vote_add" type="text" value="{{ $poll[0]->vote_add }}"
+                                            name="vote_add" data-bts-button-down-class="btn btn-default btn-outline"
+                                            data-bts-button-up-class="btn btn-default btn-outline">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--row-->
+                            <!--row-->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
                                         <label class="control-label">{{ __('How many option user select?') }}</label>
                                         <input id="option_select" type="text" value="{{ $poll[0]->option_select }}"
                                             name="option_select" data-bts-button-down-class="btn btn-default btn-outline"
@@ -325,7 +337,7 @@
                                                 class="custom-select width-equal col-12">
                                                 @foreach ($recaptcha as $recaptcha_key => $recaptcha_value)
                                                     <option value="{{ $recaptcha_key }}" class="text-capitalize"
-                                                        @if (isset($poll[0]->recaptcha_type) && $poll[0]->recaptcha_type == $recaptcha_key) selected @endif>
+                                                        @if (isset($poll[0]->captcha_type) && $poll[0]->captcha_type == $recaptcha_key) selected @endif>
                                                         {{ $recaptcha_value }}</option>
                                                 @endforeach
                                             </select>

@@ -49,6 +49,13 @@ $(document).ready(function () {
         });
     }
 
+    if ($("input[name = 'vote_add']").length > 0) {
+        $("input[name='vote_add']").TouchSpin({
+            min: 1,
+            max: 1000000000,
+        });
+    }
+
     function sameHeightBoxes() {
         $(".options-container .option-card").each(function () {
             $(this).removeAttr("style")
