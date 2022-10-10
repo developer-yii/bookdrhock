@@ -654,6 +654,10 @@ div.clockdiv-container>div {
     margin: auto;
 }
 
+.math-recaptcha-div label {
+    width: 60px;
+}
+
 #poll-vote-form .google-recaptcha-div .form-group.has-error .g-recaptcha>div {
     border: 1px solid #a94442;
 }
@@ -944,6 +948,12 @@ div.clockdiv-container>div {
 
     #poll-vote-form .math-recaptcha-div {
         width: 100%;
+    }
+
+    .embeded-container {
+        max-width: 410px;
+        min-width: 405px;
+        overflow-x: scroll;
     }
 }
 

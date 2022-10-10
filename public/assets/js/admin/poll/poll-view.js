@@ -7,6 +7,7 @@ $(document).ready(function () {
                     $('.option-container-details .card-poll').removeClass('selected');
                     $(this).addClass('selected');
                 } else {
+                    document.getElementsByClassName('poll-heading')[0].scrollIntoView();
                     showMessage('error', 'You can choose ' + maximumVoteInWord + ' option only')
                 }
             } else {
