@@ -91,6 +91,11 @@ $(document).ready(function () {
                 processData: false,
                 success: function (response) {
                     if (response.response == 'success') {
+                        if (response.type && response.type == 'embeded') {
+                            $("html, body").animate({
+                                scrollTop: 0
+                            }, "slow");
+                        }
                         pollResultRedirect(response.slug);
                     } else if (response.response == 'error') {
                         $(formId)[0].reset();
