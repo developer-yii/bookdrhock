@@ -946,18 +946,6 @@ div.clockdiv-container>div {
         font-weight: 600
     }
 
-    div.clockdiv-container {
-        flex-direction: column;
-    }
-
-    div.clockdiv-container>div {
-        width: 100%;
-    }
-
-    div.clockdiv-container>div:not(:last-child) {
-        margin-bottom: 10px;
-    }
-
     /* .embeded-container {
         max-width: 410px;
         min-width: 405px;
@@ -984,6 +972,20 @@ div.clockdiv-container>div {
 
     .menu-right-div .navbar-collapse.collapse.show {
         display: block !important;
+    }
+}
+
+@media (max-width: 400px) {
+    div.clockdiv-container {
+        flex-direction: column;
+    }
+
+    div.clockdiv-container>div {
+        width: 100%;
+    }
+
+    div.clockdiv-container>div:not(:last-child) {
+        margin-bottom: 10px;
     }
 }
 
