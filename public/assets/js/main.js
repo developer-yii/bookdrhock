@@ -71,7 +71,7 @@ jQuery(document).ready(function ($) {
                 },
                 breakpoints: {
                     0: {
-                        slidesPerView: 1
+                        slidesPerView: 1.2
                     },
                     500: {
                         slidesPerView: 1.5
@@ -113,7 +113,7 @@ jQuery(document).ready(function ($) {
                 },
                 breakpoints: {
                     0: {
-                        slidesPerView: 1
+                        slidesPerView: 1.2
                     },
                     500: {
                         slidesPerView: 1.5

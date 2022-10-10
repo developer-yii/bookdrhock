@@ -41,31 +41,39 @@
                         @if (isset($latest_polls) && !empty($latest_polls) && count($latest_polls) > 0)
                             <div class="swiper latest-polls pt-4 mt-5" data-count="{{ count($latest_polls) }}">
                                 <div class="swiper-wrapper">
-                                    @foreach ($latest_polls as $latest_poll)
+                                    @foreach ($latest_polls as $poll)
                                         <div class="swiper-slide">
-                                            <div class="poll-card w-100">
-                                                <div class="card-content">
-                                                    <h3 class="card-title text-capitalize text-white">
-                                                        {{ $latest_poll->title }}</h3>
-                                                    @if (isset($latest_poll->description) && !empty($latest_poll->description))
-                                                        <div class="card-text">
-                                                            {!! Str::limit(Str::replaceArray('&nbsp;', [''], strip_tags($latest_poll->description)), 100) !!}
-                                                        </div>
-                                                    @endif
-                                                </div>
-                                                <span class="card-link">
-                                                    <a href="{{ route('poll.view', $latest_poll->slug) }}" title="Read Full"
-                                                        class="btn btn-info">
-                                                        <span>View poll</span>
+                                            <div class="poll-card">
+                                                <div class="image-container">
+                                                    <a href="{{ route('poll.view', $poll->slug) }}">
+                                                        @if (isset($poll->feature_image) && !empty($poll->feature_image))
+                                                            <img src="{{ $poll->getImagePath($poll->feature_image, $poll->slug, 'poll_feature_image') }}"
+                                                                alt="{{ $poll->title }}" />
+                                                        @else
+                                                            <img src="{{ @asset('assets/images/bodybg.jpg') }}"
+                                                                alt="{{ $poll->title }}" />
+                                                        @endif
                                                     </a>
-                                                </span>
-                                                @if (isset($latest_poll->feature_image) && !empty($latest_poll->feature_image))
-                                                    <img src="{{ $latest_poll->getImagePath($latest_poll->feature_image, $latest_poll->slug, 'poll_feature_image') }}"
-                                                        alt="{{ $latest_poll->title }}" />
-                                                @else
-                                                    <img src="{{ @asset('assets/images/bodybg.jpg') }}"
-                                                        alt="{{ $latest_poll->title }}" />
-                                                @endif
+                                                </div>
+                                                <div
+                                                    class="content-container equal-height-box d-flex flex-column justify-content-between">
+                                                    <div class="box-title">
+                                                        <h3 class="m-0 text-capitalize font-bold">
+                                                            <a href="{{ route('poll.view', $poll->slug) }}"
+                                                                class="">{{ $poll->title }}</a>
+                                                        </h3>
+                                                        @if (isset($poll->description) && !empty($poll->description))
+                                                            <div class="card-text mt-3">
+                                                                {!! Str::limit(Str::replaceArray('&nbsp;', [''], strip_tags($poll->description)), 100) !!}
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                    <div class="boc-btn mt-4">
+                                                        <a href="{{ route('poll.view', $poll->slug) }}"
+                                                            class="btn btn-primary">View
+                                                            poll</a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     @endforeach
@@ -107,31 +115,39 @@
                         @if (isset($popular_polls) && !empty($popular_polls) && count($popular_polls) > 0)
                             <div class="swiper popular-polls pt-4 mt-5" data-count="{{ count($popular_polls) }}">
                                 <div class="swiper-wrapper">
-                                    @foreach ($popular_polls as $popular_poll)
+                                    @foreach ($popular_polls as $poll)
                                         <div class="swiper-slide">
-                                            <div class="poll-card w-100">
-                                                <div class="card-content">
-                                                    <h3 class="card-title text-capitalize text-white">
-                                                        {{ $popular_poll->title }}</h3>
-                                                    @if (isset($popular_poll->description) && !empty($popular_poll->description))
-                                                        <div class="card-text">
-                                                            {!! Str::limit(Str::replaceArray('&nbsp;', [''], strip_tags($popular_poll->description)), 100) !!}
-                                                        </div>
-                                                    @endif
-                                                </div>
-                                                <span class="card-link">
-                                                    <a href="{{ route('poll.view', $popular_poll->slug) }}"
-                                                        title="Read Full" class="btn btn-info">
-                                                        <span>View poll</span>
+                                            <div class="poll-card">
+                                                <div class="image-container">
+                                                    <a href="{{ route('poll.view', $poll->slug) }}">
+                                                        @if (isset($poll->feature_image) && !empty($poll->feature_image))
+                                                            <img src="{{ $poll->getImagePath($poll->feature_image, $poll->slug, 'poll_feature_image') }}"
+                                                                alt="{{ $poll->title }}" />
+                                                        @else
+                                                            <img src="{{ @asset('assets/images/bodybg.jpg') }}"
+                                                                alt="{{ $poll->title }}" />
+                                                        @endif
                                                     </a>
-                                                </span>
-                                                @if (isset($popular_poll->feature_image) && !empty($popular_poll->feature_image))
-                                                    <img src="{{ $popular_poll->getImagePath($popular_poll->feature_image, $popular_poll->slug, 'poll_feature_image') }}"
-                                                        alt="{{ $popular_poll->title }}" />
-                                                @else
-                                                    <img src="{{ @asset('assets/images/bodybg.jpg') }}"
-                                                        alt="{{ $popular_poll->title }}" />
-                                                @endif
+                                                </div>
+                                                <div
+                                                    class="content-container equal-height-box d-flex flex-column justify-content-between">
+                                                    <div class="box-title">
+                                                        <h3 class="m-0 text-capitalize font-bold">
+                                                            <a href="{{ route('poll.view', $poll->slug) }}"
+                                                                class="">{{ $poll->title }}</a>
+                                                        </h3>
+                                                        @if (isset($poll->description) && !empty($poll->description))
+                                                            <div class="card-text mt-3">
+                                                                {!! Str::limit(Str::replaceArray('&nbsp;', [''], strip_tags($poll->description)), 100) !!}
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                    <div class="boc-btn mt-4">
+                                                        <a href="{{ route('poll.view', $poll->slug) }}"
+                                                            class="btn btn-primary">View
+                                                            poll</a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     @endforeach
@@ -154,7 +170,7 @@
                             <div class="col-md-12 mb-5">
                                 <div class="title text-center">
                                     <h2 class="text-capitalize text-blue text-center font-bold title-border-center">
-                                        {{ $category }}</h2>
+                                        {{ getCategoryName($category) }}</h2>
                                 </div>
                                 @if (isset($polls) && !empty($polls) && count($polls) > 0)
                                     <div class="card-container mt-5 pt-5">
@@ -191,8 +207,18 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            @if ($loop->iteration == 3)
+                                                @php break; @endphp
+                                            @endif
                                         @endforeach
                                     </div>
+                                    @if (count($polls) > 3)
+                                        <div class="btn-container text-center mt-5">
+                                            <a href="{{ route('site.getCategoryView', $category) }}"
+                                                class="btn btn-primary">View
+                                                more</a>
+                                        </div>
+                                    @endif
                                 @else
                                     <div class="notice-message">
                                         <h4>No any {{ $category }}'s poll found.</h4>
