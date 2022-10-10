@@ -1,11 +1,11 @@
 @extends('layouts.site')
 
 @section('content')
-    <section id="wrapper" class="category-single category-{{ $category->name }}">
+    <section id="wrapper" class="category-single category-{{ is_object($category) ? $category->name : $category }}">
         <div class="banner d-flex align-items-center">
             <div class="container">
                 <div class="row">
-                    <h1 class="font-bold text-white text-capitalize">{{ $category->name }}</h1>
+                    <h1 class="font-bold text-white text-capitalize">{{ is_object($category) ? $category->name : $category }}</h1>
                 </div>
             </div>
         </div>
@@ -14,7 +14,7 @@
                 @if (isset($polls) && !empty($polls) && count($polls) > 0)
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="card-container">
+                            <div class="card-grid-container-ctm">
                                 @foreach ($polls as $poll)
                                     <div class="poll-card">
                                         <div class="image-container">
@@ -53,7 +53,7 @@
                     </div>
                 @else
                     <div class="notice-message">
-                        <h4>No any {{ $category->name }}'s poll found.</h4>
+                        <h4>No any {{ is_object($category) ? $category->name : $category }}'s poll found.</h4>
                     </div>
                 @endif
             </div>

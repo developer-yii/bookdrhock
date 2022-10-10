@@ -536,7 +536,7 @@ header.site-header .menu-right-div a.dropdown-toggle.profile-pic:hover {
     transform: translateX(-50%);
 }
 
-.category-poll-div .card-container {
+.card-grid-container-ctm {
     --auto-grid-min-size: 30rem;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(var(--auto-grid-min-size), 1fr));

@@ -3,7 +3,7 @@ $(document).ready(function () {
     if ($(".datetimepicker-custom").length > 0) {
         var todayDate = new Date();
         $('#start_datetime').datetimepicker({
-            defaultDate: todayDate,
+            // defaultDate: todayDate,
             format: 'DD-MM-YYYY hh:mm a',
         });
         $('#end_datetime').datetimepicker({

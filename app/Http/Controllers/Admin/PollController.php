@@ -32,10 +32,10 @@ class PollController extends Controller
                     return isset($row->category_name) ? $row->category_name : "-";
                 })
                 ->editColumn('start_datetime', function ($row) {
-                    return isset($row->start_datetime) ? getDateFormateView($row->start_datetime) : "";
+                    return isset($row->start_datetime) ? getDateFormateView($row->start_datetime) : "-";
                 })
                 ->editColumn('end_datetime', function ($row) {
-                    return isset($row->end_datetime) ? getDateFormateView($row->end_datetime) : "";
+                    return isset($row->end_datetime) ? getDateFormateView($row->end_datetime) : "-";
                 })
                 ->escapeColumns([])
                 ->toJson();
@@ -283,8 +283,6 @@ class PollController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'start_datetime' => 'required',
-            'end_datetime' => 'required',
             'feature_image' => 'image|mimes:jpg,png,jpeg',
             'option.*.title' => 'required',
             'option.*.image' => 'image|mimes:jpg,png,jpeg',
@@ -294,88 +292,88 @@ class PollController extends Controller
             'option.*.image.mimes' => 'The image must be a file of type: jpg, png, jpeg.',
         ]);
 
-        if ((date('Y-m-d H:i', strtotime($request->start_datetime)) < date('Y-m-d H:i', strtotime($request->end_datetime)))) {
-
-            $slug = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 1, 10);
-
-            if (isset($request->id) && !empty($request->id)) {
-                $modelP = Poll::find($request->id);
-                $slug = $modelP->slug;
-                $fileName = $modelP->feature_image;
-            } else {
-                $modelP = new Poll();
-                $fileName = '';
-            }
-
-            if (isset($fileName) && !empty($fileName) && !empty($modelP->getImageStoragePath($fileName, $slug, 'poll_feature_image')) && ((!isset($request->set_image) && empty($request->set_image)) || $request->hasFile('feature_image'))) {
-                unlink($modelP->getImageStoragePath($fileName, $slug, 'poll_feature_image'));
-                $fileName = '';
-            }
-
-            if ($request->hasFile('feature_image')) {
-                $fileName = $request->feature_image->hashName();
-                $request->feature_image->store('public/poll/' . $slug);
-            }
-
-            $modelP->title = $request->title;
-            $modelP->slug = $slug;
-            $modelP->start_datetime = date('Y-m-d H:i', strtotime($request->start_datetime));
-            $modelP->end_datetime = date('Y-m-d H:i', strtotime($request->end_datetime));
-            $modelP->description = $request->description;
-            $modelP->category = $request->category;
-            $modelP->vote_schedule = $request->vote_schedule;
-            $modelP->popular_tag = ($request->popular_tag == 'on') ? true : false;
-            $modelP->captcha_type = $request->captcha_type;
-            $modelP->vote_add = $request->vote_add;
-            $modelP->option_select = $request->option_select;
-            $modelP->feature_image = $fileName;
-            $modelP->save();
-
-            if (isset($request->removed_options) && !empty($request->removed_options)) {
-                $removeOptions = PollOption::query()
-                    ->where('poll_id', $modelP->id)
-                    ->whereIn('id', $request->removed_options)
-                    ->get();
-
-                foreach ($removeOptions as $removeOption) {
-                    if (!empty($modelP->getImageStoragePath($removeOption->image, $slug, 'poll_options'))) {
-                        unlink($modelP->getImageStoragePath($removeOption->image, $slug, 'poll_options'));
-                    }
-                }
-
-                PollOption::query()
-                    ->where('poll_id', $modelP->id)
-                    ->whereIn('id', $request->removed_options)
-                    ->delete();
-            }
-
-            foreach ($request->option as $option) {
-                if (array_key_exists('option_id', $option) && isset($option['option_id']) && !empty($option['option_id'])) {
-                    $modelPO = PollOption::find($option['option_id']);
-                    $fileNameO = $modelPO->image;
-                } else {
-                    $modelPO = new PollOption();
-                    $fileNameO = '';
-                }
-
-                if (isset($fileNameO) && !empty($fileNameO) && !empty($modelP->getImageStoragePath($fileNameO, $slug, 'poll_options')) && ((array_key_exists('image', $option) && isset($option['image']) && !empty($option['image'])) || (!isset($option['set_image']) && empty($option['set_image'])))) {
-                    unlink($modelP->getImageStoragePath($fileNameO, $slug, 'poll_options'));
-                    $fileNameO = '';
-                }
-
-                if (array_key_exists('image', $option) && isset($option['image']) && !empty($option['image'])) {
-                    $fileNameO = $option['image']->hashName();
-                    $option['image']->store('public/poll/' . $slug . '/option_images');
-                }
-
-                $modelPO->poll_id = $modelP->id;
-                $modelPO->title = $option['title'];
-                $modelPO->image = (isset($fileNameO) && !empty($fileNameO)) ? $fileNameO : null;
-                $modelPO->save();
-            }
-        } else {
+        if (((isset($request->start_datetime) && !empty($request->start_datetime)) || (isset($request->end_datetime) && !empty($request->end_datetime))) && (date('Y-m-d H:i', strtotime($request->start_datetime)) < date('Y-m-d H:i', strtotime($request->end_datetime)))) {
             return response()->json(['response' => 'error', 'message' => 'End date must be grater then start date!', 'errors' => ['end_datetime' => 'End date must be grater then start date.']], 400);
         }
+
+        $slug = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 1, 10);
+
+        if (isset($request->id) && !empty($request->id)) {
+            $modelP = Poll::find($request->id);
+            $slug = $modelP->slug;
+            $fileName = $modelP->feature_image;
+        } else {
+            $modelP = new Poll();
+            $fileName = '';
+        }
+
+        if (isset($fileName) && !empty($fileName) && !empty($modelP->getImageStoragePath($fileName, $slug, 'poll_feature_image')) && ((!isset($request->set_image) && empty($request->set_image)) || $request->hasFile('feature_image'))) {
+            unlink($modelP->getImageStoragePath($fileName, $slug, 'poll_feature_image'));
+            $fileName = '';
+        }
+
+        if ($request->hasFile('feature_image')) {
+            $fileName = $request->feature_image->hashName();
+            $request->feature_image->store('public/poll/' . $slug);
+        }
+
+        $modelP->title = $request->title;
+        $modelP->slug = $slug;
+        $modelP->start_datetime = isset($request->start_datetime) && !empty($request->start_datetime) ? date('Y-m-d H:i', strtotime($request->start_datetime)) : null;
+        $modelP->end_datetime = isset($request->end_datetime) && !empty($request->end_datetime) ? date('Y-m-d H:i', strtotime($request->end_datetime)) : null;
+        $modelP->description = $request->description;
+        $modelP->category = $request->category;
+        $modelP->vote_schedule = $request->vote_schedule;
+        $modelP->popular_tag = ($request->popular_tag == 'on') ? true : false;
+        $modelP->captcha_type = $request->captcha_type;
+        $modelP->vote_add = $request->vote_add;
+        $modelP->option_select = $request->option_select;
+        $modelP->feature_image = $fileName;
+        $modelP->save();
+
+        if (isset($request->removed_options) && !empty($request->removed_options)) {
+            $removeOptions = PollOption::query()
+                ->where('poll_id', $modelP->id)
+                ->whereIn('id', $request->removed_options)
+                ->get();
+
+            foreach ($removeOptions as $removeOption) {
+                if (!empty($modelP->getImageStoragePath($removeOption->image, $slug, 'poll_options'))) {
+                    unlink($modelP->getImageStoragePath($removeOption->image, $slug, 'poll_options'));
+                }
+            }
+
+            PollOption::query()
+                ->where('poll_id', $modelP->id)
+                ->whereIn('id', $request->removed_options)
+                ->delete();
+        }
+
+        foreach ($request->option as $option) {
+            if (array_key_exists('option_id', $option) && isset($option['option_id']) && !empty($option['option_id'])) {
+                $modelPO = PollOption::find($option['option_id']);
+                $fileNameO = $modelPO->image;
+            } else {
+                $modelPO = new PollOption();
+                $fileNameO = '';
+            }
+
+            if (isset($fileNameO) && !empty($fileNameO) && !empty($modelP->getImageStoragePath($fileNameO, $slug, 'poll_options')) && ((array_key_exists('image', $option) && isset($option['image']) && !empty($option['image'])) || (!isset($option['set_image']) && empty($option['set_image'])))) {
+                unlink($modelP->getImageStoragePath($fileNameO, $slug, 'poll_options'));
+                $fileNameO = '';
+            }
+
+            if (array_key_exists('image', $option) && isset($option['image']) && !empty($option['image'])) {
+                $fileNameO = $option['image']->hashName();
+                $option['image']->store('public/poll/' . $slug . '/option_images');
+            }
+
+            $modelPO->poll_id = $modelP->id;
+            $modelPO->title = $option['title'];
+            $modelPO->image = (isset($fileNameO) && !empty($fileNameO)) ? $fileNameO : null;
+            $modelPO->save();
+        }
+
 
         $message = "Poll created successfully.";
         if (isset($request->id) && !empty($request->id)) {
