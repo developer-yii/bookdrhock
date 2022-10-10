@@ -133,6 +133,34 @@ class PollController extends Controller
         }
     }
 
+    public function embedViewResults($slug)
+    {
+        $poll = Poll::query()
+            ->select(
+                'polls.*',
+                'poll_options.id as option_id',
+                'poll_options.title as option_title',
+                'poll_options.image as option_image',
+                DB::raw("(count(poll_votes.poll_options) + poll_options.admin_vote) as votes")
+            )
+            ->join('poll_options', 'poll_options.poll_id', '=', 'polls.id')
+            ->leftJoin('poll_votes', 'poll_votes.poll_options', '=', 'poll_options.id')
+            ->where('polls.slug', $slug)
+            ->groupBy('poll_options.id')
+            ->orderBy('votes', 'desc')
+            ->get();
+
+        $userrole = Auth::user() ? Auth::user()->user_role : '';
+        $type = 'results';
+        app('mathcaptcha')->reset();
+
+        if (isset($poll) && !empty($poll)) {
+            return view('admin.poll.embedview', compact('poll', 'userrole', 'type'));
+        } else {
+            return abort(404);
+        }
+    }
+
     public function votechangePollOptions(Request $request)
     {
         if (isset($request->id) && !empty($request->id) && isset($request->title) && !empty(isset($request->title))) {
