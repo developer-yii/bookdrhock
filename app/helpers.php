@@ -1,5 +1,7 @@
 <?php
 
+use App\Model\PollCategory;
+
 function getDateFormateView($date)
 {
     return date('d-m-Y h:i a', strtotime($date));
@@ -52,6 +54,23 @@ function convert_number($number)
         $result = "zero";
     }
     return $result;
+}
+
+function getCategoryName($slug = '')
+{
+    if (isset($slug) && !empty($slug)) {
+        $category = PollCategory::query()
+            ->where('slug', $slug)
+            ->first();
+
+        if (isset($category) && !empty($category)) {
+            return $category->name;
+        } else {
+            return "";
+        }
+    } else {
+        return "";
+    }
 }
 
 function ddp($data = [])

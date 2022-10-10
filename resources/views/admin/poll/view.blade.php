@@ -12,7 +12,7 @@
             <div class="col-12">
                 <div class="row align-items-center justify-content-center">
                     <div class="col-md-8 col-xl-6 col-12">
-                        <div class="bg-white card poll-view-card p-30 rounded-0 position-relative">
+                        <div class="bg-white card poll-view-card rounded-0 position-relative">
                             @if (isset($userrole) && !empty($userrole) && $userrole == 1)
                                 <div class="edit-button position-absolute top right">
                                     <a href="{{ route('poll.editForm', $poll[0]->id) }}"
