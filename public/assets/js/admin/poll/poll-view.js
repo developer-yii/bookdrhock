@@ -95,8 +95,18 @@ $(document).ready(function () {
                     } else if (response.response == 'error') {
                         $(formId)[0].reset();
                         $('.option-container-details .card-poll.selected').removeClass('selected');
+                        if (response.type && response.type == 'embeded') {
+                            $("html, body").animate({
+                                scrollTop: 0
+                            }, "slow");
+                        }
                         showMessage('error', response.message);
                     } else {
+                        if (response.type && response.type == 'embeded') {
+                            $("html, body").animate({
+                                scrollTop: 0
+                            }, "slow");
+                        }
                         showMessage('error', 'something is wrong!');
                     }
                 },

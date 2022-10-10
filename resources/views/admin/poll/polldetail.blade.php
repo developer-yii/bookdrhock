@@ -32,7 +32,10 @@
         @csrf
         <input type="hidden" name="id" id="id" value="{{ $poll[0]->id }}">
         <input type="hidden" name="slug" id="slug" value="{{ $poll[0]->slug }}">
+        <input type="hidden" name="vote_add" id="vote_add" value="{{ $poll[0]->vote_add }}">
         <input type="hidden" name="vote_schedule" id="vote_schedule" value="{{ $poll[0]->vote_schedule }}">
+        <input type="hidden" name="page_type" id="page_type"
+            value="{{ request()->routeIs('poll.embedView') ? 'embeded' : 'normal' }}">
 @endif
 <div class="poll-options-main text-center  @if (isset($type) && !empty($type) && $type == 'details') mt-5 @endif">
     @if (isset($type) && !empty($type) && $type == 'details')

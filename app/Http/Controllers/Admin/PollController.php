@@ -223,6 +223,11 @@ class PollController extends Controller
             $hours = (int) $request->vote_schedule;
         }
 
+        $voteAdd = 1;
+        if (isset($request->vote_add) && !empty($request->vote_add)) {
+            $voteAdd = (int) $request->vote_add;
+        }
+
         $curruntVotes = PollVote::query()
             ->where('ip', $request->ip())
             ->where('poll_id', $request->id)
@@ -231,7 +236,7 @@ class PollController extends Controller
             ->get()
             ->count();
 
-        if (isset($curruntVotes) && $curruntVotes < 1) {
+        if (isset($curruntVotes) && $curruntVotes <= $voteAdd) {
             foreach (explode(',', $request->selected_options) as $option) {
                 $model = new PollVote();
                 $model->user_id = (Auth::user()) ? Auth::user()->id : null;
@@ -243,9 +248,9 @@ class PollController extends Controller
 
             $request->session()->flash('flash-poll-voted');
 
-            return response()->json(['response' => 'success', 'message' => 'Your vote submitted successfully', 'data' => $model, 'slug' => $request->slug], 200);
+            return response()->json(['response' => 'success', 'message' => 'Your vote submitted successfully', 'data' => $model, 'slug' => $request->slug, 'type' => $request->page_type], 200);
         } else {
-            return response()->json(['response' => 'error', 'message' => 'You can vote again after ' . $hours . ' hours', 'data' => $curruntVotes], 200);
+            return response()->json(['response' => 'error', 'message' => 'You can vote again after ' . $hours . ' hours', 'data' => $curruntVotes, 'type' => $request->page_type], 200);
         }
     }
 
@@ -321,6 +326,7 @@ class PollController extends Controller
             $modelP->vote_schedule = $request->vote_schedule;
             $modelP->popular_tag = ($request->popular_tag == 'on') ? true : false;
             $modelP->captcha_type = $request->captcha_type;
+            $modelP->vote_add = $request->vote_add;
             $modelP->option_select = $request->option_select;
             $modelP->feature_image = $fileName;
             $modelP->save();
@@ -390,6 +396,7 @@ class PollController extends Controller
         }
         $model->delete();
         PollOption::where('poll_id', $request->id)->delete();
+        PollVote::where('poll_id', $request->id)->delete();
         return response()->json(['response' => 'success', 'message' => 'Poll deleted successfully!']);
     }
 }
