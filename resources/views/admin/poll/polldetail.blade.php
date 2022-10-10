@@ -29,6 +29,7 @@
 @endif
 @if (isset($type) && !empty($type) && $type == 'details')
     <form action="#" method="POST" id="poll-vote-form" class="form-horizontal">
+        @csrf
         <input type="hidden" name="id" id="id" value="{{ $poll[0]->id }}">
         <input type="hidden" name="slug" id="slug" value="{{ $poll[0]->slug }}">
         <input type="hidden" name="vote_schedule" id="vote_schedule" value="{{ $poll[0]->vote_schedule }}">
@@ -105,6 +106,7 @@
 @endif
 @if (isset($type) && !empty($type) && $type == 'results')
     <div class="card-bottom mt-4">
-        <a href="{{ route('poll.view', $poll[0]->slug) }}" class="btn btn-primary">Go to poll page</a>
+        <a href="{{ request()->routeIs('poll.embedViewResults') ? route('poll.embedView', $poll[0]->slug) : route('poll.view', $poll[0]->slug) }}"
+            class="btn btn-primary">Go to poll page</a>
     </div>
 @endif

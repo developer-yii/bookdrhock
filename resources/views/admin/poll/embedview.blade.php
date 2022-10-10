@@ -13,7 +13,8 @@
                 <div class="row align-items-center justify-content-center">
                     <div class="col-md-8 col-xl-6 col-12">
                         <div class="bg-white card poll-view-card p-30 rounded-0 position-relative">
-                            @include('admin.poll.polldetail', ['type' => 'details'])
+                            @php $type = isset($type) && !empty($type) ? $type : 'details' @endphp
+                            @include('admin.poll.polldetail', ['type' => $type])
                         </div>
                     </div>
                 </div>
@@ -36,6 +37,13 @@
             indexUrl: "{{ route('poll') }}",
             votingUrl: "{{ route('poll.voting') }}"
         }
+
+        function pollResultRedirect(slug) {
+            url = "{{ route('poll.embedViewResults', ':slug') }}";
+            url = url.replace(':slug', slug);
+            window.location.href = url;
+        }
+
         var maximumVoteInNumber =
             {{ isset($poll[0]->option_select) && !empty($poll[0]->option_select) && $poll[0]->option_select > 0 ? $poll[0]->option_select : 0 }}
         var maximumVoteInWord =
