@@ -25,8 +25,7 @@ class SiteController extends Controller
 
         foreach ($categories as $category) {
             $polls = Poll::query()
-                ->orderBy('start_datetime')
-                ->where('end_datetime', '>', date('Y-m-d H:i:s'))
+                ->orderBy('created_at', 'desc')
                 ->where('category', $category->id)
                 ->get();
 
@@ -59,6 +58,7 @@ class SiteController extends Controller
 
             if (isset($category) && !empty($category)) {
                 $polls = Poll::query()
+                    ->orderBy('created_at', 'desc')
                     ->where('category', $category->id)
                     ->get();
             } else {
