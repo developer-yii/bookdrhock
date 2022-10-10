@@ -6,8 +6,9 @@
 @if (isset($type) && !empty($type) && $type == 'details')
     <div class="poll-timer text-center">
         <h5 class="text-uppercase countdown-heading">time left</h5>
-        <div class="clockdiv-container" id="clockdiv" data-startdatetime="{{ $poll[0]->start_datetime }}"
-            data-enddatetime="{{ $poll[0]->end_datetime }}">
+        <div class="clockdiv-container" id="clockdiv"
+            data-startdatetime="{{ isset($poll[0]->start_datetime) && !empty($poll[0]->start_datetime) ? $poll[0]->start_datetime : 'null' }}"
+            data-enddatetime="{{ isset($poll[0]->end_datetime) && !empty($poll[0]->end_datetime) ? $poll[0]->end_datetime : 'null' }}">
             <div class="time-box bg-success text-light font-bold">
                 <span class="days" id="day">00</span>
                 <div>Days</div>
@@ -101,7 +102,11 @@
                 </div>
             </div>
         @endif
-        <button class="btn btn-primary mt-3 submit-voting" id="submit-voting">Vote</button>
+        <div class="btn-container mt-3 d-flex align-items-center justify-content-between">
+            <button class="btn btn-primary submit-voting" id="submit-voting">Vote</button>
+            <a href="{{ request()->routeIs('poll.embedView') ? route('poll.embedViewResults', $poll[0]->slug) : route('poll.viewResults', $poll[0]->slug) }}"
+                class="btn btn-success">Go to result page</a>
+        </div>
     @endif
 </div>
 @if (isset($type) && !empty($type) && $type == 'details')

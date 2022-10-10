@@ -17,48 +17,50 @@ $(document).ready(function () {
     }
 
     if ($('#clockdiv').length > 0) {
-        var deadline = headinText = '';
-        if (new Date() > new Date($('#clockdiv').data('enddatetime'))) {
-            deadline = new Date($('#clockdiv').data('startdatetime')).getTime();
-            headinText = "Poll ended";
-            $('.poll-options-main').empty().append(
-                '<a href="' + routes.homeUrl + '" class="btn btn-primary text-capitalize m-0">Running polls</a>');
-        } else if (new Date() > new Date($('#clockdiv').data('startdatetime'))) {
-            deadline = new Date($('#clockdiv').data('enddatetime')).getTime();
-            headinText = "time left";
-        } else {
-            deadline = new Date($('#clockdiv').data('startdatetime')).getTime();
-            headinText = "comming soon";
-            $('.poll-options-main').empty().append(
-                '<a href="' + routes.homeUrl + '" class="btn btn-primary text-capitalize m-0">Running polls</a>');
-        }
-        $('.countdown-heading').text(headinText);
-        var x = setInterval(function () {
-            var now = new Date().getTime();
-            var t = deadline - now;
-            var days = Math.floor(t / (1000 * 60 * 60 * 24));
-            var hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            var minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
-            var seconds = Math.floor((t % (1000 * 60)) / 1000);
-
-            document.getElementById("day").innerHTML = days.toString().length == 1 ? '0' + days :
-                days;
-            document.getElementById("hour").innerHTML = hours.toString().length == 1 ? '0' + hours :
-                hours;
-            document.getElementById("minute").innerHTML = minutes.toString().length == 1 ? '0' +
-                minutes :
-                minutes;
-            document.getElementById("second").innerHTML = (seconds.toString().length == 1) ? '0' +
-                seconds :
-                seconds;
-            if (t < 0) {
-                clearInterval(x);
-                document.getElementById("day").innerHTML = '00';
-                document.getElementById("hour").innerHTML = '00';
-                document.getElementById("minute").innerHTML = '00';
-                document.getElementById("second").innerHTML = '00';
+        if ($('#clockdiv').data('startdatetime') != null || $('#clockdiv').data('enddatetime') != null) {
+            var deadline = headinText = '';
+            if (new Date() > new Date($('#clockdiv').data('enddatetime'))) {
+                deadline = new Date($('#clockdiv').data('startdatetime')).getTime();
+                headinText = "Poll ended";
+                $('.poll-options-main').empty().append(
+                    '<a href="' + routes.homeUrl + '" class="btn btn-primary text-capitalize m-0">Running polls</a>');
+            } else if (new Date() > new Date($('#clockdiv').data('startdatetime'))) {
+                deadline = new Date($('#clockdiv').data('enddatetime')).getTime();
+                headinText = "time left";
+            } else {
+                deadline = new Date($('#clockdiv').data('startdatetime')).getTime();
+                headinText = "comming soon";
+                $('.poll-options-main').empty().append(
+                    '<a href="' + routes.homeUrl + '" class="btn btn-primary text-capitalize m-0">Running polls</a>');
             }
-        }, 1000);
+            $('.countdown-heading').text(headinText);
+            var x = setInterval(function () {
+                var now = new Date().getTime();
+                var t = deadline - now;
+                var days = Math.floor(t / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((t % (1000 * 60)) / 1000);
+
+                document.getElementById("day").innerHTML = days.toString().length == 1 ? '0' + days :
+                    days;
+                document.getElementById("hour").innerHTML = hours.toString().length == 1 ? '0' + hours :
+                    hours;
+                document.getElementById("minute").innerHTML = minutes.toString().length == 1 ? '0' +
+                    minutes :
+                    minutes;
+                document.getElementById("second").innerHTML = (seconds.toString().length == 1) ? '0' +
+                    seconds :
+                    seconds;
+                if (t < 0) {
+                    clearInterval(x);
+                    document.getElementById("day").innerHTML = '00';
+                    document.getElementById("hour").innerHTML = '00';
+                    document.getElementById("minute").innerHTML = '00';
+                    document.getElementById("second").innerHTML = '00';
+                }
+            }, 1000);
+        }
     }
 
     let formId = '#poll-vote-form',

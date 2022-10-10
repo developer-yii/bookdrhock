@@ -12,14 +12,11 @@ class SiteController extends Controller
     public function index(Request $request)
     {
         $latest_polls = Poll::query()
-            ->where('end_datetime', '>', date('Y-m-d H:i:s'))
-            ->orderBy('start_datetime')
-            ->take(10)
+            ->orderBy('created_at', 'desc')
             ->get();
 
         $popular_polls = Poll::query()
-            ->orderBy('start_datetime')
-            ->where('end_datetime', '>', date('Y-m-d H:i:s'))
+            ->orderBy('created_at', 'desc')
             ->where('popular_tag', true)
             ->get();
 
@@ -43,16 +40,30 @@ class SiteController extends Controller
 
     public function getCategoryView($slug)
     {
-        $category = PollCategory::query()
-            ->where('slug', $slug)
-            ->first();
-
-
         $polls = [];
-        if (isset($category) && !empty($category)) {
+        if (isset($slug) && !empty(isset($slug)) && $slug  == "latest") {
+            $category = 'Latest';
             $polls = Poll::query()
-                ->where('category', $category->id)
+                ->orderBy('created_at', 'desc')
                 ->get();
+        } elseif (isset($slug) && !empty(isset($slug)) && $slug  == "popular") {
+            $category = 'Popular';
+            $polls = Poll::query()
+                ->orderBy('created_at', 'desc')
+                ->where('popular_tag', true)
+                ->get();
+        } else {
+            $category = PollCategory::query()
+                ->where('slug', $slug)
+                ->first();
+
+            if (isset($category) && !empty($category)) {
+                $polls = Poll::query()
+                    ->where('category', $category->id)
+                    ->get();
+            } else {
+                return abort(404);
+            }
         }
 
         return view('site.category', compact('polls', 'category'));

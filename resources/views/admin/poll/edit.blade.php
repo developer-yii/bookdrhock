@@ -86,8 +86,9 @@
                                                     class="control-label">{{ __('Start Datetime*') }}</label>
                                                 <input type="text" class="form-control datetimepicker-custom"
                                                     id="start_datetime"
-                                                    value="{{ date('d-m-Y h:i a', strtotime($poll[0]->start_datetime)) }}"
-                                                    name="start_datetime" data-date-container='#datepicker_container'>
+                                                    value="{{ (isset($poll[0]->start_datetime) && !empty($poll[0]->start_datetime)) ? date('d-m-Y h:i a', strtotime($poll[0]->start_datetime)) : '' }}"
+                                                    name="start_datetime" placeholder="dd-mm-yyyy"
+                                                    data-date-container='#datepicker_container'>
                                                 <span class="help-block error-span"></span>
                                             </div>
                                         </div>
@@ -98,7 +99,8 @@
                                                 <input type="text" class="form-control datetimepicker-custom"
                                                     id="end_datetime"
                                                     value="{{ date('d-m-Y h:i a', strtotime($poll[0]->end_datetime)) }}"
-                                                    name="end_datetime" data-date-container='#datepicker_container'>
+                                                    name="end_datetime" placeholder="dd-mm-yyyy"
+                                                    data-date-container='#datepicker_container'>
                                                 <span class="help-block error-span"></span>
                                             </div>
                                         </div>

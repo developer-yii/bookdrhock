@@ -1,8 +1,6 @@
 @extends('layouts.site')
 
 @push('extraStyle')
-    <!--Swiper CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
 @endpush
 
 
@@ -19,66 +17,55 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 mb-5 mb-sm-0">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div class="title">
-                                <h2 class="text-capitalize text-blue text-center font-bold title-border">latest polls</h2>
-                            </div>
-                            <div class="slider-navigation-container position-relative">
-                                @if (isset($latest_polls) && !empty($latest_polls) && count($latest_polls) > 0)
-                                    <div class="latest-polls-slider-custombtn-prev btn btn-primary"><i
-                                            class=" ti-arrow-left"></i></div>
-                                    <div class="latest-polls-slider-custombtn-next btn btn-primary"><i
-                                            class="ti-arrow-right"></i></div>
-                                @endif
-                            </div>
+                        <div class="title text-center">
+                            <h2 class="text-capitalize text-blue text-center font-bold title-border-center">
+                                latest polls</h2>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="container-fluid m-0 p-0">
-                <div class="row">
-                    <div class="col-md-12">
                         @if (isset($latest_polls) && !empty($latest_polls) && count($latest_polls) > 0)
-                            <div class="swiper latest-polls pt-4 mt-5" data-count="{{ count($latest_polls) }}">
-                                <div class="swiper-wrapper">
-                                    @foreach ($latest_polls as $poll)
-                                        <div class="swiper-slide">
-                                            <div class="poll-card">
-                                                <div class="image-container">
-                                                    <a href="{{ route('poll.view', $poll->slug) }}">
-                                                        @if (isset($poll->feature_image) && !empty($poll->feature_image))
-                                                            <img src="{{ $poll->getImagePath($poll->feature_image, $poll->slug, 'poll_feature_image') }}"
-                                                                alt="{{ $poll->title }}" />
-                                                        @else
-                                                            <img src="{{ @asset('assets/images/bodybg.jpg') }}"
-                                                                alt="{{ $poll->title }}" />
-                                                        @endif
-                                                    </a>
-                                                </div>
-                                                <div
-                                                    class="content-container equal-height-box d-flex flex-column justify-content-between">
-                                                    <div class="box-title">
-                                                        <h3 class="m-0 text-capitalize font-bold">
-                                                            <a href="{{ route('poll.view', $poll->slug) }}"
-                                                                class="">{{ $poll->title }}</a>
-                                                        </h3>
-                                                        @if (isset($poll->description) && !empty($poll->description))
-                                                            <div class="card-text mt-3">
-                                                                {!! Str::limit(Str::replaceArray('&nbsp;', [''], strip_tags($poll->description)), 100) !!}
-                                                            </div>
-                                                        @endif
+                            <div class="card-grid-container-ctm mt-2 pt-5">
+                                @foreach ($latest_polls as $poll)
+                                    <div class="poll-card">
+                                        <div class="image-container">
+                                            <a href="{{ route('poll.view', $poll->slug) }}">
+                                                @if (isset($poll->feature_image) && !empty($poll->feature_image))
+                                                    <img src="{{ $poll->getImagePath($poll->feature_image, $poll->slug, 'poll_feature_image') }}"
+                                                        alt="{{ $poll->title }}" />
+                                                @else
+                                                    <img src="{{ @asset('assets/images/bodybg.jpg') }}"
+                                                        alt="{{ $poll->title }}" />
+                                                @endif
+                                            </a>
+                                        </div>
+                                        <div
+                                            class="content-container equal-height-box d-flex flex-column justify-content-between">
+                                            <div class="box-title">
+                                                <h3 class="m-0 text-capitalize font-bold">
+                                                    <a href="{{ route('poll.view', $poll->slug) }}"
+                                                        class="">{{ $poll->title }}</a>
+                                                </h3>
+                                                @if (isset($poll->description) && !empty($poll->description))
+                                                    <div class="card-text mt-3">
+                                                        {!! Str::limit(Str::replaceArray('&nbsp;', [''], strip_tags($poll->description)), 100) !!}
                                                     </div>
-                                                    <div class="boc-btn mt-4">
-                                                        <a href="{{ route('poll.view', $poll->slug) }}"
-                                                            class="btn btn-primary">View
-                                                            poll</a>
-                                                    </div>
-                                                </div>
+                                                @endif
+                                            </div>
+                                            <div class="boc-btn mt-4">
+                                                <a href="{{ route('poll.view', $poll->slug) }}" class="btn btn-primary">View
+                                                    poll</a>
                                             </div>
                                         </div>
-                                    @endforeach
-                                </div>
+                                    </div>
+                                    @if ($loop->iteration == 3)
+                                        @php break; @endphp
+                                    @endif
+                                @endforeach
                             </div>
+                            @if (count($latest_polls) > 3)
+                                <div class="btn-container text-center mt-5">
+                                    <a href="{{ route('site.getCategoryView', 'latest') }}" class="btn btn-primary">View
+                                        more</a>
+                                </div>
+                            @endif
                         @else
                             <div class="notice-message">
                                 <h4>No any latest poll found.</h4>
@@ -92,67 +79,56 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 mb-5 mb-sm-0">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div class="title">
-                                <h2 class="text-capitalize text-blue text-center font-bold title-border">popular polls
-                                </h2>
-                            </div>
-                            <div class="slider-navigation-container position-relative">
-                                @if (isset($popular_polls) && !empty($popular_polls) && count($popular_polls) > 0)
-                                    <div class="popular-polls-slider-custombtn-prev btn btn-primary"><i
-                                            class=" ti-arrow-left"></i></div>
-                                    <div class="popular-polls-slider-custombtn-next btn btn-primary"><i
-                                            class="ti-arrow-right"></i></div>
-                                @endif
-                            </div>
+                        <div class="title text-center">
+                            <h2 class="text-capitalize text-blue text-center font-bold title-border-center">
+                                popular polls</h2>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="container-fluid m-0 p-0">
-                <div class="row">
-                    <div class="col-md-12">
                         @if (isset($popular_polls) && !empty($popular_polls) && count($popular_polls) > 0)
-                            <div class="swiper popular-polls pt-4 mt-5" data-count="{{ count($popular_polls) }}">
-                                <div class="swiper-wrapper">
-                                    @foreach ($popular_polls as $poll)
-                                        <div class="swiper-slide">
-                                            <div class="poll-card">
-                                                <div class="image-container">
-                                                    <a href="{{ route('poll.view', $poll->slug) }}">
-                                                        @if (isset($poll->feature_image) && !empty($poll->feature_image))
-                                                            <img src="{{ $poll->getImagePath($poll->feature_image, $poll->slug, 'poll_feature_image') }}"
-                                                                alt="{{ $poll->title }}" />
-                                                        @else
-                                                            <img src="{{ @asset('assets/images/bodybg.jpg') }}"
-                                                                alt="{{ $poll->title }}" />
-                                                        @endif
-                                                    </a>
-                                                </div>
-                                                <div
-                                                    class="content-container equal-height-box d-flex flex-column justify-content-between">
-                                                    <div class="box-title">
-                                                        <h3 class="m-0 text-capitalize font-bold">
-                                                            <a href="{{ route('poll.view', $poll->slug) }}"
-                                                                class="">{{ $poll->title }}</a>
-                                                        </h3>
-                                                        @if (isset($poll->description) && !empty($poll->description))
-                                                            <div class="card-text mt-3">
-                                                                {!! Str::limit(Str::replaceArray('&nbsp;', [''], strip_tags($poll->description)), 100) !!}
-                                                            </div>
-                                                        @endif
+                            <div class="card-grid-container-ctm mt-2 pt-5">
+                                @foreach ($popular_polls as $poll)
+                                    <div class="poll-card">
+                                        <div class="image-container">
+                                            <a href="{{ route('poll.view', $poll->slug) }}">
+                                                @if (isset($poll->feature_image) && !empty($poll->feature_image))
+                                                    <img src="{{ $poll->getImagePath($poll->feature_image, $poll->slug, 'poll_feature_image') }}"
+                                                        alt="{{ $poll->title }}" />
+                                                @else
+                                                    <img src="{{ @asset('assets/images/bodybg.jpg') }}"
+                                                        alt="{{ $poll->title }}" />
+                                                @endif
+                                            </a>
+                                        </div>
+                                        <div
+                                            class="content-container equal-height-box d-flex flex-column justify-content-between">
+                                            <div class="box-title">
+                                                <h3 class="m-0 text-capitalize font-bold">
+                                                    <a href="{{ route('poll.view', $poll->slug) }}"
+                                                        class="">{{ $poll->title }}</a>
+                                                </h3>
+                                                @if (isset($poll->description) && !empty($poll->description))
+                                                    <div class="card-text mt-3">
+                                                        {!! Str::limit(Str::replaceArray('&nbsp;', [''], strip_tags($poll->description)), 100) !!}
                                                     </div>
-                                                    <div class="boc-btn mt-4">
-                                                        <a href="{{ route('poll.view', $poll->slug) }}"
-                                                            class="btn btn-primary">View
-                                                            poll</a>
-                                                    </div>
-                                                </div>
+                                                @endif
+                                            </div>
+                                            <div class="boc-btn mt-4">
+                                                <a href="{{ route('poll.view', $poll->slug) }}"
+                                                    class="btn btn-primary">View
+                                                    poll</a>
                                             </div>
                                         </div>
-                                    @endforeach
-                                </div>
+                                    </div>
+                                    @if ($loop->iteration == 3)
+                                        @php break; @endphp
+                                    @endif
+                                @endforeach
                             </div>
+                            @if (count($popular_polls) > 3)
+                                <div class="btn-container text-center mt-5">
+                                    <a href="{{ route('site.getCategoryView', 'popular') }}" class="btn btn-primary">View
+                                        more</a>
+                                </div>
+                            @endif
                         @else
                             <div class="notice-message">
                                 <h4>No any popular poll found.</h4>
@@ -173,7 +149,7 @@
                                         {{ getCategoryName($category) }}</h2>
                                 </div>
                                 @if (isset($polls) && !empty($polls) && count($polls) > 0)
-                                    <div class="card-container mt-5 pt-5">
+                                    <div class="card-grid-container-ctm mt-2 pt-5">
                                         @foreach ($polls as $poll)
                                             <div class="poll-card">
                                                 <div class="image-container">
@@ -238,6 +214,4 @@
 @endsection
 
 @push('extraScript')
-    <!-- Swiper-js  -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
 @endpush

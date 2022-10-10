@@ -14,7 +14,7 @@
                 @if (isset($polls) && !empty($polls) && count($polls) > 0)
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="card-container">
+                            <div class="card-grid-container-ctm">
                                 @foreach ($polls as $poll)
                                     <div class="poll-card">
                                         <div class="image-container">
