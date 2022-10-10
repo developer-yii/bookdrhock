@@ -12,7 +12,7 @@
             <div class="col-12">
                 <div class="row align-items-center justify-content-center">
                     <div class="col-md-8 col-xl-6 col-12">
-                        <div class="bg-white card poll-view-card p-30 rounded-0 position-relative">
+                        <div class="bg-white card poll-view-card rounded-0 position-relative">
                             @php $type = isset($type) && !empty($type) ? $type : 'details' @endphp
                             @include('admin.poll.polldetail', ['type' => $type])
                         </div>
