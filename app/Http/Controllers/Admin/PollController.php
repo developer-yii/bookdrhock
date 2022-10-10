@@ -24,7 +24,7 @@ class PollController extends Controller
                 ->leftJoin('poll_categories', 'poll_categories.id', '=', 'polls.category')
                 ->select('polls.*', 'poll_categories.name as category_name')
                 ->groupBy('polls.id')
-                ->orderBy('start_datetime')
+                ->orderBy('created_at', 'desc')
                 ->get();
 
             return DataTables::of($polls)
