@@ -655,7 +655,11 @@ div.clockdiv-container>div {
 }
 
 .math-recaptcha-div label {
-    width: 60px;
+    width: 90px;
+}
+
+.math-recaptcha-div .input-group-div {
+    width: 100%;
 }
 
 #poll-vote-form .google-recaptcha-div .form-group.has-error .g-recaptcha>div {
@@ -829,14 +833,6 @@ div.clockdiv-container>div {
     background-color: #ea4c89
 }
 
-@media (max-width:767px) {
-    .social-icons li.title {
-        display: block;
-        margin-right: 0;
-        font-weight: 600
-    }
-}
-
 
 /*
 * Site css end
@@ -918,12 +914,6 @@ div.clockdiv-container>div {
 @media (max-width:767px) {
 
     /* footer css */
-    .social-icons li.title {
-        display: block;
-        margin-right: 0;
-        font-weight: 600
-    }
-
     .poll-card img {
         height: 300px;
     }
@@ -950,11 +940,29 @@ div.clockdiv-container>div {
         width: 100%;
     }
 
-    .embeded-container {
+    .social-icons li.title {
+        display: block;
+        margin-right: 0;
+        font-weight: 600
+    }
+
+    div.clockdiv-container {
+        flex-direction: column;
+    }
+
+    div.clockdiv-container>div {
+        width: 100%;
+    }
+
+    div.clockdiv-container>div:not(:last-child) {
+        margin-bottom: 10px;
+    }
+
+    /* .embeded-container {
         max-width: 410px;
         min-width: 405px;
         overflow-x: scroll;
-    }
+    } */
 }
 
 /*

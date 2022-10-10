@@ -36,10 +36,8 @@
 <![endif]-->
 </head>
 
-<body class="bg-transparent">
-    <main id="main" class="main">
-        @yield('content')
-    </main>
+<body class="bg-transparent w-100 d-inline-flex">
+    @yield('content')
     <!-- jQuery -->
     <script src="{{ asset('plugins/jquery/dist/jquery.min.js') }}" type="text/javascript"></script>
     <!-- Bootstrap Core JavaScript -->
