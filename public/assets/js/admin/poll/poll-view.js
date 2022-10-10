@@ -92,25 +92,19 @@ $(document).ready(function () {
                 success: function (response) {
                     if (response.response == 'success') {
                         if (response.type && response.type == 'embeded') {
-                            $("html, body").animate({
-                                scrollTop: 0
-                            }, "slow");
+                            document.getElementsByClassName('poll-heading')[0].scrollIntoView();
                         }
                         pollResultRedirect(response.slug);
                     } else if (response.response == 'error') {
                         $(formId)[0].reset();
                         $('.option-container-details .card-poll.selected').removeClass('selected');
                         if (response.type && response.type == 'embeded') {
-                            $("html, body").animate({
-                                scrollTop: 0
-                            }, "slow");
+                            document.getElementsByClassName('poll-heading')[0].scrollIntoView();
                         }
                         showMessage('error', response.message);
                     } else {
                         if (response.type && response.type == 'embeded') {
-                            $("html, body").animate({
-                                scrollTop: 0
-                            }, "slow");
+                            document.getElementsByClassName('poll-heading')[0].scrollIntoView();
                         }
                         showMessage('error', 'something is wrong!');
                     }
@@ -133,6 +127,9 @@ $(document).ready(function () {
                 }
             })
         } else {
+            if ($('#page_type').val() && $('#page_type').val() == 'embeded') {
+                document.getElementsByClassName('poll-heading')[0].scrollIntoView();
+            }
             showMessage('error', 'please select any option')
         }
     })
