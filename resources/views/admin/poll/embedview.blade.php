@@ -6,17 +6,17 @@
 @endpush
 
 @section('content')
-    <div class="container embeded-container">
+    {{-- <div class="container embeded-container">
         <!--row -->
         <div class="row my-5">
             <div class="col-12">
-                <div class="bg-white card poll-view-card rounded-0 position-relative w-100">
-                    @php $type = isset($type) && !empty($type) ? $type : 'details' @endphp
-                    @include('admin.poll.polldetail', ['type' => $type])
-                </div>
             </div>
         </div>
         <!-- /.row -->
+    </div> --}}
+    <div class="bg-white card poll-view-card rounded-0 position-relative w-100 m-1">
+        @php $type = isset($type) && !empty($type) ? $type : 'details' @endphp
+        @include('admin.poll.polldetail', ['type' => $type])
     </div>
 @endsection
 
