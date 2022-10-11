@@ -48,16 +48,19 @@
     @endif
     <div class="option-container @if (isset($type) && !empty($type) && $type == 'details') option-container-details @endif mt-5">
         @foreach ($poll as $pollOption)
-            <div class="card-poll d-flex align-items-center mb-3">
+            <div class="card-poll d-flex align-items-center mb-3 imagelight-box">
                 <input type="hidden" class="option_id" name="option_id_{{ $loop->iteration }}"
                     id="option_id_{{ $loop->iteration }}" value="{{ $pollOption->option_id }}">
                 <div class="image-div">
                     @if (isset($pollOption->option_image) && !empty($pollOption->option_image))
-                        <img src="{{ $pollOption->getImagePath($pollOption->option_image, $poll[0]->slug, 'poll_options') }}"
-                            alt="{{ $pollOption->option_title }}" class="w-100">
+                        <a
+                            href="{{ $pollOption->getImagePath($pollOption->option_image, $poll[0]->slug, 'poll_options') }}"><img
+                                src="{{ $pollOption->getImagePath($pollOption->option_image, $poll[0]->slug, 'poll_options') }}"
+                                alt="{{ $pollOption->option_title }}" class="w-100"></a>
                     @else
-                        <img src="{{ @asset('assets/images/bodybg.jpg') }}" alt="{{ $pollOption->option_title }}"
-                            class="w-100">
+                        <a href="{{ @asset('assets/images/bodybg.jpg') }}" alt="{{ $pollOption->option_title }}"><img
+                                src="{{ @asset('assets/images/bodybg.jpg') }}" alt="{{ $pollOption->option_title }}"
+                                class="w-100"></a>
                     @endif
                 </div>
                 <div class="title-div w-100 text-left">
@@ -102,10 +105,10 @@
                 </div>
             </div>
         @endif
-        <div class="btn-container mt-3 d-flex align-items-center justify-content-between">
-            <button class="btn btn-primary submit-voting" id="submit-voting">Vote</button>
+        <div class="btn-container mt-5 d-flex align-items-center justify-content-center">
             <a href="{{ request()->routeIs('poll.embedView') ? route('poll.embedViewResults', $poll[0]->slug) : route('poll.viewResults', $poll[0]->slug) }}"
-                class="btn btn-success">Go to result page</a>
+                class="link pr-4 text-capitalize">results</a>
+            <button class="btn btn-primary submit-voting btn-lg" id="submit-voting">Vote</button>
         </div>
     @endif
 </div>

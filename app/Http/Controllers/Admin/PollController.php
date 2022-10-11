@@ -292,7 +292,11 @@ class PollController extends Controller
             'option.*.image.mimes' => 'The image must be a file of type: jpg, png, jpeg.',
         ]);
 
-        if (((isset($request->start_datetime) && !empty($request->start_datetime)) || (isset($request->end_datetime) && !empty($request->end_datetime))) && (date('Y-m-d H:i', strtotime($request->start_datetime)) < date('Y-m-d H:i', strtotime($request->end_datetime)))) {
+        if ((isset($request->end_datetime) && !empty($request->end_datetime) && !isset($request->start_datetime))) {
+            return response()->json(['response' => 'error', 'message' => 'End date must be grater then start date!', 'errors' => ['start_datetime' => 'The start datetime field is required.']], 400);
+        } elseif ((isset($request->start_datetime) && !empty($request->start_datetime) && !isset($request->end_datetime))) {
+            return response()->json(['response' => 'error', 'message' => 'End date must be grater then start date!', 'errors' => ['end_datetime' => 'The end datetime field is required.']], 400);
+        } elseif (isset($request->end_datetime) && !empty($request->end_datetime) && (date('Y-m-d H:i', strtotime($request->start_datetime)) > date('Y-m-d H:i', strtotime($request->end_datetime)))) {
             return response()->json(['response' => 'error', 'message' => 'End date must be grater then start date!', 'errors' => ['end_datetime' => 'End date must be grater then start date.']], 400);
         }
 

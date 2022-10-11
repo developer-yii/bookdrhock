@@ -67,7 +67,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group" id="datepicker_container">
                                                 <label for="start_datetime"
-                                                    class="control-label">{{ __('Start Datetime*') }}</label>
+                                                    class="control-label">{{ __('Start Datetime') }}</label>
                                                 <input type="text" class="form-control datetimepicker-custom"
                                                     id="start_datetime" value="{{ old('start_datetime') }}"
                                                     name="start_datetime" placeholder="dd-mm-yyyy"
@@ -78,7 +78,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group" id="datepicker_container">
                                                 <label for="end_datetime"
-                                                    class="control-label">{{ __('End Datetime*') }}</label>
+                                                    class="control-label">{{ __('End Datetime') }}</label>
                                                 <input type="text" class="form-control datetimepicker-custom"
                                                     id="end_datetime" value="{{ old('end_datetime') }}" name="end_datetime"
                                                     placeholder="dd-mm-yyyy" data-date-container='#datepicker_container'>

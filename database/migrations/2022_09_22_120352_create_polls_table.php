@@ -17,8 +17,8 @@ class CreatePollsTable extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug')->unique();
-            $table->timestamp('start_datetime')->nullable(false);
-            $table->timestamp('end_datetime')->nullable(false);
+            $table->timestamp('start_datetime')->nullable(true);
+            $table->timestamp('end_datetime')->nullable(true);
             $table->longText('description')->nullable(true);
             $table->string('category')->nullable(true);
             $table->integer('vote_schedule')->default(12);
