@@ -13,10 +13,12 @@ class SiteController extends Controller
     {
         $latest_polls = Poll::query()
             ->orderBy('created_at', 'desc')
+            ->where('category', '!=', null)
             ->get();
 
         $popular_polls = Poll::query()
             ->orderBy('created_at', 'desc')
+            ->where('category', '!=', null)
             ->where('popular_tag', true)
             ->get();
 
@@ -44,12 +46,14 @@ class SiteController extends Controller
             $category = 'Latest';
             $polls = Poll::query()
                 ->orderBy('created_at', 'desc')
+                ->where('category', '!=', null)
                 ->get();
         } elseif (isset($slug) && !empty(isset($slug)) && $slug  == "popular") {
             $category = 'Popular';
             $polls = Poll::query()
                 ->orderBy('created_at', 'desc')
                 ->where('popular_tag', true)
+                ->where('category', '!=', null)
                 ->get();
         } else {
             $category = PollCategory::query()
@@ -82,5 +86,15 @@ class SiteController extends Controller
     public function privacyPolicy()
     {
         return view('site.privacypolicy');
+    }
+
+    public function sitemap()
+    {
+        $polls = Poll::query()
+            ->where('category', '!=', null)
+            ->get();
+        $categories = PollCategory::all();
+
+        return response()->view('sitemap', compact('polls', 'categories'))->header('Content-Type', 'text/xml');
     }
 }
