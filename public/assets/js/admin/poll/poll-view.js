@@ -16,6 +16,24 @@ $(document).ready(function () {
         })
     }
 
+    if ($('.imagelight-box').length > 0) {
+        // assign captions and title from alt-attributes of images:
+        var count = 0;
+        $(".imagelight-box a").each(function () {
+            count++;
+            // add all to same gallery
+            $(this).attr("data-fancybox", "optionimage-" + count);
+            $(this).attr("data-caption", $(this).find("img").attr("alt"));
+            $(this).attr("title", $(this).find("img").attr("alt"));
+        });
+        // start fancybox:
+        $(".imagelight-box a").fancybox();
+        $(document).on('click', '.option-container-details .imagelight-box a', function (e) {
+            e.preventDefault();
+            $(this).parents('.card-poll').toggleClass('selected');
+        })
+    }
+
     if ($('#clockdiv').length > 0) {
         if ($('#clockdiv').data('startdatetime') != null || $('#clockdiv').data('enddatetime') != null) {
             var deadline = headinText = '';
