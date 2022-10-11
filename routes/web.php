@@ -102,7 +102,11 @@ Route::name('site.')->namespace('Site')->group(function () {
     Route::get('/about', 'SiteController@about')->name('about');
     Route::get('/contact', 'SiteController@contact')->name('contact');
     Route::get('/privacy-policy', 'SiteController@privacyPolicy')->name('privacyPolicy');
+    
+    // Sitemap
+    Route::get('sitemap.xml','SiteController@sitemap')->name('sitemap');
 });
+
 
 // Clear all cache
 Route::get('/clear', function () {
