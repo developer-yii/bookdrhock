@@ -229,7 +229,7 @@
     <!-- lazyload -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
     <!--Main custom JS -->
-    <script src="{{ asset('assets/js/main.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/js/main.js') }}?123" type="text/javascript"></script>
     @if (session('flash-login-inactive'))
         <script type="text/javascript">
             $(document).ready(function() {
