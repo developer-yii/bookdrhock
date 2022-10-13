@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col-md-12 col-lg-12 col-sm-12">
             <div class="white-box">
-                <h1 class="text-center">{{ __('Welcome to Bookdrhock') }}</h1>
+                <h1 class="text-center">{{ __('Welcome to Fandomz') }}</h1>
             </div>
         </div>
     </div>

@@ -27,7 +27,7 @@ class PollCategoryController extends Controller
 
         $request->validate([
             'name' => 'required',
-            'slug' => 'required|unique:poll_categories,slug,' . $request->id . ',id',
+            'slug' => 'required|unique:poll_categories,slug,' . $request->id . ',id,deleted_at,NULL',
         ]);
 
         if (isset($request->id) && !empty($request->id)) {
@@ -62,6 +62,7 @@ class PollCategoryController extends Controller
                         if (!in_array($slug, $checkCategorySlug)) {
                             $checkCategorySlug = PollCategory::query()
                                 ->where('slug', $slug)
+                                ->where('deleted_at', '!=', null)
                                 ->pluck('slug', 'id')
                                 ->toArray();
 

@@ -1,4 +1,5 @@
 @extends('layouts.site')
+@section('title', 'About')
 
 @section('content')
     <section id="wrapper" class="about">
@@ -26,7 +27,7 @@
                                 labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
                                 laboris nisi ut aliquip ex ea commodo consequat.</p>
                         </div>
-                        <div class="button-container mt-2">
+                        <div class="button-container my-2">
                             <a href="{{ route('site.contact') }}" class="btn btn-primary">Contact us</a>
                         </div>
                     </div>

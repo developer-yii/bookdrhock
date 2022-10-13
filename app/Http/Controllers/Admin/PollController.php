@@ -81,84 +81,115 @@ class PollController extends Controller
     public function view($slug)
     {
         $poll = Poll::query()
-            ->select(
-                'polls.*',
-                'poll_options.id as option_id',
-                'poll_options.title as option_title',
-                'poll_options.image as option_image',
-                DB::raw("(count(poll_votes.poll_options) + poll_options.admin_vote) as votes")
-            )
-            ->join('poll_options', 'poll_options.poll_id', '=', 'polls.id')
-            ->leftJoin('poll_votes', 'poll_votes.poll_options', '=', 'poll_options.id')
-            ->where('polls.slug', $slug)
-            ->groupBy('poll_options.id')
-            ->get();
+            ->where('slug', $slug)
+            ->first();
+
+        if (empty($poll))
+            return abort(404);
+
+        $poll_options = PollOption::query()
+            ->where('poll_id', $poll->id)
+            ->get()
+            ->keyBy('id')
+            ->toArray();
+
+        $poll_voting = PollVote::query()
+            ->select('poll_options', DB::raw('count(*) as count'))
+            ->where('poll_id', $poll->id)
+            ->groupBy('poll_options')
+            ->get()
+            ->pluck('count', 'poll_options')
+            ->toArray();
+
+        $poll_option_array = [];
+        foreach ($poll_options as $list) {
+            if (isset($poll_voting[$list['id']]))
+                $poll_option_array[$list['id']] = $list['admin_vote'] + $poll_voting[$list['id']];
+            else
+                $poll_option_array[$list['id']] = $list['admin_vote'];
+        }
+        ksort($poll_option_array);
 
         $userrole = Auth::user() ? Auth::user()->user_role : '';
         $type = 'details';
         app('mathcaptcha')->reset();
 
-        if (isset($poll) && !empty($poll)) {
-            return view('admin.poll.view', compact('poll', 'userrole', 'type'));
-        } else {
-            return abort(404);
-        }
+        return view('admin.poll.view', compact('poll', 'userrole', 'type', 'poll_options', 'poll_option_array'));
     }
 
     public function viewResults($slug)
     {
         $poll = Poll::query()
-            ->select(
-                'polls.*',
-                'poll_options.id as option_id',
-                'poll_options.title as option_title',
-                'poll_options.image as option_image',
-                DB::raw("(count(poll_votes.poll_options) + poll_options.admin_vote) as votes")
-            )
-            ->join('poll_options', 'poll_options.poll_id', '=', 'polls.id')
-            ->leftJoin('poll_votes', 'poll_votes.poll_options', '=', 'poll_options.id')
-            ->where('polls.slug', $slug)
-            ->groupBy('poll_options.id')
-            ->orderBy('votes', 'desc')
-            ->get();
+            ->where('slug', $slug)
+            ->first();
+
+        if (empty($poll))
+            return abort(404);
+
+        $poll_options = PollOption::query()
+            ->where('poll_id', $poll->id)
+            ->get()
+            ->keyBy('id')
+            ->toArray();
+
+        $poll_voting = PollVote::query()
+            ->select('poll_options', DB::raw('count(*) as count'))
+            ->where('poll_id', $poll->id)
+            ->groupBy('poll_options')
+            ->get()
+            ->pluck('count', 'poll_options')
+            ->toArray();
+
+        $poll_option_array = [];
+        foreach ($poll_options as $list) {
+            if (isset($poll_voting[$list['id']]))
+                $poll_option_array[$list['id']] = $list['admin_vote'] + $poll_voting[$list['id']];
+            else
+                $poll_option_array[$list['id']] = $list['admin_vote'];
+        }
+        arsort($poll_option_array);
 
         $userrole = Auth::user() ? Auth::user()->user_role : '';
         $type = 'results';
-        app('mathcaptcha')->reset();
 
-        if (isset($poll) && !empty($poll)) {
-            return view('admin.poll.view', compact('poll', 'userrole', 'type'));
-        } else {
-            return abort(404);
-        }
+        return view('admin.poll.view', compact('poll', 'userrole', 'type', 'poll_options', 'poll_option_array'));
     }
 
     public function embedViewResults($slug)
     {
         $poll = Poll::query()
-            ->select(
-                'polls.*',
-                'poll_options.id as option_id',
-                'poll_options.title as option_title',
-                'poll_options.image as option_image',
-                DB::raw("(count(poll_votes.poll_options) + poll_options.admin_vote) as votes")
-            )
-            ->join('poll_options', 'poll_options.poll_id', '=', 'polls.id')
-            ->leftJoin('poll_votes', 'poll_votes.poll_options', '=', 'poll_options.id')
-            ->where('polls.slug', $slug)
-            ->groupBy('poll_options.id')
-            ->orderBy('votes', 'desc')
-            ->get();
+            ->where('slug', $slug)
+            ->first();
 
-        $userrole = Auth::user() ? Auth::user()->user_role : '';
-        $type = 'results';
-        app('mathcaptcha')->reset();
-
-        if (isset($poll) && !empty($poll)) {
-            return view('admin.poll.embedview', compact('poll', 'userrole', 'type'));
-        } else {
+        if (empty($poll))
             return abort(404);
+
+        $poll_options = PollOption::query()
+            ->where('poll_id', $poll->id)
+            ->get()
+            ->keyBy('id')
+            ->toArray();
+
+        $poll_voting = PollVote::query()
+            ->select('poll_options', DB::raw('count(*) as count'))
+            ->where('poll_id', $poll->id)
+            ->groupBy('poll_options')
+            ->get()
+            ->pluck('count', 'poll_options')
+            ->toArray();
+
+        $poll_option_array = [];
+        foreach ($poll_options as $list) {
+            if (isset($poll_voting[$list['id']]))
+                $poll_option_array[$list['id']] = $list['admin_vote'] + $poll_voting[$list['id']];
+            else
+                $poll_option_array[$list['id']] = $list['admin_vote'];
         }
+        arsort($poll_option_array);
+
+        $type = 'results';
+
+        return view('admin.poll.embedview', compact('poll', 'type', 'poll_options', 'poll_option_array'));
     }
 
     public function votechangePollOptions(Request $request)
@@ -182,28 +213,39 @@ class PollController extends Controller
     public function embedView($slug)
     {
         $poll = Poll::query()
-            ->select(
-                'polls.*',
-                'poll_options.id as option_id',
-                'poll_options.title as option_title',
-                'poll_options.image as option_image',
-                DB::raw("(count(poll_votes.poll_options) + poll_options.admin_vote) as votes")
-            )
-            ->join('poll_options', 'poll_options.poll_id', '=', 'polls.id')
-            ->leftJoin('poll_votes', 'poll_votes.poll_options', '=', 'poll_options.id')
-            ->where('polls.slug', $slug)
-            ->groupBy('poll_options.id')
-            ->get();
+            ->where('slug', $slug)
+            ->first();
 
-        $categories = PollCategory::all();
+        if (empty($poll))
+            return abort(404);
 
+        $poll_options = PollOption::query()
+            ->where('poll_id', $poll->id)
+            ->get()
+            ->keyBy('id')
+            ->toArray();
+
+        $poll_voting = PollVote::query()
+            ->select('poll_options', DB::raw('count(*) as count'))
+            ->where('poll_id', $poll->id)
+            ->groupBy('poll_options')
+            ->get()
+            ->pluck('count', 'poll_options')
+            ->toArray();
+
+        $poll_option_array = [];
+        foreach ($poll_options as $list) {
+            if (isset($poll_voting[$list['id']]))
+                $poll_option_array[$list['id']] = $list['admin_vote'] + $poll_voting[$list['id']];
+            else
+                $poll_option_array[$list['id']] = $list['admin_vote'];
+        }
+        arsort($poll_option_array);
+
+        $type = 'details';
         app('mathcaptcha')->reset();
 
-        if (isset($poll) && !empty($poll)) {
-            return view('admin.poll.embedview', compact('categories', 'poll'));
-        } else {
-            return abort(404);
-        }
+        return view('admin.poll.embedview', compact('poll', 'type', 'poll_options', 'poll_option_array'));
     }
 
     public function Voting(Request $request)
@@ -283,9 +325,9 @@ class PollController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'feature_image' => 'image|mimes:jpg,png,jpeg',
+            'feature_image' => 'image|mimes:jpg,png,jpeg,webp',
             'option.*.title' => 'required',
-            'option.*.image' => 'image|mimes:jpg,png,jpeg',
+            'option.*.image' => 'image|mimes:jpg,png,jpeg,webp',
         ], [
             'option.*.title.required' => 'The title field is required.',
             'option.*.image.image' => 'The image must be an image.',

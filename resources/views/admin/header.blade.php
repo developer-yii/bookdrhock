@@ -4,7 +4,7 @@
             data-target=".navbar-collapse"><i class="ti-menu"></i></a>
         <div class="top-left-part p-3">
             <a class="logo d-flex align-items-center" href="{{ route('home') }}">
-                <img src="{{ asset('assets/images/logo.png') }}" width="200px" alt="home" />
+                <img src="{{ asset('assets/images/logo_new.png') }}" width="200px" alt="home" />
             </a>
         </div>
         <ul class="nav navbar-top-links navbar-right pull-right">

@@ -5,6 +5,10 @@ jQuery(document).ready(function ($) {
         }
     });
 
+    if ($(".lazyload").length > 0) {
+        $("img.lazyload").lazyload();
+    }
+
     if ($(".datepicker-custom").length > 0) {
         var todayDate = new Date();
         $('.datepicker-custom').datepicker({
