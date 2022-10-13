@@ -1,4 +1,9 @@
 @extends('layouts.site')
+@section('title', $poll->title)
+@section('meta_description', str_replace('&nbsp;', ' ', preg_replace( "/\r|\n/", "", strip_tags($poll->description))))
+
+<!--Str::limit(Str::replaceArray('&amp;', [''], Str::replaceArray('&nbsp;', [''], strip_tags($poll->description))), 100)-->
+
 
 @push('extraStyle')
     <!--alerts CSS -->
@@ -17,7 +22,7 @@
                         <div class="bg-white card poll-view-card rounded-0 position-relative">
                             @if (isset($userrole) && !empty($userrole) && $userrole == 1)
                                 <div class="edit-button position-absolute top right">
-                                    <a href="{{ route('poll.editForm', $poll[0]->id) }}"
+                                    <a href="{{ route('poll.editForm', $poll->id) }}"
                                         class="btn btn-info waves-effect waves-light">
                                         <span>edit poll</span>
                                         <i class=" ti-pencil-alt"></i>
@@ -60,9 +65,9 @@
         }
 
         var maximumVoteInNumber =
-            {{ isset($poll[0]->option_select) && !empty($poll[0]->option_select) && $poll[0]->option_select > 0 ? $poll[0]->option_select : 0 }}
+            {{ isset($poll->option_select) && !empty($poll->option_select) && $poll->option_select > 0 ? $poll->option_select : 0 }}
         var maximumVoteInWord =
-            "{{ isset($poll[0]->option_select) && !empty($poll[0]->option_select) && $poll[0]->option_select > 0 ? convert_number($poll[0]->option_select) : 0 }}"
+            "{{ isset($poll->option_select) && !empty($poll->option_select) && $poll->option_select > 0 ? convert_number($poll->option_select) : 0 }}"
     </script>
     <script src="{{ asset('assets/js/admin/poll/poll-view.js') }}" type="text/javascript"></script>
 @endpush

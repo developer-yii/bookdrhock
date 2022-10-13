@@ -1,14 +1,20 @@
 <div class="poll-heading">
-    <h1 class="text-center text-capitalize">{{ $poll[0]->title }}</h1>
-    <div class="text-center">{!! $poll[0]->description !!}</div>
+    <h1 class="text-center text-capitalize">{{ $poll->title }}</h1>
+    <div class="text-center">{!! $poll->description !!}</div>
     <hr>
 </div>
-@if (isset($type) && !empty($type) && $type == 'details')
+@if (isset($type) &&
+    !empty($type) &&
+    $type == 'details' &&
+    isset($poll->start_datetime) &&
+    !empty($poll->start_datetime) &&
+    isset($poll->end_datetime) &&
+    !empty($poll->end_datetime))
     <div class="poll-timer text-center">
         <h5 class="text-uppercase countdown-heading">time left</h5>
         <div class="clockdiv-container" id="clockdiv"
-            data-startdatetime="{{ isset($poll[0]->start_datetime) && !empty($poll[0]->start_datetime) ? $poll[0]->start_datetime : 'null' }}"
-            data-enddatetime="{{ isset($poll[0]->end_datetime) && !empty($poll[0]->end_datetime) ? $poll[0]->end_datetime : 'null' }}">
+            data-startdatetime="{{ isset($poll->start_datetime) && !empty($poll->start_datetime) ? $poll->start_datetime : 'null' }}"
+            data-enddatetime="{{ isset($poll->end_datetime) && !empty($poll->end_datetime) ? $poll->end_datetime : 'null' }}">
             <div class="time-box bg-success text-light font-bold">
                 <span class="days" id="day">00</span>
                 <div>Days</div>
@@ -31,54 +37,54 @@
 @if (isset($type) && !empty($type) && $type == 'details')
     <form action="#" method="POST" id="poll-vote-form" class="form-horizontal">
         @csrf
-        <input type="hidden" name="id" id="id" value="{{ $poll[0]->id }}">
-        <input type="hidden" name="slug" id="slug" value="{{ $poll[0]->slug }}">
-        <input type="hidden" name="vote_add" id="vote_add" value="{{ $poll[0]->vote_add }}">
-        <input type="hidden" name="vote_schedule" id="vote_schedule" value="{{ $poll[0]->vote_schedule }}">
+        <input type="hidden" name="id" id="id" value="{{ $poll['id'] }}">
+        <input type="hidden" name="slug" id="slug" value="{{ $poll->slug }}">
+        <input type="hidden" name="vote_add" id="vote_add" value="{{ $poll->vote_add }}">
+        <input type="hidden" name="vote_schedule" id="vote_schedule" value="{{ $poll->vote_schedule }}">
         <input type="hidden" name="page_type" id="page_type"
             value="{{ request()->routeIs('poll.embedView') ? 'embeded' : 'normal' }}">
 @endif
 <div class="poll-options-main text-center  @if (isset($type) && !empty($type) && $type == 'details') mt-5 @endif">
     @if (isset($type) && !empty($type) && $type == 'details')
-        @if (isset($poll[0]->option_select) && !empty($poll[0]->option_select) && count($poll) > $poll[0]->option_select)
-            <p>You can choose {{ convert_number($poll[0]->option_select) }} option</p>
+        @if (isset($poll->option_select) && !empty($poll->option_select) && count($poll_options) > $poll->option_select)
+            <p>You can choose {{ convert_number($poll->option_select) }} option</p>
         @else
             <p>You can choose more than one</p>
         @endif
     @endif
     <div class="option-container @if (isset($type) && !empty($type) && $type == 'details') option-container-details @endif mt-5">
-        @foreach ($poll as $pollOption)
+        @foreach ($poll_option_array as $option_id => $option_vote)
             <div class="card-poll d-flex align-items-center mb-3 imagelight-box">
                 <input type="hidden" class="option_id" name="option_id_{{ $loop->iteration }}"
-                    id="option_id_{{ $loop->iteration }}" value="{{ $pollOption->option_id }}">
+                    id="option_id_{{ $loop->iteration }}" value="{{ $poll_options[$option_id]['id'] }}">
                 <div class="image-div">
-                    @if (isset($pollOption->option_image) && !empty($pollOption->option_image))
-                        <a
-                            href="{{ $pollOption->getImagePath($pollOption->option_image, $poll[0]->slug, 'poll_options') }}"><img
-                                src="{{ $pollOption->getImagePath($pollOption->option_image, $poll[0]->slug, 'poll_options') }}"
-                                alt="{{ $pollOption->option_title }}" class="w-100"></a>
+                    @if (isset($poll_options[$option_id]['image']) && !empty($poll_options[$option_id]['image']))
+                        <a href="{{ getImagePath($poll_options[$option_id]['image'], $poll->slug, 'poll_options') }}"><img
+                                data-original="{{ getImagePath($poll_options[$option_id]['image'], $poll->slug, 'poll_options') }}"
+                                alt="{{ $poll_options[$option_id]['title'] }}" class="w-100 lazyload"></a>
                     @else
-                        <a href="{{ @asset('assets/images/bodybg.jpg') }}" alt="{{ $pollOption->option_title }}"><img
-                                src="{{ @asset('assets/images/bodybg.jpg') }}" alt="{{ $pollOption->option_title }}"
-                                class="w-100"></a>
+                        <a href="{{ @asset('assets/images/bodybg.jpg') }}"
+                            alt="{{ $poll_options[$option_id]['title'] }}"><img
+                                data-original="{{ @asset('assets/images/bodybg.jpg') }}"
+                                alt="{{ $poll_options[$option_id]['title'] }}" class="w-100 lazyload"></a>
                     @endif
                 </div>
                 <div class="title-div w-100 text-left">
-                    <input type="hidden" name="option_id" class="option_id" value="{{ $pollOption->option_id }}">
-                    <p class="m-0 pl-4">{{ $pollOption->option_title }}</p>
+                    <input type="hidden" name="option_id" class="option_id"
+                        value="{{ $poll_options[$option_id]['id'] }}">
+                    <p class="m-0 pl-4">{{ $poll_options[$option_id]['title'] }}</p>
                 </div>
                 @if (isset($type) && !empty($type) && $type == 'results')
                     <div class="total-votebox position-absolute">
                         <img src="{{ @asset('assets/images/voting-box.png') }}" alt="Voting Box" class="w-100">
-                        <p>{{ strlen($pollOption->votes) > 1 ? $pollOption->votes : '0' . $pollOption->votes }}
-                        </p>
+                        <p>{{ strlen($option_vote) > 1 ? $option_vote : '0' . $option_vote }}</p>
                     </div>
                 @endif
             </div>
         @endforeach
     </div>
     @if (isset($type) && !empty($type) && $type == 'details')
-        @if (isset($poll[0]->captcha_type) && !empty($poll[0]->captcha_type) && $poll[0]->captcha_type == 1)
+        @if (isset($poll->captcha_type) && !empty($poll->captcha_type) && $poll->captcha_type == 1)
             <div class="google-recaptcha-div mt-5">
                 <div class="form-group">
                     <input type="hidden" name="enabledgooglecaptcha" id="enabledgooglecaptcha"
@@ -88,7 +94,7 @@
                     <span class="help-block error-span"></span>
                 </div>
             </div>
-        @elseif(isset($poll[0]->captcha_type) && !empty($poll[0]->captcha_type) && $poll[0]->captcha_type == 2)
+        @elseif(isset($poll->captcha_type) && !empty($poll->captcha_type) && $poll->captcha_type == 2)
             <div class="form-group">
                 <input type="hidden" name="enabledmathcaptcha" id="enabledmathcaptcha" class="enabledmathcaptcha"
                     value="enabledmathcaptcha">
@@ -106,9 +112,10 @@
             </div>
         @endif
         <div class="btn-container mt-5 d-flex align-items-center justify-content-center">
-            <a href="{{ request()->routeIs('poll.embedView') ? route('poll.embedViewResults', $poll[0]->slug) : route('poll.viewResults', $poll[0]->slug) }}"
+            <a href="{{ request()->routeIs('poll.embedView') ? route('poll.embedViewResults', $poll->slug) : route('poll.viewResults', $poll->slug) }}"
                 class="link pr-4 text-capitalize">results</a>
-            <button class="btn btn-primary submit-voting btn-lg" id="submit-voting">Vote</button>
+            <button class="btn btn-primary submit-voting btn-lg" id="submit-voting"><span
+                    class="load open"></span><span class="btn-text">Vote</span></button>
         </div>
     @endif
 </div>
@@ -117,7 +124,7 @@
 @endif
 @if (isset($type) && !empty($type) && $type == 'results')
     <div class="card-bottom mt-4">
-        <a href="{{ request()->routeIs('poll.embedViewResults') ? route('poll.embedView', $poll[0]->slug) : route('poll.view', $poll[0]->slug) }}"
+        <a href="{{ request()->routeIs('poll.embedViewResults') ? route('poll.embedView', $poll->slug) : route('poll.view', $poll->slug) }}"
             class="btn btn-primary">Go to poll page</a>
     </div>
 @endif

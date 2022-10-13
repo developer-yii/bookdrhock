@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?php echo '<?xml version="1.0" encoding="UTF-8"?>'; ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
@@ -36,26 +36,30 @@
         <priority>0.60</priority>
     </url>
 
-    @foreach ($categories as $category)
-        <url>
-            <loc>{{ route('site.getCategoryView', $category->slug) }}</loc>
-            <lastmod>{{ gmdate('Y-m-d\TH:i:s\Z', strtotime($category->updated_at)) }}</lastmod>
-            <priority>0.80</priority>
-        </url>
-    @endforeach
+    @if (isset($categories) && !empty($categories) && count($categories) > 0)
+        @foreach ($categories as $category)
+            <url>
+                <loc>{{ route('site.getCategoryView', $category->slug) }}</loc>
+                <lastmod>{{ gmdate('Y-m-d\TH:i:s\Z', strtotime($category->updated_at)) }}</lastmod>
+                <priority>0.80</priority>
+            </url>
+        @endforeach
+    @endif
 
-    @foreach ($polls as $poll)
-        <url>
-            <loc>{{ route('poll.view', $poll->slug) }}</loc>
-            <lastmod>{{ gmdate('Y-m-d\TH:i:s\Z', strtotime($poll->updated_at)) }}</lastmod>
-            <priority>0.80</priority>
-        </url>
+    @if (isset($polls) && !empty($polls) && count($polls) > 0)
+        @foreach ($polls as $poll)
+            <url>
+                <loc>{{ route('poll.view', $poll->slug) }}</loc>
+                <lastmod>{{ gmdate('Y-m-d\TH:i:s\Z', strtotime($poll->updated_at)) }}</lastmod>
+                <priority>0.80</priority>
+            </url>
 
-        <url>
-            <loc>{{ route('poll.viewResults', $poll->slug) }}</loc>
-            <lastmod>{{ gmdate('Y-m-d\TH:i:s\Z', strtotime($poll->updated_at)) }}</lastmod>
-            <priority>0.64</priority>
-        </url>
-    @endforeach
+            <url>
+                <loc>{{ route('poll.viewResults', $poll->slug) }}</loc>
+                <lastmod>{{ gmdate('Y-m-d\TH:i:s\Z', strtotime($poll->updated_at)) }}</lastmod>
+                <priority>0.64</priority>
+            </url>
+        @endforeach
+    @endif
 
 </urlset>

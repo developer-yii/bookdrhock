@@ -5,15 +5,16 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
+    <meta name="description" content="@yield('meta_description', 'Fandomz')">
     <meta name="keywords" content="">
     <meta name="author" content="">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/images/favicon.png') }}">
-    <title>{{ config('app.name', 'Bookdrhock') }}</title>
+    <link rel="icon" type="image/jpg" sizes="16x16" href="{{ asset('assets/images/favicon.jpg') }}">
+    <!--<title>{{ config('app.name', 'Fandomz') }}</title>-->
+    <title>@yield('title', 'Fandomz')</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
@@ -47,7 +48,7 @@
         <nav class="navbar navbar-expand-lg navbar-light shadow-sm bg-light fixed-top rounded-0 mb-0">
             <div class="container">
                 <a class="logo d-flex align-items-center" href="{{ route('home') }}">
-                    <img src="{{ asset('assets/images/logo-dark.png') }}" width="200px" alt="home" />
+                    <img src="{{ asset('assets/images/logo_new.png') }}" width="200px" alt="home" />
                 </a>
                 <div class="menu-right-div d-flex align-content-center justify-content-between w-100">
                     <button class="navbar-toggler navbar-toggler-right border-0" type="button" data-toggle="collapse"
@@ -158,7 +159,7 @@
                 <div class="col-sm-12 col-md-6">
                     <div class="footer-logo pb-4">
                         <a class="logo d-flex align-items-center" href="{{ route('home') }}">
-                            <img src="{{ @asset('assets/images/logo.png') }}" width="200px" alt="home">
+                            <img src="{{ @asset('assets/images/logo_new.png') }}" width="200px" alt="home">
                         </a>
                     </div>
                     <p class="text-justify pr-5">
@@ -196,7 +197,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8 col-sm-6 col-xs-12">
-                    <p class="copyright-text">{{ date('Y') }} {{ __('© Bookdrhock by') }} <a
+                    <p class="copyright-text">{{ date('Y') }} {{ __('© Fandomz by') }} <a
                             href="https://amcodr.com/" target="_blank">{{ __('Amcodr IT Solutions') }}</a>.</p>
                 </div>
 
@@ -225,6 +226,8 @@
     <script src="{{ asset('assets/js/custom.min.js') }}" type="text/javascript"></script>
     <!-- Toast Message JavaScript -->
     <script src="{{ asset('plugins/toast-master/js/jquery.toast.js') }}" type="text/javascript"></script>
+    <!-- lazyload -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
     <!--Main custom JS -->
     <script src="{{ asset('assets/js/main.js') }}" type="text/javascript"></script>
     @if (session('flash-login-inactive'))

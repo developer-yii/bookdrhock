@@ -7,7 +7,9 @@ $(document).ready(function () {
                     $('.option-container-details .card-poll').removeClass('selected');
                     $(this).addClass('selected');
                 } else {
-                    document.getElementsByClassName('poll-heading')[0].scrollIntoView();
+                    if ($('#page_type').val() && $('#page_type').val() == 'embeded') {
+                        document.getElementsByClassName('poll-heading')[0].scrollIntoView();
+                    }
                     showMessage('error', 'You can choose ' + maximumVoteInWord + ' option only')
                 }
             } else {
@@ -96,6 +98,7 @@ $(document).ready(function () {
     $(vottingBtnId).on('click', function (e) {
         e.preventDefault();
         if ($('.option-container-details .card-poll.selected').length > 0) {
+            $(vottingBtnId).attr('disabled', true);
             let formData = new FormData($(formId)['0']);
             let selectOptions = [];
             $(".option-container-details .card-poll.selected").each(function () {
@@ -110,6 +113,10 @@ $(document).ready(function () {
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function () {
+                    $(vottingBtnId).addClass('lodder')
+                    $(vottingBtnId).attr('disabled', true);
+                },
                 success: function (response) {
                     if (response.response == 'success') {
                         if (response.type && response.type == 'embeded') {
@@ -129,6 +136,10 @@ $(document).ready(function () {
                         }
                         showMessage('error', 'something is wrong!');
                     }
+                },
+                complete: function () {
+                    $(vottingBtnId).removeClass('lodder')
+                    $(vottingBtnId).attr('disabled', false);
                 },
                 error: function (error) {
                     if (error.responseJSON.errors) {

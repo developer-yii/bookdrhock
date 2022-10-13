@@ -480,7 +480,7 @@ header.site-header .menu-right-div a.dropdown-toggle.profile-pic:hover {
 }
 
 .poll-options-main .total-votebox {
-    width: 70px;
+    width: auto;
     height: 30px;
     display: flex;
     align-items: center;
@@ -674,6 +674,68 @@ div.clockdiv-container>div {
 
 #poll-vote-form .google-recaptcha-div .form-group.has-error .g-recaptcha>div {
     border: 1px solid #a94442;
+}
+
+#poll-vote-form .load {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 5px solid #fff;
+    border-radius: 100%;
+}
+
+#poll-vote-form .open {
+    border-top: 5px solid transparent;
+    -webkit-animation: load-animate infinite linear 1s;
+    animation: load-animate infinite linear 1s;
+}
+
+#poll-vote-form #submit-voting.lodder .btn-text {
+    display: none;
+}
+
+#poll-vote-form #submit-voting.lodder .load {
+    display: inline-block;
+}
+
+#poll-vote-form #submit-voting.lodder {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+#poll-vote-form #submit-voting:disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+@-webkit-keyframes load-animate {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    50% {
+        transform: rotate(180deg);
+        opacity: 0.35;
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes load-animate {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    50% {
+        transform: rotate(180deg);
+        opacity: 0.35;
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .poll-information .poll-info-table tr th {
@@ -994,6 +1056,17 @@ div.clockdiv-container>div {
     }
 }
 
+@media (max-width: 450px) {
+    .poll-form-container .panel-heading>div {
+        flex-direction: column;
+        align-items: start;
+    }
+
+    .poll-form-container .panel-heading .button-container {
+        margin-top: 15px;
+    }
+}
+
 @media (max-width: 400px) {
     div.clockdiv-container {
         flex-direction: column;
@@ -1004,6 +1077,16 @@ div.clockdiv-container>div {
     }
 
     div.clockdiv-container>div:not(:last-child) {
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 360px) {
+    .poll-form-container .panel-heading .button-container {
+        text-align: center;
+    }
+
+    .poll-form-container .panel-heading .button-container a:first-child {
         margin-bottom: 10px;
     }
 }

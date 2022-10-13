@@ -1,4 +1,5 @@
 @extends('layouts.site')
+@section('title', 'Privacy Policy')
 
 @section('content')
     <section id="wrapper" class="privacypolicy">

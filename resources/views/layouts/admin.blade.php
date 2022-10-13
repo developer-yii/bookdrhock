@@ -12,8 +12,8 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/images/favicon.png') }}">
-    <title>{{ config('app.name', 'Bookdrhock') }}</title>
+    <link rel="icon" type="image/jpg" sizes="16x16" href="{{ asset('assets/images/favicon.jpg') }}">
+    <title>{{ config('app.name', 'Fandomz') }}</title>
     <!-- Bootstrap Core CSS -->
     <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('plugins/bootstrap-extension/css/bootstrap-extension.css') }}" rel="stylesheet"
@@ -67,7 +67,7 @@
             </div>
 
             <!-- /.container-fluid -->
-            <footer class="footer text-center"> {{ date('Y') }} &copy; Bookdrhock by <a href="https://amcodr.com/"
+            <footer class="footer text-center"> {{ date('Y') }} &copy; Fandomz by <a href="https://amcodr.com/"
                     target="_blank">Amcodr IT Solutions</a>.</footer>
         </div>
         <!-- /#page-wrapper -->
@@ -88,6 +88,8 @@
     <script src="{{ asset('assets/js/custom.min.js') }}" type="text/javascript"></script>
     <!-- Toaster message JavaScript -->
     <script src="{{ asset('plugins/toast-master/js/jquery.toast.js') }}" type="text/javascript"></script>
+    <!-- lazyload -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
     <!--Main custom JS -->
     <script src="{{ asset('assets/js/main.js') }}" type="text/javascript"></script>
     @if (session('flash-login'))

@@ -1,4 +1,5 @@
 @extends('layouts.site')
+@section('title', (is_object($category) ? $category->name : $category))
 
 @section('content')
     <section id="wrapper" class="category-single category-{{ is_object($category) ? $category->name : $category }}">
