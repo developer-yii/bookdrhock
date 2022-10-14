@@ -38,9 +38,9 @@
         }
 
         var maximumVoteInNumber =
-            {{ isset($poll[0]->option_select) && !empty($poll[0]->option_select) && $poll[0]->option_select > 0 ? $poll[0]->option_select : 0 }}
+            {{ isset($poll->option_select) && !empty($poll->option_select) && $poll->option_select > 0 ? $poll->option_select : 0 }}
         var maximumVoteInWord =
-            "{{ isset($poll[0]->option_select) && !empty($poll[0]->option_select) && $poll[0]->option_select > 0 ? convert_number($poll[0]->option_select) : 0 }}"
+            "{{ isset($poll->option_select) && !empty($poll->option_select) && $poll->option_select > 0 ? convert_number($poll->option_select) : 0 }}"
     </script>
     <script src="{{ asset('assets/js/admin/poll/poll-view.js') }}" type="text/javascript"></script>
 @endpush
