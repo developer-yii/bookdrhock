@@ -1,13 +1,12 @@
 window.addEventListener("pageshow", function (event) {
     var historyTraversal = event.persisted || (typeof window.performance != "undefined" && window.performance.navigation.type === 2);
     if (historyTraversal) {
-        // Handle page restore.
-        //alert('refresh');
         window.location.reload();
     }
 });
 
 $(document).ready(function () {
+    $('#poll-vote-form')[0].reset();
     if ($('.option-container-details .card-poll').length > 0) {
         $('.option-container-details .card-poll').on('click', function (e) {
             e.preventDefault();
