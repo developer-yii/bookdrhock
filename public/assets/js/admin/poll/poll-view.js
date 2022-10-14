@@ -6,7 +6,9 @@ window.addEventListener("pageshow", function (event) {
 });
 
 $(document).ready(function () {
-    $('#poll-vote-form')[0].reset();
+    if ($('#poll-vote-form').length > 0) {
+        $('#poll-vote-form')[0].reset();
+    }
     if ($('.option-container-details .card-poll').length > 0) {
         $('.option-container-details .card-poll').on('click', function (e) {
             e.preventDefault();
