@@ -240,7 +240,7 @@ class PollController extends Controller
             else
                 $poll_option_array[$list['id']] = $list['admin_vote'];
         }
-        arsort($poll_option_array);
+        ksort($poll_option_array);
 
         $type = 'details';
         app('mathcaptcha')->reset();
