@@ -1027,11 +1027,9 @@ div.clockdiv-container>div {
         font-weight: 600
     }
 
-    /* .embeded-container {
-        max-width: 410px;
-        min-width: 405px;
-        overflow-x: scroll;
-    } */
+    .poll-options-main.option-view-results .card-poll .title-div p {
+        padding-bottom: 45px;
+    }
 }
 
 /*

@@ -44,7 +44,7 @@
         <input type="hidden" name="page_type" id="page_type"
             value="{{ request()->routeIs('poll.embedView') ? 'embeded' : 'normal' }}">
 @endif
-<div class="poll-options-main text-center  @if (isset($type) && !empty($type) && $type == 'details') mt-5 @endif">
+<div class="poll-options-main option-view-{{ $type }} text-center  @if (isset($type) && !empty($type) && $type == 'details') mt-5 @endif">
     @if (isset($type) && !empty($type) && $type == 'details')
         @if (isset($poll->option_select) && !empty($poll->option_select) && count($poll_options) > $poll->option_select)
             <p>You can choose {{ convert_number($poll->option_select) }} option</p>

@@ -108,7 +108,7 @@ class PollController extends Controller
             else
                 $poll_option_array[$list['id']] = $list['admin_vote'];
         }
-        ksort($poll_option_array);
+        arsort($poll_option_array);
 
         $userrole = Auth::user() ? Auth::user()->user_role : '';
         $type = 'details';
@@ -240,7 +240,7 @@ class PollController extends Controller
             else
                 $poll_option_array[$list['id']] = $list['admin_vote'];
         }
-        ksort($poll_option_array);
+        arsort($poll_option_array);
 
         $type = 'details';
         app('mathcaptcha')->reset();
@@ -275,10 +275,11 @@ class PollController extends Controller
             ->where('poll_id', $request->id)
             ->where('created_at', '>', Carbon::now()->subHours($hours)->toDateTimeString())
             ->orderBy('created_at', 'DESC')
+            ->groupBy('created_at')
             ->get()
             ->count();
 
-        if (isset($curruntVotes) && $curruntVotes <= $voteAdd) {
+        if (isset($curruntVotes) && $curruntVotes < $voteAdd) {
             foreach (explode(',', $request->selected_options) as $option) {
                 $model = new PollVote();
                 $model->user_id = (Auth::user()) ? Auth::user()->id : null;
