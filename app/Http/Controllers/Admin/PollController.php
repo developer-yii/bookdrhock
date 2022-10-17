@@ -252,13 +252,22 @@ class PollController extends Controller
     {
         $request->validate([
             'selected_options' => 'required',
-            'mathcaptcha' => 'required_if:enabledmathcaptcha,==,"enabledmathcaptcha"|mathcaptcha',
+            'mathcaptcha_ctm' => 'required_if:enabledmathcaptcha,==,"enabledmathcaptcha"',
             'g-recaptcha-response' => ['required_if:enabledgooglecaptcha,==,"enabledgooglecaptcha"', new ReCaptcha]
         ], [
             'mathcaptcha.mathcaptcha' => 'Your answer is wrong.',
-            'mathcaptcha.required_if' => 'Please give answer.',
+            'mathcaptcha_ctm.required_if' => 'Please give answer.',
             'g-recaptcha-response.required_if' => 'Please valid google recaptcha.'
         ]);
+
+        if (isset($request->enabledmathcaptcha) && !empty($request->enabledmathcaptcha)) {
+            if (isset($request->match_captcha_firstnumb) && !empty($request->match_captcha_firstnumb) && isset($request->match_captcha_secoundnumb) && !empty($request->match_captcha_secoundnumb)) {
+                if ($request->mathcaptcha_ctm != ($request->match_captcha_firstnumb + $request->match_captcha_secoundnumb))
+                    return response()->json(['response' => 'error_matchcaptcha', 'errors' => ['mathcaptcha_ctm' => 'Your answer is wrong.'], 'data' => $request->all(), 'type' => $request->page_type], 400);
+            } else {
+                return response()->json(['response' => 'error_matchcaptcha', 'errors' => ['mathcaptcha_ctm' => 'something is wrong!'], 'data' => $request->all(), 'type' => $request->page_type], 400);
+            }
+        }
 
         $hours = 12;
         if (isset($request->vote_schedule) && !empty($request->vote_schedule)) {
