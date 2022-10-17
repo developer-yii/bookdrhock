@@ -44,7 +44,8 @@
         <input type="hidden" name="page_type" id="page_type"
             value="{{ request()->routeIs('poll.embedView') ? 'embeded' : 'normal' }}">
 @endif
-<div class="poll-options-main option-view-{{ $type }} text-center  @if (isset($type) && !empty($type) && $type == 'details') mt-5 @endif">
+<div
+    class="poll-options-main option-view-{{ $type }} text-center  @if (isset($type) && !empty($type) && $type == 'details') mt-5 @endif">
     @if (isset($type) && !empty($type) && $type == 'details')
         @if (isset($poll->option_select) && !empty($poll->option_select) && count($poll_options) > $poll->option_select)
             <p>You can choose {{ convert_number($poll->option_select) }} option</p>
@@ -101,10 +102,20 @@
                 <div class="math-recaptcha-div mt-5">
                     <h5 class="font-weight-bold mt-0">Please answer it</h5>
                     <div class="form-group mb-0 d-flex align-items-baseline justify-content-center">
-                        <label for="captcha" class="col-form-label text-left">{{ app('mathcaptcha')->label() }}
+                        @php
+                            $first_numb = rand(1, 20);
+                            $second_numb = rand(1, 20);
+                        @endphp
+                        <input type="hidden" name="match_captcha_firstnumb" value="{{ $first_numb }}"
+                            id="match_captcha_firstnumb" class="match_captcha_firstnumb" readonly>
+                        <input type="hidden" name="match_captcha_secoundnumb" value="{{ $second_numb }}"
+                            id="match_captcha_secoundnumb" class="match_captcha_secoundnumb" readonly>
+                        <label for="captcha" class="col-form-label text-left">{{ $first_numb }} +
+                            {{ $second_numb }}
                             = </label>
                         <div class="input-group-div ml-3">
-                            {!! app('mathcaptcha')->input(['class' => 'form-control mathcaptcha', 'id' => 'mathcaptcha']) !!}
+                            <input type="text" id="mathcaptcha_ctm" name="mathcaptcha_ctm" required="required"
+                                value="" class="form-control mathcaptcha_ctm">
                             <span class="help-block error-span d-none"></span>
                         </div>
                     </div>
