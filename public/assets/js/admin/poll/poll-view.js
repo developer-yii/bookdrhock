@@ -19,6 +19,7 @@ $(document).ready(function () {
                 } else {
                     if ($('#page_type').val() && $('#page_type').val() == 'embeded') {
                         document.getElementsByClassName('poll-heading')[0].scrollIntoView();
+                        // showMessageBottom('error', 'You can choose ' + maximumVoteInWord + ' option only');
                     }
                     showMessage('error', 'You can choose ' + maximumVoteInWord + ' option only')
                 }
@@ -137,14 +138,18 @@ $(document).ready(function () {
                         $(formId)[0].reset();
                         $('.option-container-details .card-poll.selected').removeClass('selected');
                         if (response.type && response.type == 'embeded') {
-                            document.getElementsByClassName('poll-heading')[0].scrollIntoView();
+                            // document.getElementsByClassName('poll-heading')[0].scrollIntoView();
+                            showMessageBottom('error', response.message);
+                        } else {
+                            showMessage('error', response.message);
                         }
-                        showMessage('error', response.message);
                     } else {
                         if (response.type && response.type == 'embeded') {
-                            document.getElementsByClassName('poll-heading')[0].scrollIntoView();
+                            // document.getElementsByClassName('poll-heading')[0].scrollIntoView();
+                            showMessageBottom('error', 'something is wrong!');
+                        } else {
+                            showMessage('error', 'something is wrong!');
                         }
-                        showMessage('error', 'something is wrong!');
                     }
                 },
                 complete: function () {
@@ -170,9 +175,10 @@ $(document).ready(function () {
             })
         } else {
             if ($('#page_type').val() && $('#page_type').val() == 'embeded') {
-                document.getElementsByClassName('poll-heading')[0].scrollIntoView();
+                showMessageBottom('error', 'please select any option');
+            } else {
+                showMessage('error', 'please select any option')
             }
-            showMessage('error', 'please select any option')
         }
     })
 
