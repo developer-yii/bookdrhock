@@ -72,7 +72,8 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <button type="button" class="btn btn-success" id="update-profile">{{ __('Update Profile') }}</button>
+                                            <button type="button" class="btn btn-success"
+                                                id="update-profile">{{ __('Update Profile') }}</button>
                                         </div>
                                     </div>
                                 </div>
@@ -95,5 +96,5 @@
             updateUrl: "{{ route('userProfile.update') }}",
         }
     </script>
-    <script src="{{ asset('assets/js/admin/profile.js') }}" type="text/javascript"></script>
+    <script src="{{ addAdminJsLink('profile.js') }}" type="text/javascript"></script>
 @endpush

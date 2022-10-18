@@ -181,5 +181,5 @@
             loginUserId: {{ $login_user_id }}
         }
     </script>
-    <script src="{{ asset('assets/js/admin/user.js') }}" type="text/javascript"></script>
+    <script src="{{ addAdminJsLink('user.js') }}" type="text/javascript"></script>
 @endpush

@@ -84,5 +84,5 @@
             updateUrl: "{{ route('userProfile.passwordUpdate') }}",
         }
     </script>
-    <script src="{{ asset('assets/js/admin/profile-password.js') }}" type="text/javascript"></script>
+    <script src="{{ addAdminJsLink('profile-password.js') }}" type="text/javascript"></script>
 @endpush

@@ -431,5 +431,5 @@
             window.location.href = url;
         }
     </script>
-    <script src="{{ asset('assets/js/admin/poll/poll-create.js') }}" type="text/javascript"></script>
+    <script src="{{ addAdminJsLink('poll/poll-create.js') }}" type="text/javascript"></script>
 @endpush

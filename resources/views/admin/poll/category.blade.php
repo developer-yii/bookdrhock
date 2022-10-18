@@ -121,5 +121,5 @@
             deleteUrl: "{{ route('category.delete') }}"
         }
     </script>
-    <script src="{{ asset('assets/js/admin/poll/poll-category.js') }}" type="text/javascript"></script>
+    <script src="{{ addAdminJsLink('poll/poll-category.js') }}" type="text/javascript"></script>
 @endpush

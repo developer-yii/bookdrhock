@@ -191,5 +191,5 @@
             window.open(url, '_blank');
         }
     </script>
-    <script src="{{ asset('assets/js/admin/poll/poll.js') }}" type="text/javascript"></script>
+    <script src="{{ addAdminJsLink('poll/poll.js') }}" type="text/javascript"></script>
 @endpush
