@@ -84,5 +84,5 @@
             })
         </script>
     @endif
-    <script src="{{ asset('assets/js/admin/codeblock.js') }}" type="text/javascript"></script>
+    <script src="{{ addAdminJsLink('codeblock.js') }}" type="text/javascript"></script>
 @endpush

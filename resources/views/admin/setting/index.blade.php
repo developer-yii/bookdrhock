@@ -75,5 +75,5 @@
             addOrUpdateUrl: "{{ route('setting.createorupdate') }}",
         }
     </script>
-    <script src="{{ asset('assets/js/admin/setting.js') }}" type="text/javascript"></script>
+    <script src="{{ addAdminJsLink('setting.js') }}" type="text/javascript"></script>
 @endpush

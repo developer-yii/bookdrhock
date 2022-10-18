@@ -96,3 +96,13 @@ function getImagePath($filename = "", $foldername = "", $type = "poll_options")
         return "";
     }
 }
+
+function cacheclear()
+{
+    return time();
+}
+
+function addAdminJsLink($link)
+{
+    return asset('assets/js/admin') . "/" . $link . '?' . time();
+}
