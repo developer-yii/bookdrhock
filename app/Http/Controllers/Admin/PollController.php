@@ -250,6 +250,22 @@ class PollController extends Controller
 
     public function Voting(Request $request)
     {
+        if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
+            $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+            $_SERVER['HTTP_CLIENT_IP'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+        }
+        $client  = @$_SERVER['HTTP_CLIENT_IP'];
+        $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+        $remote  = $_SERVER['REMOTE_ADDR'];
+
+        if (filter_var($client, FILTER_VALIDATE_IP)) {
+            $clientIp = $client;
+        } elseif (filter_var($forward, FILTER_VALIDATE_IP)) {
+            $clientIp = $forward;
+        } else {
+            $clientIp = $remote;
+        }
+
         $request->validate([
             'selected_options' => 'required',
             'mathcaptcha_ctm' => 'required_if:enabledmathcaptcha,==,"enabledmathcaptcha"',
@@ -280,7 +296,7 @@ class PollController extends Controller
         }
 
         $curruntVotes = PollVote::query()
-            ->where('ip', $request->ip())
+            ->where('ip', $clientIp)
             ->where('poll_id', $request->id)
             ->where('created_at', '>', Carbon::now()->subHours($hours)->toDateTimeString())
             ->orderBy('created_at', 'DESC')
@@ -293,7 +309,7 @@ class PollController extends Controller
                 $model = new PollVote();
                 $model->user_id = (Auth::user()) ? Auth::user()->id : null;
                 $model->poll_id = $request->id;
-                $model->ip = $request->ip();
+                $model->ip = $clientIp;
                 $model->poll_options = $option;
                 $model->save();
             }
