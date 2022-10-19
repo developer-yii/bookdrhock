@@ -49,25 +49,33 @@ $(document).ready(function () {
 
     if ($('#clockdiv').length > 0) {
         if ($('#clockdiv').data('startdatetime') != null || $('#clockdiv').data('enddatetime') != null) {
-            var deadline = headinText = '';
+            var deadline = deadlineString = headinText = '';
             if (new Date() > new Date($('#clockdiv').data('enddatetime'))) {
                 deadline = new Date($('#clockdiv').data('startdatetime')).getTime();
+                deadlineString = $('#clockdiv').data('startdatetime');
                 headinText = "Poll ended";
                 $('.poll-options-main').empty().append(
                     '<a href="' + routes.homeUrl + '" class="btn btn-primary text-capitalize m-0">Running polls</a>');
             } else if (new Date() > new Date($('#clockdiv').data('startdatetime'))) {
                 deadline = new Date($('#clockdiv').data('enddatetime')).getTime();
+                deadlineString = $('#clockdiv').data('enddatetime');
                 headinText = "time left";
             } else {
                 deadline = new Date($('#clockdiv').data('startdatetime')).getTime();
+                deadlineString = $('#clockdiv').data('startdatetime');
                 headinText = "comming soon";
                 $('.poll-options-main').empty().append(
                     '<a href="' + routes.homeUrl + '" class="btn btn-primary text-capitalize m-0">Running polls</a>');
             }
             $('.countdown-heading').text(headinText);
+
+            // Have to split time funny for IOS and Safari NAN and timezone bug
+            var timeParsed = deadlineString.replace(' ', 'T').split(/[^0-9]/);
+            var countDown = new Date(new Date(timeParsed[0], timeParsed[1] - 1, timeParsed[2], timeParsed[3], timeParsed[4], timeParsed[5])).getTime();
+
             var x = setInterval(function () {
                 var now = new Date().getTime();
-                var t = deadline - now;
+                var t = countDown - now;
                 var days = Math.floor(t / (1000 * 60 * 60 * 24));
                 var hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 var minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));

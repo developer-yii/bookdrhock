@@ -304,6 +304,8 @@ class PollController extends Controller
             ->get()
             ->count();
 
+        $currunt_date = Carbon::now()->toDateTimeString();
+
         if (isset($curruntVotes) && $curruntVotes < $voteAdd) {
             foreach (explode(',', $request->selected_options) as $option) {
                 $model = new PollVote();
@@ -311,6 +313,7 @@ class PollController extends Controller
                 $model->poll_id = $request->id;
                 $model->ip = $clientIp;
                 $model->poll_options = $option;
+                $model->created_at = $currunt_date;
                 $model->save();
             }
 
@@ -318,7 +321,7 @@ class PollController extends Controller
 
             return response()->json(['response' => 'success', 'message' => 'Your vote submitted successfully', 'data' => $model, 'slug' => $request->slug, 'type' => $request->page_type], 200);
         } else {
-            return response()->json(['response' => 'error', 'message' => 'You can vote again after ' . $hours . ' hours', 'data' => $curruntVotes, 'type' => $request->page_type], 200);
+            return response()->json(['response' => 'error', 'message' => 'You\'ve completed your vote, vote again in ' . $hours . ' hours', 'data' => $curruntVotes, 'type' => $request->page_type], 200);
         }
     }
 
