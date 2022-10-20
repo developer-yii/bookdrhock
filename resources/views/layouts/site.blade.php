@@ -244,6 +244,13 @@
             });
         </script>
     @endif
+    @if (session('flash-poll-votedone'))
+        <script type="text/javascript">
+            $(document).ready(function() {
+                showMessage('success', '{{ session('flash-poll-votedone') }}');
+            });
+        </script>
+    @endif
     @stack('extraScript')
 </body>
 

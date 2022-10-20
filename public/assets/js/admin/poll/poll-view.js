@@ -71,10 +71,14 @@ $(document).ready(function () {
 
             // Have to split time funny for IOS and Safari NAN and timezone bug
             var timeParsed = deadlineString.replace(' ', 'T').split(/[^0-9]/);
-            var countDown = new Date(new Date(timeParsed[0], timeParsed[1] - 1, timeParsed[2], timeParsed[3], timeParsed[4], timeParsed[5])).getTime();
+            var countDown = new Date(Date.UTC(timeParsed[0], timeParsed[1] - 1, timeParsed[2], timeParsed[3], timeParsed[4], timeParsed[5]));
+
+            var nowtest = new Date();
+            var timertest = countDown - nowtest;
+            console.log('deadlinestring: ' + deadlineString, 'countDown: ' + countDown, 'timer: ' + timertest);
 
             var x = setInterval(function () {
-                var now = new Date().getTime();
+                var now = new Date();
                 var t = countDown - now;
                 var days = Math.floor(t / (1000 * 60 * 60 * 24));
                 var hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -142,15 +146,16 @@ $(document).ready(function () {
                             document.getElementsByClassName('poll-heading')[0].scrollIntoView();
                         }
                         pollResultRedirect(response.slug);
-                    } else if (response.response == 'error') {
+                    } else if (response.response == 'votedone') {
                         $(formId)[0].reset();
                         $('.option-container-details .card-poll.selected').removeClass('selected');
                         if (response.type && response.type == 'embeded') {
-                            // document.getElementsByClassName('poll-heading')[0].scrollIntoView();
-                            showMessageBottom('error', response.message);
+                            document.getElementsByClassName('poll-heading')[0].scrollIntoView();
+                            // showMessageBottom('error', response.message);
                         } else {
-                            showMessage('error', response.message);
+                            // showMessage('error', response.message);
                         }
+                        pollResultRedirect(response.slug);
                     } else {
                         if (response.type && response.type == 'embeded') {
                             // document.getElementsByClassName('poll-heading')[0].scrollIntoView();

@@ -100,7 +100,7 @@
                 <input type="hidden" name="enabledmathcaptcha" id="enabledmathcaptcha" class="enabledmathcaptcha"
                     value="enabledmathcaptcha">
                 <div class="math-recaptcha-div mt-5">
-                    <h5 class="font-weight-bold mt-0">Please answer it</h5>
+                    <h5 class="font-weight-bold mt-0 text-uppercase">Please answer it - 解决数学问题</h5>
                     <div class="form-group mb-0 d-flex align-items-baseline justify-content-center">
                         @php
                             $first_numb = rand(1, 20);
