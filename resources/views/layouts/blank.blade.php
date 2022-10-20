@@ -73,7 +73,11 @@
     @if (session('flash-poll-votedone'))
         <script type="text/javascript">
             $(document).ready(function() {
-                showMessage('success', '{{ session('flash-poll-votedone') }}');
+                let hours = $('#vote_schedule').val()
+                if (hours == '')
+                    hours = '12';
+
+                showMessage('success', 'You Have Completed Your Votes, vote again in ' + hours + ' hours');
             });
         </script>
     @endif
