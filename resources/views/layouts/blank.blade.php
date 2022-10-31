@@ -76,7 +76,7 @@
                 let hours = $('#vote_schedule').val()
                 if (hours == '')
                     hours = '12';
-
+                console.log('test', hours);
                 showMessage('success', 'You Have Completed Your Votes, vote again in ' + hours + ' hours');
             });
         </script>
