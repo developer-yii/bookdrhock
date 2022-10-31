@@ -119,6 +119,7 @@ class PollController extends Controller
 
     public function viewResults($slug)
     {
+        // ddp(session()->get('flash-poll-votedone'));
         $poll = Poll::query()
             ->where('slug', $slug)
             ->first();
@@ -305,23 +306,36 @@ class PollController extends Controller
             ->count();
 
         $currunt_date = Carbon::now()->toDateTimeString();
-
+        $insert_array = array();
+        $k=0;
         if (isset($curruntVotes) && $curruntVotes < $voteAdd) {
             foreach (explode(',', $request->selected_options) as $option) {
-                $model = new PollVote();
-                $model->user_id = (Auth::user()) ? Auth::user()->id : null;
-                $model->poll_id = $request->id;
-                $model->ip = $clientIp;
-                $model->poll_options = $option;
-                $model->created_at = $currunt_date;
-                $model->save();
+                $insert_array[$k]['poll_id'] = $request->id;
+                $insert_array[$k]['ip'] = $clientIp;
+                $insert_array[$k]['poll_options'] = $option;
+                $insert_array[$k]['created_at'] = $currunt_date;
+                $insert_array[$k]['updated_at'] = $currunt_date;
+
+                // $model = new PollVote();
+                // $model->user_id = (Auth::user()) ? Auth::user()->id : null;
+                // $model->poll_id = $request->id;
+                // $model->ip = $clientIp;
+                // $model->poll_options = $option;
+                // $model->created_at = $currunt_date;
+                // $model->save();
+                $k++;
+            }
+
+            if(!empty($insert_array)){
+                PollVote::insert($insert_array);
             }
 
             $request->session()->flash('flash-poll-voted');
 
-            return response()->json(['response' => 'success', 'message' => 'Your vote submitted successfully', 'data' => $model, 'slug' => $request->slug, 'type' => $request->page_type], 200);
+            return response()->json(['response' => 'success', 'message' => 'Your vote submitted successfully', 'data' => $insert_array, 'slug' => $request->slug, 'type' => $request->page_type], 200);
         } else {
-            $request->session()->flash('flash-poll-votedone', 'You Have Completed Your Votes, vote again in ' . $hours . ' hours');
+            // $request->session()->flash('flash-poll-votedone');
+            session()->flash('flash-poll-votedone', 'You Have Completed Your Votes, vote again in ' . $hours . ' hours');
 
             return response()->json(['response' => 'votedone', 'message' => 'You\'ve completed your vote, vote again in ' . $hours . ' hours', 'slug' => $request->slug, 'type' => $request->page_type], 200);
         }
