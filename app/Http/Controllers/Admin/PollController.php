@@ -87,28 +87,30 @@ class PollController extends Controller
         if (empty($poll))
             return abort(404);
 
-        $poll_options = PollOption::query()
+        $poll_option_array = PollOption::query()
             ->where('poll_id', $poll->id)
             ->get()
             ->keyBy('id')
             ->toArray();
 
-        $poll_voting = PollVote::query()
-            ->select('poll_options', DB::raw('count(*) as count'))
-            ->where('poll_id', $poll->id)
-            ->groupBy('poll_options')
-            ->get()
-            ->pluck('count', 'poll_options')
-            ->toArray();
+        $poll_options = $poll_option_array;
 
-        $poll_option_array = [];
-        foreach ($poll_options as $list) {
-            if (isset($poll_voting[$list['id']]))
-                $poll_option_array[$list['id']] = $list['admin_vote'] + $poll_voting[$list['id']];
-            else
-                $poll_option_array[$list['id']] = $list['admin_vote'];
-        }
-        arsort($poll_option_array);
+        // $poll_voting = PollVote::query()
+        //     ->select('poll_options', DB::raw('count(*) as count'))
+        //     ->where('poll_id', $poll->id)
+        //     ->groupBy('poll_options')
+        //     ->get()
+        //     ->pluck('count', 'poll_options')
+        //     ->toArray();
+
+        // $poll_option_array = [];
+        // foreach ($poll_options as $list) {
+        //     if (isset($poll_voting[$list['id']]))
+        //         $poll_option_array[$list['id']] = $list['admin_vote'] + $poll_voting[$list['id']];
+        //     else
+        //         $poll_option_array[$list['id']] = $list['admin_vote'];
+        // }
+        // arsort($poll_option_array);
 
         $userrole = Auth::user() ? Auth::user()->user_role : '';
         $type = 'details';
@@ -119,7 +121,6 @@ class PollController extends Controller
 
     public function viewResults($slug)
     {
-        // ddp(session()->get('flash-poll-votedone'));
         $poll = Poll::query()
             ->where('slug', $slug)
             ->first();
@@ -220,28 +221,30 @@ class PollController extends Controller
         if (empty($poll))
             return abort(404);
 
-        $poll_options = PollOption::query()
+        $poll_option_array = PollOption::query()
             ->where('poll_id', $poll->id)
             ->get()
             ->keyBy('id')
             ->toArray();
 
-        $poll_voting = PollVote::query()
-            ->select('poll_options', DB::raw('count(*) as count'))
-            ->where('poll_id', $poll->id)
-            ->groupBy('poll_options')
-            ->get()
-            ->pluck('count', 'poll_options')
-            ->toArray();
+        $poll_options = $poll_option_array;
 
-        $poll_option_array = [];
-        foreach ($poll_options as $list) {
-            if (isset($poll_voting[$list['id']]))
-                $poll_option_array[$list['id']] = $list['admin_vote'] + $poll_voting[$list['id']];
-            else
-                $poll_option_array[$list['id']] = $list['admin_vote'];
-        }
-        arsort($poll_option_array);
+        // $poll_voting = PollVote::query()
+        //     ->select('poll_options', DB::raw('count(*) as count'))
+        //     ->where('poll_id', $poll->id)
+        //     ->groupBy('poll_options')
+        //     ->get()
+        //     ->pluck('count', 'poll_options')
+        //     ->toArray();
+
+        // $poll_option_array = [];
+        // foreach ($poll_options as $list) {
+        //     if (isset($poll_voting[$list['id']]))
+        //         $poll_option_array[$list['id']] = $list['admin_vote'] + $poll_voting[$list['id']];
+        //     else
+        //         $poll_option_array[$list['id']] = $list['admin_vote'];
+        // }
+        // arsort($poll_option_array);
 
         $type = 'details';
         app('mathcaptcha')->reset();
@@ -307,7 +310,7 @@ class PollController extends Controller
 
         $currunt_date = Carbon::now()->toDateTimeString();
         $insert_array = array();
-        $k=0;
+        $k = 0;
         if (isset($curruntVotes) && $curruntVotes < $voteAdd) {
             foreach (explode(',', $request->selected_options) as $option) {
                 $insert_array[$k]['poll_id'] = $request->id;
@@ -326,7 +329,7 @@ class PollController extends Controller
                 $k++;
             }
 
-            if(!empty($insert_array)){
+            if (!empty($insert_array)) {
                 PollVote::insert($insert_array);
             }
 
