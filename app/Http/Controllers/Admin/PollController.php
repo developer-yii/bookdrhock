@@ -328,6 +328,7 @@ class PollController extends Controller
 
             if(!empty($insert_array)){
                 PollVote::insert($insert_array);
+                PollOption::whereIn('id',explode(',', $request->selected_options))->increment('user_vote_count');
             }
 
             $request->session()->flash('flash-poll-voted');
