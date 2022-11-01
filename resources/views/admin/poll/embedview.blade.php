@@ -36,6 +36,10 @@
             $('.poll-view').hide();
             $('.result-view').show();
             $('.result-view').html(data);
+
+            if ($(".lazyload").length > 0) {
+                $("img.lazyload").lazyload();
+            }
         }
 
         var maximumVoteInNumber =
