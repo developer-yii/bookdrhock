@@ -87,13 +87,13 @@ class PollController extends Controller
         if (empty($poll))
             return abort(404);
 
-        $poll_option_array = PollOption::query()
+        $poll_options = PollOption::query()
             ->where('poll_id', $poll->id)
             ->get()
             ->keyBy('id')
             ->toArray();
 
-        $poll_options = $poll_option_array;
+        // $poll_options = $poll_option_array;
 
         // $poll_voting = PollVote::query()
         //     ->select('poll_options', DB::raw('count(*) as count'))
@@ -103,14 +103,11 @@ class PollController extends Controller
         //     ->pluck('count', 'poll_options')
         //     ->toArray();
 
-        // $poll_option_array = [];
-        // foreach ($poll_options as $list) {
-        //     if (isset($poll_voting[$list['id']]))
-        //         $poll_option_array[$list['id']] = $list['admin_vote'] + $poll_voting[$list['id']];
-        //     else
-        //         $poll_option_array[$list['id']] = $list['admin_vote'];
-        // }
-        // arsort($poll_option_array);
+        $poll_option_array = [];
+        foreach ($poll_options as $list) {
+            $poll_option_array[$list['id']] = $list['admin_vote'] + $list['user_vote_count'];
+        }
+        arsort($poll_option_array);
 
         $userrole = Auth::user() ? Auth::user()->user_role : '';
         $type = 'details';
@@ -215,13 +212,13 @@ class PollController extends Controller
         if (empty($poll))
             return abort(404);
 
-        $poll_option_array = PollOption::query()
+        $poll_options = PollOption::query()
             ->where('poll_id', $poll->id)
             ->get()
             ->keyBy('id')
             ->toArray();
 
-        $poll_options = $poll_option_array;
+        // $poll_options = $poll_option_array;
 
         // $poll_voting = PollVote::query()
         //     ->select('poll_options', DB::raw('count(*) as count'))
@@ -231,14 +228,11 @@ class PollController extends Controller
         //     ->pluck('count', 'poll_options')
         //     ->toArray();
 
-        // $poll_option_array = [];
-        // foreach ($poll_options as $list) {
-        //     if (isset($poll_voting[$list['id']]))
-        //         $poll_option_array[$list['id']] = $list['admin_vote'] + $poll_voting[$list['id']];
-        //     else
-        //         $poll_option_array[$list['id']] = $list['admin_vote'];
-        // }
-        // arsort($poll_option_array);
+        $poll_option_array = [];
+        foreach ($poll_options as $list) {
+            $poll_option_array[$list['id']] = $list['admin_vote'] + $list['user_vote_count'];
+        }
+        arsort($poll_option_array);
 
         $type = 'details';
         app('mathcaptcha')->reset();
