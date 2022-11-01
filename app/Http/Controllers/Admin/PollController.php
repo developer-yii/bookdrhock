@@ -339,7 +339,8 @@ class PollController extends Controller
             $pollOptions = Poll::query()
                 ->select(
                     'poll_options.*',
-                    DB::raw("(count(poll_votes.poll_options) + poll_options.admin_vote) as votes"),
+                    // DB::raw("(count(poll_votes.poll_options) + poll_options.admin_vote) as votes"),
+                    DB::raw("(poll_options.user_vote_count + poll_options.admin_vote) as votes"),
                     'polls.slug as slug'
                 )
                 ->join('poll_options', 'poll_options.poll_id', '=', 'polls.id')
