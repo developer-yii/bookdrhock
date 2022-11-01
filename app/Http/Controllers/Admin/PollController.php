@@ -134,20 +134,17 @@ class PollController extends Controller
             ->keyBy('id')
             ->toArray();
 
-        $poll_voting = PollVote::query()
-            ->select('poll_options', DB::raw('count(*) as count'))
-            ->where('poll_id', $poll->id)
-            ->groupBy('poll_options')
-            ->get()
-            ->pluck('count', 'poll_options')
-            ->toArray();
+        // $poll_voting = PollVote::query()
+        //     ->select('poll_options', DB::raw('count(*) as count'))
+        //     ->where('poll_id', $poll->id)
+        //     ->groupBy('poll_options')
+        //     ->get()
+        //     ->pluck('count', 'poll_options')
+        //     ->toArray();
 
         $poll_option_array = [];
         foreach ($poll_options as $list) {
-            if (isset($poll_voting[$list['id']]))
-                $poll_option_array[$list['id']] = $list['admin_vote'] + $poll_voting[$list['id']];
-            else
-                $poll_option_array[$list['id']] = $list['admin_vote'];
+            $poll_option_array[$list['id']] = $list['admin_vote']+$list['user_vote_count'];
         }
         arsort($poll_option_array);
 
@@ -172,20 +169,17 @@ class PollController extends Controller
             ->keyBy('id')
             ->toArray();
 
-        $poll_voting = PollVote::query()
-            ->select('poll_options', DB::raw('count(*) as count'))
-            ->where('poll_id', $poll->id)
-            ->groupBy('poll_options')
-            ->get()
-            ->pluck('count', 'poll_options')
-            ->toArray();
+        // $poll_voting = PollVote::query()
+        //     ->select('poll_options', DB::raw('count(*) as count'))
+        //     ->where('poll_id', $poll->id)
+        //     ->groupBy('poll_options')
+        //     ->get()
+        //     ->pluck('count', 'poll_options')
+        //     ->toArray();
 
         $poll_option_array = [];
         foreach ($poll_options as $list) {
-            if (isset($poll_voting[$list['id']]))
-                $poll_option_array[$list['id']] = $list['admin_vote'] + $poll_voting[$list['id']];
-            else
-                $poll_option_array[$list['id']] = $list['admin_vote'];
+            $poll_option_array[$list['id']] = $list['admin_vote']+$list['user_vote_count'];
         }
         arsort($poll_option_array);
 
