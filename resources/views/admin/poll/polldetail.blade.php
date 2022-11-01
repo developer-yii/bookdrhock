@@ -135,7 +135,12 @@
 @endif
 @if (isset($type) && !empty($type) && $type == 'results')
     <div class="card-bottom mt-4">
-        <a href="{{ request()->routeIs('poll.embedViewResults') ? route('poll.embedView', $poll->slug) : route('poll.view', $poll->slug) }}"
+        @if (isset($pagetype) && !empty($pagetype))
+        <a href="{{ ($pagetype!='normal') ? route('poll.embedView', $poll->slug) : route('poll.view', $poll->slug) }}"
             class="btn btn-primary">Go to poll page</a>
+        @else
+        <a href="{{ request()->routeIs('poll.voting') ? route('poll.embedView', $poll->slug) : route('poll.view', $poll->slug) }}"
+            class="btn btn-primary">Go to poll page</a>
+        @endif
     </div>
 @endif

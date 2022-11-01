@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\View;
 
 class PollController extends Controller
 {
@@ -322,15 +323,44 @@ class PollController extends Controller
                 PollOption::whereIn('id',explode(',', $request->selected_options))->increment('user_vote_count');
             }
 
-            $request->session()->flash('flash-poll-voted');
+            // $request->session()->flash('flash-poll-voted');
 
-            return response()->json(['response' => 'success', 'message' => 'Your vote submitted successfully', 'data' => $insert_array, 'slug' => $request->slug, 'type' => $request->page_type], 200);
+            $view = $this->getResultView($request->id,$request->page_type);
+
+            return response()->json(['response' => 'success', 'message' => 'Your vote submitted successfully', 'data' => $insert_array, 'slug' => $request->slug, 'type' => $request->page_type,'html'=>$view], 200);
         } else {
             // $request->session()->flash('flash-poll-votedone');
             session()->flash('flash-poll-votedone', 'You Have Completed Your Votes, vote again in ' . $hours . ' hours');
+            $view = $this->getResultView($request->id,$request->page_type);
 
-            return response()->json(['response' => 'votedone', 'message' => 'You\'ve completed your vote, vote again in ' . $hours . ' hours', 'slug' => $request->slug, 'type' => $request->page_type], 200);
+            return response()->json(['response' => 'votedone', 'message' => 'You\'ve completed your vote, vote again in ' . $hours . ' hours', 'slug' => $request->slug, 'type' => $request->page_type,'html'=>$view], 200);
         }
+    }
+
+    public function getResultView($id,$pagetype)
+    {
+        $poll = Poll::query()
+            ->where('id', $id)
+            ->first();
+
+        $poll_options = PollOption::query()
+            ->where('poll_id', $id)
+            ->get()
+            ->keyBy('id')
+            ->toArray();
+
+        $poll_option_array = [];
+        foreach ($poll_options as $list) {
+            $poll_option_array[$list['id']] = $list['admin_vote']+$list['user_vote_count'];
+        }
+        arsort($poll_option_array);
+
+        $userrole = '';
+        $type = 'results';
+
+        $view = View::make('admin.poll.result_ajax', compact('poll', 'userrole', 'type', 'poll_options', 'poll_option_array','pagetype'))->render();
+        return $view;
+            
     }
 
     public function getPollOptions(Request $request)

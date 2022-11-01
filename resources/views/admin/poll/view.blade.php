@@ -15,11 +15,34 @@
 @section('content')
     <div class="container">
         <!--row -->
-        <div class="row my-5">
+        <div class="row my-5 poll-view">
             <div class="col-12">
                 <div class="row align-items-center justify-content-center">
                     <div class="col-md-8 col-xl-6 col-12">
                         <div class="bg-white card poll-view-card rounded-0 position-relative">
+                            @if (isset($userrole) && !empty($userrole) && $userrole == 1)
+                                <div class="edit-button position-absolute top right">
+                                    <a href="{{ route('poll.editForm', $poll->id) }}"
+                                        class="btn btn-info waves-effect waves-light">
+                                        <span>edit poll</span>
+                                        <i class=" ti-pencil-alt"></i>
+                                    </a>
+                                </div>
+                            @endif
+                            @php $type = isset($type) && !empty($type) ? $type : 'details' @endphp
+                            @include('admin.poll.polldetail', ['type' => $type])
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!--row -->
+        <div class="row my-5">
+            <div class="col-12">
+                <div class="row align-items-center justify-content-center">
+                    <div class="col-md-8 col-xl-6 col-12">
+                        <div class="bg-white card poll-view-card rounded-0 position-relative result-view">
                             @if (isset($userrole) && !empty($userrole) && $userrole == 1)
                                 <div class="edit-button position-absolute top right">
                                     <a href="{{ route('poll.editForm', $poll->id) }}"
@@ -57,11 +80,14 @@
             homeUrl: "{{ route('home') }}",
             votingUrl: "{{ route('poll.voting') }}"
         }
-
-        function pollResultRedirect(slug) {
-            url = "{{ route('poll.viewResults', ':slug') }}";
-            url = url.replace(':slug', slug);
-            window.location.href = url;
+        $('.result-view').hide();
+        function pollResultRedirect(slug,data) {
+            // url = "{{ route('poll.viewResults', ':slug') }}";
+            // url = url.replace(':slug', slug);
+            // window.location.href = url;
+            $('.poll-view').hide();
+            $('.result-view').show();
+            $('.result-view').html(data);
         }
 
         var maximumVoteInNumber =

@@ -8,10 +8,11 @@
 @endpush
 
 @section('content')
-    <div class="bg-white card poll-view-card rounded-0 position-relative w-100 m-1">
+    <div class="bg-white card poll-view-card rounded-0 position-relative w-100 m-1 poll-view">
         @php $type = isset($type) && !empty($type) ? $type : 'details' @endphp
         @include('admin.poll.polldetail', ['type' => $type])
     </div>
+    <div class="result-view bg-white card poll-view-card rounded-0 position-relative w-100 m-1 result-view"></div>
 @endsection
 
 @push('extraScript')
@@ -30,11 +31,11 @@
             indexUrl: "{{ route('poll') }}",
             votingUrl: "{{ route('poll.voting') }}"
         }
-
-        function pollResultRedirect(slug) {
-            url = "{{ route('poll.embedViewResults', ':slug') }}";
-            url = url.replace(':slug', slug);
-            window.location.href = url;
+        $('.result-view').hide();
+        function pollResultRedirect(slug,data) {
+            $('.poll-view').hide();
+            $('.result-view').show();
+            $('.result-view').html(data);
         }
 
         var maximumVoteInNumber =
