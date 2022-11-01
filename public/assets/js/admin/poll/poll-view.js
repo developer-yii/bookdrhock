@@ -144,8 +144,8 @@ $(document).ready(function () {
                     if (response.response == 'success') {
                         if (response.type && response.type == 'embeded') {
                             document.getElementsByClassName('poll-heading')[0].scrollIntoView();
-                            showMessage('success', response.message);
                         }
+                        showMessage('success', response.message);
                         pollResultRedirect(response.slug,response.html);
                     } else if (response.response == 'votedone') {
                         $(formId)[0].reset();
