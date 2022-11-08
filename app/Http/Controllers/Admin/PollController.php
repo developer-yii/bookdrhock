@@ -15,6 +15,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Validator;
 
 class PollController extends Controller
 {
@@ -510,5 +511,148 @@ class PollController extends Controller
         PollOption::where('poll_id', $request->id)->delete();
         PollVote::where('poll_id', $request->id)->delete();
         return response()->json(['response' => 'success', 'message' => 'Poll deleted successfully!']);
+    }
+
+    // call widget-poll-list
+    public function getlist($slug)
+    {
+        $poll = Poll::query()
+            ->where('slug', $slug)
+            ->first();
+
+        if (empty($poll))
+            return abort(404);
+
+        $poll_options = PollOption::query()
+            ->where('poll_id', $poll->id)
+            ->get()
+            ->keyBy('id')
+            ->toArray();
+
+        $poll_option_array = [];
+        foreach ($poll_options as $list) {
+            $poll_option_array[$list['id']] = $list['admin_vote'] + $list['user_vote_count'];
+        }
+        arsort($poll_option_array);
+
+        $type = 'details';
+        app('mathcaptcha')->reset();
+
+        return view('admin.poll_widget.poll_list', compact('poll', 'type', 'poll_options', 'poll_option_array'));
+    }
+
+    // call widget add poll
+    public function votingwidget(Request $request)
+    {
+        if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
+            $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+            $_SERVER['HTTP_CLIENT_IP'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+        }
+        $client  = @$_SERVER['HTTP_CLIENT_IP'];
+        $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+        $remote  = $_SERVER['REMOTE_ADDR'];
+
+        if (filter_var($client, FILTER_VALIDATE_IP)) {
+            $clientIp = $client;
+        } elseif (filter_var($forward, FILTER_VALIDATE_IP)) {
+            $clientIp = $forward;
+        } else {
+            $clientIp = $remote;
+        }
+
+        $validator = Validator::make($request->all(), [
+          'selected_options' => 'required',
+            'mathcaptcha_ctm' => 'required_if:enabledmathcaptcha,==,"enabledmathcaptcha"',
+            'g-recaptcha-response' => ['required_if:enabledgooglecaptcha,==,"enabledgooglecaptcha"', new ReCaptcha]
+        ],[
+            'mathcaptcha.mathcaptcha' => 'Your answer is wrong.',
+            'mathcaptcha_ctm.required_if' => 'Please give answer.',
+            'g-recaptcha-response.required_if' => 'Please valid google recaptcha.'
+        ]);
+        if (!$validator->passes())
+        {
+            $err=$validator->errors()->toArray();
+            $data = [];
+            foreach ($err as $key => $value)
+            {
+                $data[$key]=$value[0];
+            }
+            return response()->json(['errors'=>$data],400);
+        }
+        if (isset($request->enabledmathcaptcha) && !empty($request->enabledmathcaptcha)) {
+            if (isset($request->match_captcha_firstnumb) && !empty($request->match_captcha_firstnumb) && isset($request->match_captcha_secoundnumb) && !empty($request->match_captcha_secoundnumb)) {
+                if ($request->mathcaptcha_ctm != ($request->match_captcha_firstnumb + $request->match_captcha_secoundnumb))
+                    return response()->json(['response' => 'error_matchcaptcha', 'errors' => ['mathcaptcha_ctm' => 'Your answer is wrong.'], 'data' => $request->all(), 'type' => $request->page_type], 400);
+            } else {
+                return response()->json(['response' => 'error_matchcaptcha', 'errors' => ['mathcaptcha_ctm' => 'something is wrong!'], 'data' => $request->all(), 'type' => $request->page_type], 400);
+            }
+        }
+
+        $hours = 12;
+        if (isset($request->vote_schedule) && !empty($request->vote_schedule)) {
+            $hours = (int) $request->vote_schedule;
+        }
+
+        $voteAdd = 1;
+        if (isset($request->vote_add) && !empty($request->vote_add)) {
+            $voteAdd = (int) $request->vote_add;
+        }
+
+        $curruntVotes = PollVote::query()
+            ->where('ip', $clientIp)
+            ->where('poll_id', $request->id)
+            ->where('created_at', '>', Carbon::now()->subHours($hours)->toDateTimeString())
+            ->orderBy('created_at', 'DESC')
+            ->groupBy('created_at')
+            ->get()
+            ->count();
+
+        $currunt_date = Carbon::now()->toDateTimeString();
+        $insert_array = array();
+        $k = 0;
+        if (isset($curruntVotes) && $curruntVotes < $voteAdd) {
+            foreach (explode(',', $request->selected_options) as $option) {
+                $insert_array[$k]['poll_id'] = $request->id;
+                $insert_array[$k]['ip'] = $clientIp;
+                $insert_array[$k]['poll_options'] = $option;
+                $insert_array[$k]['created_at'] = $currunt_date;
+                $insert_array[$k]['updated_at'] = $currunt_date;
+                $k++;
+            }
+            if (!empty($insert_array)) {
+                PollVote::insert($insert_array);
+                PollOption::whereIn('id',explode(',', $request->selected_options))->increment('user_vote_count');
+            }            
+            return response()->json(['response' => 'success', 'message' => 'Your vote submitted successfully', 'data' => $insert_array, 'slug' => $request->slug, 'type' => $request->page_type], 200);
+        } else {            
+            session()->flash('flash-poll-votedone', 'You Have Completed Your Votes, vote again in ' . $hours . ' hours');            
+            return response()->json(['response' => 'votedone', 'message' => 'You\'ve completed your vote, vote again in ' . $hours . ' hours', 'slug' => $request->slug, 'type' => $request->page_type], 200);
+        }
+    }
+    public function getWidgetResultView($slug)
+    {
+        $pagetype = "embeded";
+        $poll = Poll::query()
+            ->where('slug', $slug)
+            ->first();
+        $poll_id = (isset($poll->id))? $poll->id:"";
+        $poll_options = PollOption::query()
+            ->where('poll_id', $poll_id)
+            ->get()
+            ->keyBy('id')
+            ->toArray();        
+        $poll_option_array = [];
+        if(!empty($poll_options)){
+            foreach ($poll_options as $list) {
+                $poll_option_array[$list['id']] = $list['admin_vote']+$list['user_vote_count'];
+            }
+            arsort($poll_option_array);            
+        }
+        $userrole = '';
+        $type = 'results';
+
+        $view = View::make('admin.poll_widget.poll_result_ajax', compact('poll', 'userrole', 'type', 'poll_options', 'poll_option_array','pagetype'))->render();
+        return response()->json(['response' => 'success','html' => $view], 200);
+            
     }
 }

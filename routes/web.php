@@ -97,6 +97,12 @@ Route::prefix('poll')->namespace('Admin')->name('poll.')->group(function () {
     Route::post('/voting', 'PollController@Voting')->name('voting');
 });
 
+Route::prefix('pollwidget')->namespace('Admin')->middleware('cors')->group(function () {
+    Route::get('/getlist/{slug}', 'PollController@getlist')->name('pollwidget.getlist');
+    Route::post('/votingwidget', 'PollController@votingwidget')->name('pollwidget.votingwidget');
+    Route::get('/getresults/{slug}', 'PollController@getWidgetResultView')->name('pollwidget.getresults');    
+});
+
 Route::name('site.')->namespace('Site')->group(function () {
     Route::get('/category/{slug}', 'SiteController@getCategoryView')->name('getCategoryView');
     Route::get('/about', 'SiteController@about')->name('about');
