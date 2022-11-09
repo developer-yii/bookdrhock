@@ -1,4 +1,4 @@
-domain_url = "http://127.0.0.1:8001";
+domain_url = "https://dev.amcodr.co/bookdrhock/public";
 //domain_url = "https://www.bookdrhock.com";
 //domain_url = "https://bookdrhock.amcodr.co";
 var d = new Date();
