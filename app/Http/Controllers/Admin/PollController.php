@@ -540,6 +540,32 @@ class PollController extends Controller
 
         return view('admin.poll_widget.poll_list', compact('poll', 'type', 'poll_options', 'poll_option_array'));
     }
+    public function getlistHtml($slug)
+    {
+        $poll = Poll::query()
+            ->where('slug', $slug)
+            ->first();
+
+        if (empty($poll))
+            return abort(404);
+
+        $poll_options = PollOption::query()
+            ->where('poll_id', $poll->id)
+            ->get()
+            ->keyBy('id')
+            ->toArray();
+
+        $poll_option_array = [];
+        foreach ($poll_options as $list) {
+            $poll_option_array[$list['id']] = $list['admin_vote'] + $list['user_vote_count'];
+        }
+        arsort($poll_option_array);
+
+        $type = 'details';
+        app('mathcaptcha')->reset();
+
+        return view('admin.poll_widget.poll_list_html', compact('poll', 'type', 'poll_options', 'poll_option_array'));
+    }
 
     // call widget add poll
     public function votingwidget(Request $request)
