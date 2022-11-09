@@ -9,7 +9,7 @@
 @push('extraScript')    
     <script type="text/javascript">        
         var routes = {
-            indexUrl: "{{ url('pollwidget/getlist') }}",
+            indexUrl: "{{ url('pollwidget/getlistHtml') }}",
             votingUrl: "{{ route('pollwidget.votingwidget') }}",
             resultsUrl: "{{ url('pollwidget/getresults') }}",
         }

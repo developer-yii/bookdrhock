@@ -1,42 +1,54 @@
 $(document).ready(function () {
-    if ($('#poll-vote-form').length > 0) {
-        $('#poll-vote-form')[0].reset();
-    }
-    if ($('.option-container-details .card-poll').length > 0) {
-        $('.option-container-details .card-poll').on('click', function (e) {
-            e.preventDefault();
-            if (maximumVoteInNumber > 0 && $('.option-container-details .card-poll.selected').length == maximumVoteInNumber && !$(this).hasClass('selected')) {
-                if (maximumVoteInNumber == 1) {
-                    $('.option-container-details .card-poll').removeClass('selected');
-                    $(this).addClass('selected');
-                } else {
-                    document.getElementsByClassName('poll-heading')[0].scrollIntoView();
-                    showMessage('error', 'You can choose ' + maximumVoteInWord + ' option only')
-                }
-            } else {
-                $(this).toggleClass('selected');
+    if ($('.fandomz-poll-widget #poll-vote-form').length > 0) {
+        $('.fandomz-poll-widget #poll-vote-form')[0].reset();
+    }        
+
+    $('.fandomz-poll-widget').on('click', '.option-container-details .card-poll', function (e) {    
+        e.preventDefault();
+        if (maximumVoteInNumber > 0 && $('.option-container-details .card-poll.selected').length == maximumVoteInNumber && !$(this).hasClass('selected')) {
+            if (maximumVoteInNumber == 1) {
+                $('.fandomz-poll-widget .option-container-details .card-poll').removeClass('selected');
+                $(this).addClass('selected');
+            } else {                
+                showMessage('error', 'You can choose ' + maximumVoteInWord + ' option only')
             }
-        })
+        } else {
+            $(this).toggleClass('selected');
+        }
+    });
+    
+    $('.fandomz-poll-widget').on('click', '.option-container-details .imagelight-box a', function (e) {
+        e.preventDefault();
+        $(this).parents('.card-poll').toggleClass('selected');
+    });    
+    // call auto load
+    setTimeout(function () {
+        setFancyboxImg();
+        setClockdiv();
+        setLazyloadImg();
+    },1000);
+    function setLazyloadImg(){
+        if ($(".lazyload").length > 0) {
+            $(".lazyload").lazyload({
+                 event: "lazyload",
+                 effect: "fadeIn",
+                 effectspeed: 2000
+               })
+             .trigger("lazyload");
+        }
     }
-    setFancyboxImg();
     function setFancyboxImg(){
-        if ($('.imagelight-box').length > 0) {
+        if ($('.fandomz-poll-widget .imagelight-box').length > 0) {
             var count = 0;
-            $(".imagelight-box a").each(function () {
+            $(".fandomz-poll-widget .imagelight-box a").each(function () {
                 count++;
                 $(this).attr("data-fancybox", "optionimage-" + count);
                 $(this).attr("data-caption", $(this).find("img").attr("alt"));
                 $(this).attr("title", $(this).find("img").attr("alt"));
             });
             $(".imagelight-box a").fancybox();
-            $(document).on('click', '.option-container-details .imagelight-box a', function (e) {
-                e.preventDefault();
-                $(this).parents('.card-poll').toggleClass('selected');
-            })
         }        
     }
-
-    setClockdiv();
     function setClockdiv(){
         if ($('#clockdiv').length > 0) {
             if ($('#clockdiv').data('startdatetime') != null || $('#clockdiv').data('enddatetime') != null) {
@@ -44,10 +56,8 @@ $(document).ready(function () {
                 if (new Date() > new Date($('#clockdiv').data('enddatetime'))) {
                     deadline = new Date($('#clockdiv').data('startdatetime')).getTime();
                     deadlineString = $('#clockdiv').data('startdatetime');
-                    headinText = "Poll ended";
+                    headinText = "Poll ended";                    
                     $('.poll-options-main').empty();
-                    /*$('.poll-options-main').empty().append(
-                        '<a href="' + routes.homeUrl + '" class="btn btn-primary text-capitalize m-0">Running polls</a>');*/
                 } else if (new Date() > new Date($('#clockdiv').data('startdatetime'))) {
                     deadline = new Date($('#clockdiv').data('enddatetime')).getTime();
                     deadlineString = $('#clockdiv').data('enddatetime');
@@ -57,43 +67,40 @@ $(document).ready(function () {
                     deadlineString = $('#clockdiv').data('startdatetime');
                     headinText = "comming soon";
                     $('.poll-options-main').empty();
-                    /*$('.poll-options-main').empty().append(
-                        '<a href="' + routes.homeUrl + '" class="btn btn-primary text-capitalize m-0">Running polls</a>');*/
                 }
                 $('.countdown-heading').text(headinText);
-
-                // Have to split time funny for IOS and Safari NAN and timezone bug
                 var timeParsed = deadlineString.replace(' ', 'T').split(/[^0-9]/);
                 var countDown = new Date(Date.UTC(timeParsed[0], timeParsed[1] - 1, timeParsed[2], timeParsed[3], timeParsed[4], timeParsed[5]));
 
                 var nowtest = new Date();
                 var timertest = countDown - nowtest;
-                console.log('deadlinestring: ' + deadlineString, 'countDown: ' + countDown, 'timer: ' + timertest);
 
                 var x = setInterval(function () {
-                    var now = new Date();
-                    var t = countDown - now;
-                    var days = Math.floor(t / (1000 * 60 * 60 * 24));
-                    var hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    var minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
-                    var seconds = Math.floor((t % (1000 * 60)) / 1000);
+                    if ($('#day').length > 0) {
+                        var now = new Date();
+                        var t = countDown - now;
+                        var days = Math.floor(t / (1000 * 60 * 60 * 24));
+                        var hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        var minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
+                        var seconds = Math.floor((t % (1000 * 60)) / 1000);
 
-                    document.getElementById("day").innerHTML = days.toString().length == 1 ? '0' + days :
-                        days;
-                    document.getElementById("hour").innerHTML = hours.toString().length == 1 ? '0' + hours :
-                        hours;
-                    document.getElementById("minute").innerHTML = minutes.toString().length == 1 ? '0' +
-                        minutes :
-                        minutes;
-                    document.getElementById("second").innerHTML = (seconds.toString().length == 1) ? '0' +
-                        seconds :
-                        seconds;
-                    if (t < 0) {
-                        clearInterval(x);
-                        document.getElementById("day").innerHTML = '00';
-                        document.getElementById("hour").innerHTML = '00';
-                        document.getElementById("minute").innerHTML = '00';
-                        document.getElementById("second").innerHTML = '00';
+                        document.getElementById("day").innerHTML = days.toString().length == 1 ? '0' + days :
+                            days;
+                        document.getElementById("hour").innerHTML = hours.toString().length == 1 ? '0' + hours :
+                            hours;
+                        document.getElementById("minute").innerHTML = minutes.toString().length == 1 ? '0' +
+                            minutes :
+                            minutes;
+                        document.getElementById("second").innerHTML = (seconds.toString().length == 1) ? '0' +
+                            seconds :
+                            seconds;
+                        if (t < 0) {
+                            clearInterval(x);
+                            document.getElementById("day").innerHTML = '00';
+                            document.getElementById("hour").innerHTML = '00';
+                            document.getElementById("minute").innerHTML = '00';
+                            document.getElementById("second").innerHTML = '00';
+                        }
                     }
                 }, 1000);
             }
@@ -110,7 +117,6 @@ $(document).ready(function () {
             return false;
         }
     });
-
     // Add or Update Poll
     $(vottingBtnId).on('click', function (e) {
         e.preventDefault();
@@ -137,13 +143,11 @@ $(document).ready(function () {
                 success: function (response) {
                     $('#poll-vote-form')[0].reset();
                     if (response.response == 'success') {
-                        document.getElementsByClassName('poll-heading')[0].scrollIntoView();
                         showMessage('success', response.message);
                         pollResultView(response.slug);
                     } else if (response.response == 'votedone') {
                         $(formId)[0].reset();
                         $('.option-container-details .card-poll.selected').removeClass('selected');
-                        document.getElementsByClassName('poll-heading')[0].scrollIntoView();
                         showMessage('success', response.message);
                         pollResultView(response.slug);
                     } else {
@@ -172,43 +176,45 @@ $(document).ready(function () {
         }
     });
     let ResultListID = ".fandomz_result_list";
-    $('body').on('click',ResultListID,function(e){
+    $('.fandomz-poll-widget').on('click',ResultListID,function(e){
         e.preventDefault();
         var slug = $('#slug').val();
+        $('.poll-heading')[0].scrollIntoView();
         pollResultView(slug);
     });
 
     let pollListID = ".fandomz_poll_list";
-    $('body').on('click',pollListID,function(e){
+    $('.fandomz-poll-widget').on('click',pollListID,function(e){
         e.preventDefault();
         var slug = $('#slug').val();
+        $('.poll-heading')[0].scrollIntoView();
         getpollList(slug);
     });
 
-    function pollListView(slug,data) {        
+    function pollListView(slug,data) {
         $('#poll_list_'+slug).show();
         $('#poll_list_'+slug).html(data);
 
         $('#poll_result_'+slug).hide();
         $('#poll_result_'+slug).html("");
 
-        if ($(".lazyload").length > 0) {
-            $("img.lazyload").lazyload();
-        }
-        setFancyboxImg();
-        setClockdiv();
+        setTimeout(function () {            
+            setFancyboxImg();
+            setClockdiv();
+            setLazyloadImg();
+        },1000);  
     }
     function pollResultRedirect(slug,data) {
         $('#poll_list_'+slug).hide();
         $('#poll_list_'+slug).html("");
         
-        $('#poll_result_'+slug).show();
+        $('#poll_result_'+slug).show();        
         $('#poll_result_'+slug).html(data);
 
-        if ($(".lazyload").length > 0) {
-            $("img.lazyload").lazyload();
-        }
-        setFancyboxImg();        
+        setTimeout(function () {
+            setFancyboxImg();            
+            setLazyloadImg();
+        },1000);
     }
     function pollResultView(slug){
         $.ajax({
@@ -247,5 +253,5 @@ $(document).ready(function () {
             error: function (error) {
             }
         });
-    }    
+    }        
 });
