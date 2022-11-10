@@ -182,7 +182,7 @@ $(document).ready(function () {
     $('.fandomz-poll-widget').on('click',ResultListID,function(e){
         e.preventDefault();
         var slug = $('#slug').val();
-        //$('.poll-heading')[0].scrollIntoView();
+        $('.poll-heading')[0].scrollIntoView();
         reinitPreloader();
         pollResultView(slug);
     });
@@ -191,7 +191,7 @@ $(document).ready(function () {
     $('.fandomz-poll-widget').on('click',pollListID,function(e){
         e.preventDefault();
         var slug = $('#slug').val();
-        //$('.poll-heading')[0].scrollIntoView();
+        $('.poll-heading')[0].scrollIntoView();
         reinitPreloader();
         getpollList(slug);
     });
