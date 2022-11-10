@@ -107,8 +107,8 @@ $(document).ready(function () {
         }
     }
 
-    let formId = '#poll-vote-form',
-        formErrorSpanClass = '.error-span',
+    let formId = '.fandomz-poll-widget #poll-vote-form',
+        formErrorSpanClass = '.fandomz-poll-widget .error-span',
         vottingBtnId = '#fandomz_submit_voting';
 
     $(formId).bind("keypress", function (e) {
@@ -118,7 +118,7 @@ $(document).ready(function () {
         }
     });
     // Add or Update Poll
-    $(vottingBtnId).on('click', function (e) {
+    $('.fandomz-poll-widget').on('click',vottingBtnId,function(e){    
         e.preventDefault();
         if ($('.option-container-details .card-poll.selected').length > 0) {
             $(vottingBtnId).attr('disabled', true);
@@ -199,6 +199,11 @@ $(document).ready(function () {
         $('#poll_result_'+slug).html("");
 
         setTimeout(function () {            
+            if ( $('.fandomz-poll-widget #g-recaptcha').length ) {    
+                recaptcha_1 = grecaptcha.render('g-recaptcha', {
+                  'sitekey' : recaptcha_key
+                });
+            }
             setFancyboxImg();
             setClockdiv();
             setLazyloadImg();
