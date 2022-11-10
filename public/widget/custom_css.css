@@ -752,16 +752,21 @@ all bootstrap css
 /*
 preloader
 */
-#preloader {
-  position: fixed;
+.fandomz-poll-widget {
+    position: relative;
+}
+.fandomz-poll-widget #preloader {
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  width: 100%;
+  height: 800px;
   background-color: #fff;
   z-index: 9999;
 }
-#status {
+.fandomz-poll-widget #status {
   width: 40px;
   height: 40px;
   position: absolute;
@@ -769,7 +774,7 @@ preloader
   top: 50%;
   margin: -20px 0 0 -20px;
 }
-.spinner-chase {
+.fandomz-poll-widget .spinner-chase {
   margin: 0 auto;
   width: 40px;
   height: 40px;
@@ -777,7 +782,7 @@ preloader
   -webkit-animation: spinner-chase 2.5s infinite linear both;
           animation: spinner-chase 2.5s infinite linear both;
 }
-.chase-dot {
+.fandomz-poll-widget .chase-dot {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -786,7 +791,7 @@ preloader
   -webkit-animation: chase-dot 2s infinite ease-in-out both;
           animation: chase-dot 2s infinite ease-in-out both;
 }
-.chase-dot:before {
+.fandomz-poll-widget .chase-dot:before {
   content: "";
   display: block;
   width: 25%;
@@ -796,51 +801,51 @@ preloader
   -webkit-animation: chase-dot-before 2s infinite ease-in-out both;
           animation: chase-dot-before 2s infinite ease-in-out both;
 }
-.chase-dot:nth-child(1) {
+.fandomz-poll-widget .chase-dot:nth-child(1) {
   -webkit-animation-delay: -1.1s;
           animation-delay: -1.1s;
 }
-.chase-dot:nth-child(1):before {
+.fandomz-poll-widget .chase-dot:nth-child(1):before {
   -webkit-animation-delay: -1.1s;
           animation-delay: -1.1s;
 }
-.chase-dot:nth-child(2) {
+.fandomz-poll-widget .chase-dot:nth-child(2) {
   -webkit-animation-delay: -1s;
           animation-delay: -1s;
 }
-.chase-dot:nth-child(2):before {
+.fandomz-poll-widget .chase-dot:nth-child(2):before {
   -webkit-animation-delay: -1s;
           animation-delay: -1s;
 }
-.chase-dot:nth-child(3) {
+.fandomz-poll-widget .chase-dot:nth-child(3) {
   -webkit-animation-delay: -0.9s;
           animation-delay: -0.9s;
 }
-.chase-dot:nth-child(3):before {
+.fandomz-poll-widget .chase-dot:nth-child(3):before {
   -webkit-animation-delay: -0.9s;
           animation-delay: -0.9s;
 }
-.chase-dot:nth-child(4) {
+.fandomz-poll-widget .chase-dot:nth-child(4) {
   -webkit-animation-delay: -0.8s;
           animation-delay: -0.8s;
 }
-.chase-dot:nth-child(4):before {
+.fandomz-poll-widget .chase-dot:nth-child(4):before {
   -webkit-animation-delay: -0.8s;
           animation-delay: -0.8s;
 }
-.chase-dot:nth-child(5) {
+.fandomz-poll-widget .chase-dot:nth-child(5) {
   -webkit-animation-delay: -0.7s;
           animation-delay: -0.7s;
 }
-.chase-dot:nth-child(5):before {
+.fandomz-poll-widget .chase-dot:nth-child(5):before {
   -webkit-animation-delay: -0.7s;
           animation-delay: -0.7s;
 }
-.chase-dot:nth-child(6) {
+.fandomz-poll-widget .chase-dot:nth-child(6) {
   -webkit-animation-delay: -0.6s;
           animation-delay: -0.6s;
 }
-.chase-dot:nth-child(6):before {
+.fandomz-poll-widget .chase-dot:nth-child(6):before {
   -webkit-animation-delay: -0.6s;
           animation-delay: -0.6s;
 }
