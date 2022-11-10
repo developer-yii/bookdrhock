@@ -1,5 +1,5 @@
-//domain_url = "http://127.0.0.1:8001";
-domain_url = "https://dev.amcodr.co/bookdrhock/public";
+domain_url = "http://127.0.0.1:8001";
+//domain_url = "https://dev.amcodr.co/bookdrhock/public";
 var d = new Date();
 var rand = d.getMilliseconds();
 if(typeof jQuery == 'undefined'){
