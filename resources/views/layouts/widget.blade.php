@@ -13,6 +13,16 @@
 <script src="{{ asset('widget/jquery.lazyload.min.js') }}" type="text/javascript"></script>        
 <script src="{{ asset('widget/jquery.fancybox.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('widget/custom_js.js') }}" type="text/javascript"></script>
-
-<script src='https://www.google.com/recaptcha/api.js'></script>
+<script type="text/javascript">
+    var recaptcha_key = "<?=(env('GOOGLE_RECAPTCHA_KEY') != "") ? env('GOOGLE_RECAPTCHA_KEY') : ""?>";
+    var recaptcha_1="";
+    function onloadCallback() {
+        if ( $('#g-recaptcha').length ) {    
+            recaptcha_1 = grecaptcha.render('g-recaptcha', {
+              'sitekey' : recaptcha_key
+            });
+        }
+    }
+</script>
+<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"></script>
 @stack('extraScript')

@@ -106,3 +106,31 @@ function addAdminJsLink($link)
 {
     return asset('assets/js/admin') . "/" . $link . '?' . time();
 }
+
+function checkBlockedIP(){
+    if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
+        $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+        $_SERVER['HTTP_CLIENT_IP'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+    }
+    $client  = @$_SERVER['HTTP_CLIENT_IP'];
+    $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+    $remote  = $_SERVER['REMOTE_ADDR'];
+
+    if(filter_var($client, FILTER_VALIDATE_IP)){
+        $clientIp = $client;
+    }
+    elseif(filter_var($forward, FILTER_VALIDATE_IP)){
+        $clientIp = $forward;
+    }
+    else{
+        $clientIp = $remote;
+    }
+    //$clientIp = "101.110.111.255";
+    $ipdat = @json_decode(file_get_contents("http://ip-api.com/json/".$clientIp),true);
+    $country = "";
+    if(isset($ipdat['status']) && strtolower($ipdat['status']) == "success"){
+        \Log::info($clientIp);
+        $country = (isset($ipdat['country']) && $ipdat['country'])? strtolower($ipdat['country']) : "";
+    }    
+    return ($country && in_array($country, ['china']))? true : false; 
+}

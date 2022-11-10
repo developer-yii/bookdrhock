@@ -1,3 +1,6 @@
+<?php 
+$isBlockedIP = checkBlockedIP();
+?>
 <div class="poll-heading">
     <h1 class="text-center text-capitalize">{{ $poll->title }}</h1>
     <div class="text-center">{!! $poll->description !!}</div>
@@ -83,13 +86,12 @@
         @endforeach
     </div>
     @if (isset($type) && !empty($type) && $type == 'details')
-        @if (isset($poll->captcha_type) && !empty($poll->captcha_type) && $poll->captcha_type == 1)
+        @if (isset($poll->captcha_type) && !empty($poll->captcha_type) && $poll->captcha_type == 1 && !$isBlockedIP)
             <div class="google-recaptcha-div mt-5">
                 <div class="form-group">
                     <input type="hidden" name="enabledgooglecaptcha" id="enabledgooglecaptcha"
                         class="enabledgooglecaptcha" value="enabledgooglecaptcha">
-                    <div class="g-recaptcha" data-sitekey="{{ env('GOOGLE_RECAPTCHA_KEY') }}">
-                    </div>
+                    <div class="g-recaptcha" data-sitekey="{{ env('GOOGLE_RECAPTCHA_KEY') }}" id="g-recaptcha"></div>
                     <span class="help-block error-span"></span>
                 </div>
             </div>
