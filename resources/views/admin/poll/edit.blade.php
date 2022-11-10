@@ -55,7 +55,7 @@
                                 <a href="javascript:void(0)" class="btn btn-primary waves-effect waves-light"
                                     target="_blank" id="embed-iframde-code-copy">
                                     <input type="hidden" name="iframe" id="iframe"
-                                        value="<div class='fandomz-poll-widget' data-slug='{{$poll[0]->slug}}' data-lang='en'><script type='text/javascript' src='http://127.0.0.1:8001/widget/load.js'></script></div>">
+                                        value="<div class='fandomz-poll-widget' data-slug='{{$poll[0]->slug}}' data-lang='en'><script type='text/javascript' src='{{ url("/widget/load.js") }}'></script></div>">
                                     <span>Embed iframe</span>
                                     <i class="ti-link m-l-5"></i>
                                 </a>
