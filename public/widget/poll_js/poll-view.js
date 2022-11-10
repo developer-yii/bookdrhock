@@ -144,12 +144,14 @@ $(document).ready(function () {
                     $('#poll-vote-form')[0].reset();
                     if (response.response == 'success') {
                         showMessage('success', response.message);
+                        $('.poll-heading')[0].scrollIntoView();
                         reinitPreloader();
                         pollResultView(response.slug);
                     } else if (response.response == 'votedone') {
                         $(formId)[0].reset();
                         $('.fandomz-poll-widget .option-container-details .card-poll.selected').removeClass('selected');
                         showMessage('success', response.message);
+                        $('.poll-heading')[0].scrollIntoView();
                         reinitPreloader();
                         pollResultView(response.slug);
                     } else {
