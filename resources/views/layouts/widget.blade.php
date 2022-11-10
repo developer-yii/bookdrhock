@@ -6,7 +6,19 @@
 <link href="{{ asset('widget/jquery.fancybox.min.css') }}" rel="stylesheet" type="text/css">
 @stack('extraStyle')
 <link href="{{ asset('widget/custom_css.css') }}?<?=$version?>" rel="stylesheet" type="text/css">
-<div class="bg-transparent w-100 d-inline-flex">
+<div class="bg-transparent w-100 d-inline-flex">     
+    <div id="preloader">
+        <div id="status">
+            <div class="spinner-chase">
+                <div class="chase-dot"></div>
+                <div class="chase-dot"></div>
+                <div class="chase-dot"></div>
+                <div class="chase-dot"></div>
+                <div class="chase-dot"></div>
+                <div class="chase-dot"></div>
+            </div>
+        </div>
+    </div>
     @yield('content')    
 </div>
 <script src="{{ asset('plugins/toast-master/js/jquery.toast.js') }}" type="text/javascript"></script>    

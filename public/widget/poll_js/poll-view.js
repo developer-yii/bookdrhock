@@ -144,11 +144,13 @@ $(document).ready(function () {
                     $('#poll-vote-form')[0].reset();
                     if (response.response == 'success') {
                         showMessage('success', response.message);
+                        reinitPreloader();
                         pollResultView(response.slug);
                     } else if (response.response == 'votedone') {
                         $(formId)[0].reset();
                         $('.fandomz-poll-widget .option-container-details .card-poll.selected').removeClass('selected');
                         showMessage('success', response.message);
+                        reinitPreloader();
                         pollResultView(response.slug);
                     } else {
                         showMessage('error', 'something is wrong!');
@@ -175,11 +177,13 @@ $(document).ready(function () {
             showMessage('error', 'please select any option');
         }
     });
+    
     let ResultListID = ".fandomz_result_list";
     $('.fandomz-poll-widget').on('click',ResultListID,function(e){
         e.preventDefault();
         var slug = $('#slug').val();
-        $('.poll-heading')[0].scrollIntoView();
+        //$('.poll-heading')[0].scrollIntoView();
+        reinitPreloader();
         pollResultView(slug);
     });
 
@@ -187,7 +191,8 @@ $(document).ready(function () {
     $('.fandomz-poll-widget').on('click',pollListID,function(e){
         e.preventDefault();
         var slug = $('#slug').val();
-        $('.poll-heading')[0].scrollIntoView();
+        //$('.poll-heading')[0].scrollIntoView();
+        reinitPreloader();
         getpollList(slug);
     });
 
@@ -232,6 +237,7 @@ $(document).ready(function () {
                 $(ResultListID).attr('disabled', true);
             },
             success: function (response) {
+                initPreloader();
                 $(ResultListID).removeClass('lodder')
                 $(ResultListID).attr('disabled', false);
                 pollResultRedirect(slug,response.html);
@@ -251,6 +257,7 @@ $(document).ready(function () {
                 $(pollListID).attr('disabled', true);
             },
             success: function (response) {
+                initPreloader();
                 $(pollListID).removeClass('lodder')
                 $(pollListID).attr('disabled', false);
                 pollListView(slug,response);

@@ -1,3 +1,14 @@
+$(document).ready(function () {
+    initPreloader();
+});
+function initPreloader() {    
+    $('#status').fadeOut();
+    $('#preloader').delay(350).fadeOut('slow');    
+}
+function reinitPreloader() {
+    $('#status').fadeIn();
+    $('#preloader').delay(350).fadeIn('slow');    
+}
 function showMessage(type = "info", message = "") {
     $.toast({
         heading: message,
