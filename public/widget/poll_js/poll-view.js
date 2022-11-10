@@ -108,7 +108,7 @@ $(document).ready(function () {
     }
 
     let formId = '.fandomz-poll-widget #poll-vote-form',
-        formErrorSpanClass = '.fandomz-poll-widget .error-span',
+        formErrorSpanClass = '.error-span',
         vottingBtnId = '#fandomz_submit_voting';
 
     $(formId).bind("keypress", function (e) {
@@ -120,11 +120,11 @@ $(document).ready(function () {
     // Add or Update Poll
     $('.fandomz-poll-widget').on('click',vottingBtnId,function(e){    
         e.preventDefault();
-        if ($('.option-container-details .card-poll.selected').length > 0) {
+        if ($('.fandomz-poll-widget .option-container-details .card-poll.selected').length > 0) {
             $(vottingBtnId).attr('disabled', true);
             let formData = new FormData($(formId)['0']);
             let selectOptions = [];
-            $(".option-container-details .card-poll.selected").each(function () {
+            $(".fandomz-poll-widget .option-container-details .card-poll.selected").each(function () {
                 selectOptions.push($(this).find('input.option_id').val());
             });
             formData.append('selected_options', selectOptions);
@@ -147,7 +147,7 @@ $(document).ready(function () {
                         pollResultView(response.slug);
                     } else if (response.response == 'votedone') {
                         $(formId)[0].reset();
-                        $('.option-container-details .card-poll.selected').removeClass('selected');
+                        $('.fandomz-poll-widget .option-container-details .card-poll.selected').removeClass('selected');
                         showMessage('success', response.message);
                         pollResultView(response.slug);
                     } else {
@@ -165,8 +165,8 @@ $(document).ready(function () {
                             key = 'enabledgooglecaptcha';
                         }
                         if (first_input == "") first_input = key;
-                        $('#' + key).parents('.form-group').find(formErrorSpanClass).removeClass('d-none').text(value);
-                        $('#' + key).parents('.form-group').addClass('has-error');
+                        $('.fandomz-poll-widget #' + key).parents('.form-group').find(formErrorSpanClass).removeClass('d-none').text(value);
+                        $('.fandomz-poll-widget #' + key).parents('.form-group').addClass('has-error');
                         $(formId).find("#" + first_input).focus();
                     });
                 }

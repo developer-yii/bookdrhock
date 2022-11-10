@@ -1,11 +1,5 @@
-<<<<<<< HEAD
+//domain_url = "http://127.0.0.1:8001";
 domain_url = "https://dev.amcodr.co/bookdrhock/public";
-//domain_url = "https://www.bookdrhock.com";
-//domain_url = "https://bookdrhock.amcodr.co";
-=======
-domain_url = "http://127.0.0.1:8001";
-//domain_url = "https://dev.amcodr.co/bookdrhock/public";
->>>>>>> 1e3aa14a76214562e43fbb9a38e5cdfdd3838796
 var d = new Date();
 var rand = d.getMilliseconds();
 if(typeof jQuery == 'undefined'){
