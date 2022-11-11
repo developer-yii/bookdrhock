@@ -162,8 +162,7 @@ function addWidgetToken($poll_id){
     $keyStart = "u9IX9kxhHA1LeApLiotUOA31WhQhgo";
     $keyEnd = "871QY5HN2LUJSW9RTABFC03EIVMKP6Z4";
 
-    $encryptionKey = $keyStart.$clientIp.$poll_id.$keyEnd;
-    \Log::info("key_start:".$encryptionKey);
+    $encryptionKey = $keyStart.$clientIp.$poll_id.$keyEnd;    
     return Hash::make($encryptionKey);
 }
 function verifyWidgetToken($widget_token,$poll_id){

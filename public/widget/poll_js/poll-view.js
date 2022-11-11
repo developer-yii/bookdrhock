@@ -51,27 +51,35 @@ $(document).ready(function () {
     }
     function setClockdiv(){
         if ($('#clockdiv').length > 0) {
-            if ($('#clockdiv').data('startdatetime') != null || $('#clockdiv').data('enddatetime') != null) {
+            if ($('#clockdiv').attr('data-startdatetime') != null || $('#clockdiv').attr('data-enddatetime') != null) {
+                
+                var startdatetimeObj = $('#clockdiv').attr('data-startdatetime');
+                var startdatetimeObjTmp = startdatetimeObj.replace(' ', 'T').split(/[^0-9]/);
+                var startdatetime = new Date(Date.UTC(startdatetimeObjTmp[0], startdatetimeObjTmp[1] - 1, startdatetimeObjTmp[2], startdatetimeObjTmp[3], startdatetimeObjTmp[4], startdatetimeObjTmp[5]));
+
+                var enddatetimeObj = $('#clockdiv').attr('data-enddatetime');
+                var enddatetimeObjTmp = enddatetimeObj.replace(' ', 'T').split(/[^0-9]/);
+                var enddatetime = new Date(Date.UTC(enddatetimeObjTmp[0], enddatetimeObjTmp[1] - 1, enddatetimeObjTmp[2], enddatetimeObjTmp[3], enddatetimeObjTmp[4], enddatetimeObjTmp[5]));
+
                 var deadline = deadlineString = headinText = '';
-                if (new Date() > new Date($('#clockdiv').data('enddatetime'))) {
-                    deadline = new Date($('#clockdiv').data('startdatetime')).getTime();
-                    deadlineString = $('#clockdiv').data('startdatetime');
+                if (new Date() > enddatetime) {
+                    deadline = new Date(startdatetime).getTime();
+                    deadlineString = startdatetime;
                     headinText = "Poll ended";                    
                     $('.poll-options-main').empty();
-                } else if (new Date() > new Date($('#clockdiv').data('startdatetime'))) {
-                    deadline = new Date($('#clockdiv').data('enddatetime')).getTime();
-                    deadlineString = $('#clockdiv').data('enddatetime');
+                } else if (new Date() > startdatetime) {
+                    deadline = new Date(enddatetime).getTime();
+                    deadlineString = enddatetime;
                     headinText = "time left";
                 } else {
-                    deadline = new Date($('#clockdiv').data('startdatetime')).getTime();
-                    deadlineString = $('#clockdiv').data('startdatetime');
+                    deadline = new Date(startdatetime).getTime();
+                    deadlineString = startdatetime;
                     headinText = "comming soon";
                     $('.poll-options-main').empty();
                 }
                 $('.countdown-heading').text(headinText);
-                var timeParsed = deadlineString.replace(' ', 'T').split(/[^0-9]/);
-                var countDown = new Date(Date.UTC(timeParsed[0], timeParsed[1] - 1, timeParsed[2], timeParsed[3], timeParsed[4], timeParsed[5]));
-
+                
+                var countDown = deadlineString;
                 var nowtest = new Date();
                 var timertest = countDown - nowtest;
 
@@ -94,6 +102,7 @@ $(document).ready(function () {
                         document.getElementById("second").innerHTML = (seconds.toString().length == 1) ? '0' +
                             seconds :
                             seconds;
+                        $('.fandomz-poll-widget').find('#second').html();
                         if (t < 0) {
                             clearInterval(x);
                             document.getElementById("day").innerHTML = '00';
