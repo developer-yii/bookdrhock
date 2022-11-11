@@ -1,5 +1,6 @@
 <?php 
 $isBlockedIP = checkBlockedIP();
+$widgetToken = addWidgetToken($poll->id);
 ?>
 <div class="poll-heading">
     <h1 class="text-center text-capitalize">{{ $poll->title }}</h1>
@@ -39,6 +40,7 @@ $isBlockedIP = checkBlockedIP();
 @endif
 @if (isset($type) && !empty($type) && $type == 'details')
     <form action="#" method="POST" id="poll-vote-form" class="form-horizontal">
+    <input type="hidden" name="widget_token" value="{{$widgetToken}}">
 @endif
 <input type="hidden" name="id" id="id" value="{{ $poll['id'] }}">
 <input type="hidden" name="slug" id="slug" value="{{ $poll->slug }}">

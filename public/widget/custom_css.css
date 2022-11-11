@@ -749,7 +749,7 @@ all bootstrap css
     position: absolute!important;
     cursor: default;
 }
-.fandomz-poll-widget .sub-text{
+.fandomz-poll-widget .sub-text, .fandomz-poll-widget .sub-text p{
     color: #686868 !important;
 }
 /*
