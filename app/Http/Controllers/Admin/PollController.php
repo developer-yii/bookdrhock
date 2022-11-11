@@ -570,6 +570,12 @@ class PollController extends Controller
     // call widget add poll
     public function votingwidget(Request $request)
     {
+        $widget_token = ($request->widget_token)? $request->widget_token:"";
+        $poll_id = ($request->id)? $request->id:"";
+        if (!verifyWidgetToken($widget_token,$poll_id)) {
+            \Log::info("widget_token:".$widget_token);
+            return response()->json(['message' => 'something was wrong please try again later!'], 400);
+        }
         if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
             $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
             $_SERVER['HTTP_CLIENT_IP'] = $_SERVER["HTTP_CF_CONNECTING_IP"];

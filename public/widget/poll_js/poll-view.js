@@ -164,15 +164,20 @@ $(document).ready(function () {
                 },
                 error: function (error) {
                     var first_input = "";                    
-                    $.each(error.responseJSON.errors, function (key, value) {
-                        if (key == 'g-recaptcha-response') {
-                            key = 'enabledgooglecaptcha';
-                        }
-                        if (first_input == "") first_input = key;
-                        $('.fandomz-poll-widget #' + key).parents('.form-group').find(formErrorSpanClass).removeClass('d-none').text(value);
-                        $('.fandomz-poll-widget #' + key).parents('.form-group').addClass('has-error');
-                        $(formId).find("#" + first_input).focus();
-                    });
+                    if(error.responseJSON.errors){
+                        $.each(error.responseJSON.errors, function (key, value) {
+                            if (key == 'g-recaptcha-response') {
+                                key = 'enabledgooglecaptcha';
+                            }
+                            if (first_input == "") first_input = key;
+                            $('.fandomz-poll-widget #' + key).parents('.form-group').find(formErrorSpanClass).removeClass('d-none').text(value);
+                            $('.fandomz-poll-widget #' + key).parents('.form-group').addClass('has-error');
+                            $(formId).find("#" + first_input).focus();
+                        });
+                    }
+                    if(error.responseJSON.message){
+                        showMessage('error', error.responseJSON.message);
+                    }
                 }
             })
         } else {

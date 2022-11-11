@@ -1,6 +1,9 @@
 <?php
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 use App\Model\PollCategory;
+use App\Model\WidgetToken;
 
 function getDateFormateView($date)
 {
@@ -133,4 +136,62 @@ function checkBlockedIP(){
         $country = (isset($ipdat['country']) && $ipdat['country'])? strtolower($ipdat['country']) : "";
     }    
     return ($country && in_array($country, ['china']))? true : false; 
+}
+function addWidgetToken($poll_id){
+    if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
+        $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+        $_SERVER['HTTP_CLIENT_IP'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+    }
+    $client  = @$_SERVER['HTTP_CLIENT_IP'];
+    $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+    $remote  = $_SERVER['REMOTE_ADDR'];
+
+    if(filter_var($client, FILTER_VALIDATE_IP)){
+        $clientIp = $client;
+    }
+    elseif(filter_var($forward, FILTER_VALIDATE_IP)){
+        $clientIp = $forward;
+    }
+    else{
+        $clientIp = $remote;
+    }
+    /*
+        \Log::info("key_start:".Str::random(30));
+        \Log::info("key_end:".Str::random(30));
+    */
+    $keyStart = "u9IX9kxhHA1LeApLiotUOA31WhQhgo";
+    $keyEnd = "871QY5HN2LUJSW9RTABFC03EIVMKP6Z4";
+
+    $encryptionKey = $keyStart.$clientIp.$poll_id.$keyEnd;
+    \Log::info("key_start:".$encryptionKey);
+    return Hash::make($encryptionKey);
+}
+function verifyWidgetToken($widget_token,$poll_id){
+    if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
+        $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+        $_SERVER['HTTP_CLIENT_IP'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+    }
+    $client  = @$_SERVER['HTTP_CLIENT_IP'];
+    $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+    $remote  = $_SERVER['REMOTE_ADDR'];
+
+    if(filter_var($client, FILTER_VALIDATE_IP)){
+        $clientIp = $client;
+    }
+    elseif(filter_var($forward, FILTER_VALIDATE_IP)){
+        $clientIp = $forward;
+    }
+    else{
+        $clientIp = $remote;
+    }
+    $keyStart = "u9IX9kxhHA1LeApLiotUOA31WhQhgo";
+    $keyEnd = "871QY5HN2LUJSW9RTABFC03EIVMKP6Z4";
+    
+    $encryptionKey = $keyStart.$clientIp.$poll_id.$keyEnd;
+    if( Hash::check( $encryptionKey , $widget_token ) )
+    {
+        return true;
+    }else{
+        return false;
+    }
 }
