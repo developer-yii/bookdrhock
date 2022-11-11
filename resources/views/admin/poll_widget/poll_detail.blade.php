@@ -3,7 +3,7 @@ $isBlockedIP = checkBlockedIP();
 ?>
 <div class="poll-heading">
     <h1 class="text-center text-capitalize">{{ $poll->title }}</h1>
-    <div class="text-center">{!! $poll->description !!}</div>
+    <div class="text-center sub-text">{!! $poll->description !!}</div>
     <hr>
 </div>
 @if (isset($type) &&
@@ -45,13 +45,12 @@ $isBlockedIP = checkBlockedIP();
 <input type="hidden" name="vote_add" id="vote_add" value="{{ $poll->vote_add }}">
 <input type="hidden" name="vote_schedule" id="vote_schedule" value="{{ $poll->vote_schedule }}">
 <input type="hidden" name="page_type" id="page_type" value="embeded">
-<div
-    class="poll-options-main option-view-{{ $type }} text-center  @if (isset($type) && !empty($type) && $type == 'details') mt-5 @endif">
+<div class="poll-options-main option-view-{{ $type }} text-center  @if (isset($type) && !empty($type) && $type == 'details') mt-5 @endif">
     @if (isset($type) && !empty($type) && $type == 'details')
         @if (isset($poll->option_select) && !empty($poll->option_select) && count($poll_options) > $poll->option_select)
-            <p>You can choose {{ convert_number($poll->option_select) }} option</p>
+            <p class="sub-text">You can choose {{ convert_number($poll->option_select) }} option</p>
         @else
-            <p>You can choose more than one</p>
+            <p class="sub-text">You can choose more than one</p>
         @endif
     @endif
     <div class="option-container @if (isset($type) && !empty($type) && $type == 'details') option-container-details @endif mt-5">
