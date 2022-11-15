@@ -119,13 +119,14 @@ $(document).ready(function () {
     let formId = '.fandomz-poll-widget #poll-vote-form',
         formErrorSpanClass = '.error-span',
         vottingBtnId = '#fandomz_submit_voting';
-
-    $(formId).bind("keypress", function (e) {
-        if (e.keyCode == 13) {
-            $(vottingBtnId).click();
+       
+    $('.fandomz-poll-widget').on('keypress',"input",function(e){        
+        if (e.keyCode == 13) {            
+            $('.fandomz-poll-widget #fandomz_submit_voting').click();
             return false;
         }
-    });
+        return true;
+    });    
     // Add or Update Poll
     $('.fandomz-poll-widget').on('click',vottingBtnId,function(e){    
         e.preventDefault();
@@ -281,5 +282,5 @@ $(document).ready(function () {
             error: function (error) {
             }
         });
-    }        
+    }
 });
