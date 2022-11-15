@@ -1,6 +1,3 @@
-<?php 
-$isBlockedIP = checkBlockedIP();
-?>
 <div class="poll-heading">
     <h1 class="text-center text-capitalize">{{ $poll->title }}</h1>
     <div class="text-center">{!! $poll->description !!}</div>
@@ -88,16 +85,18 @@ $isBlockedIP = checkBlockedIP();
         @endforeach
     </div>
     @if (isset($type) && !empty($type) && $type == 'details')
-        @if (isset($poll->captcha_type) && !empty($poll->captcha_type) && $poll->captcha_type == 1 && !$isBlockedIP)
-            <div class="google-recaptcha-div mt-5">
-                <div class="form-group">
-                    <input type="hidden" name="enabledgooglecaptcha" id="enabledgooglecaptcha"
-                        class="enabledgooglecaptcha" value="enabledgooglecaptcha">
-                    <div class="g-recaptcha" data-sitekey="{{ env('GOOGLE_RECAPTCHA_KEY') }}">
+        @if (isset($poll->captcha_type) && !empty($poll->captcha_type) && $poll->captcha_type == 1)
+            @if(!checkBlockedIP())
+                <div class="google-recaptcha-div mt-5">
+                    <div class="form-group">
+                        <input type="hidden" name="enabledgooglecaptcha" id="enabledgooglecaptcha"
+                            class="enabledgooglecaptcha" value="enabledgooglecaptcha">
+                        <div class="g-recaptcha" data-sitekey="{{ env('GOOGLE_RECAPTCHA_KEY') }}">
+                        </div>
+                        <span class="help-block error-span"></span>
                     </div>
-                    <span class="help-block error-span"></span>
                 </div>
-            </div>
+            @endif    
         @elseif(isset($poll->captcha_type) && !empty($poll->captcha_type) && $poll->captcha_type == 2)
             <div class="form-group">
                 <input type="hidden" name="enabledmathcaptcha" id="enabledmathcaptcha" class="enabledmathcaptcha"

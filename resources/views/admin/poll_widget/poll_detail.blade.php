@@ -1,7 +1,3 @@
-<?php 
-$isBlockedIP = checkBlockedIP();
-$widgetToken = addWidgetToken($poll->id);
-?>
 <div class="poll-heading">
     <h1 class="text-center text-capitalize">{{ $poll->title }}</h1>
     <div class="text-center sub-text">{!! $poll->description !!}</div>
@@ -40,7 +36,7 @@ $widgetToken = addWidgetToken($poll->id);
 @endif
 @if (isset($type) && !empty($type) && $type == 'details')
     <form action="#" method="POST" id="poll-vote-form" class="form-horizontal">
-    <input type="hidden" name="widget_token" value="{{$widgetToken}}">
+    <input type="hidden" name="widget_token" value="{{addWidgetToken($poll->id)}}">
 @endif
 <input type="hidden" name="id" id="id" value="{{ $poll['id'] }}">
 <input type="hidden" name="slug" id="slug" value="{{ $poll->slug }}">
@@ -87,15 +83,17 @@ $widgetToken = addWidgetToken($poll->id);
         @endforeach
     </div>
     @if (isset($type) && !empty($type) && $type == 'details')
-        @if (isset($poll->captcha_type) && !empty($poll->captcha_type) && $poll->captcha_type == 1 && !$isBlockedIP)
-            <div class="google-recaptcha-div mt-5">
-                <div class="form-group">
-                    <input type="hidden" name="enabledgooglecaptcha" id="enabledgooglecaptcha"
-                        class="enabledgooglecaptcha" value="enabledgooglecaptcha">
-                    <div class="g-recaptcha" data-sitekey="{{ env('GOOGLE_RECAPTCHA_KEY') }}" id="g-recaptcha"></div>
-                    <span class="help-block error-span"></span>
+        @if (isset($poll->captcha_type) && !empty($poll->captcha_type) && $poll->captcha_type == 1)
+            @if(!checkBlockedIP())
+                <div class="google-recaptcha-div mt-5">
+                    <div class="form-group">
+                        <input type="hidden" name="enabledgooglecaptcha" id="enabledgooglecaptcha"
+                            class="enabledgooglecaptcha" value="enabledgooglecaptcha">
+                        <div class="g-recaptcha" data-sitekey="{{ env('GOOGLE_RECAPTCHA_KEY') }}" id="g-recaptcha"></div>
+                        <span class="help-block error-span"></span>
+                    </div>
                 </div>
-            </div>
+            @endif    
         @elseif(isset($poll->captcha_type) && !empty($poll->captcha_type) && $poll->captcha_type == 2)
             <div class="form-group">
                 <input type="hidden" name="enabledmathcaptcha" id="enabledmathcaptcha" class="enabledmathcaptcha"
