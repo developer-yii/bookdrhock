@@ -1,6 +1,6 @@
-domain_url = "http://127.0.0.1:8001";
+//domain_url = "http://127.0.0.1:8001";
 //domain_url = "https://www.bookdrhock.com";
-//domain_url = "https://bookdrhock.amcodr.co";
+domain_url = "https://fandomz.org";
 
 function fandomz_widget_load()
 {
