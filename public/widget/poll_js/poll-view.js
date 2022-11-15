@@ -1,4 +1,4 @@
-$(document).ready(function () {
+jQuery(document).ready(function () {
     if ($('.fandomz-poll-widget #poll-vote-form').length > 0) {
         $('.fandomz-poll-widget #poll-vote-form')[0].reset();
     }        
@@ -130,8 +130,7 @@ $(document).ready(function () {
     // Add or Update Poll
     $('.fandomz-poll-widget').on('click',vottingBtnId,function(e){    
         e.preventDefault();
-        if ($('.fandomz-poll-widget .option-container-details .card-poll.selected').length > 0) {
-            $(vottingBtnId).attr('disabled', true);
+        if ($('.fandomz-poll-widget .option-container-details .card-poll.selected').length > 0) {            
             let formData = new FormData($(formId)['0']);
             let selectOptions = [];
             $(".fandomz-poll-widget .option-container-details .card-poll.selected").each(function () {
@@ -140,56 +139,66 @@ $(document).ready(function () {
             formData.append('selected_options', selectOptions);
             $(formErrorSpanClass).addClass('d-none').text('');
             $(formId).find('input').parents('.form-group').removeClass('has-error');            
-            $.ajax({
-                url: routes.votingUrl,
-                method: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $(vottingBtnId).addClass('lodder')
-                    $(vottingBtnId).attr('disabled', true);
-                },
-                success: function (response) {
-                    $('#poll-vote-form')[0].reset();
-                    if (response.response == 'success') {
-                        showMessage('success', response.message);
-                        $('.poll-heading')[0].scrollIntoView();
-                        reinitPreloader();
-                        pollResultView(response.slug);
-                    } else if (response.response == 'votedone') {
-                        $(formId)[0].reset();
-                        $('.fandomz-poll-widget .option-container-details .card-poll.selected').removeClass('selected');
-                        showMessage('success', response.message);
-                        $('.poll-heading')[0].scrollIntoView();
-                        reinitPreloader();
-                        pollResultView(response.slug);
-                    } else {
-                        showMessage('error', 'something is wrong!');
+            if(checkVoteLimit()){
+                $.ajax({
+                    url: routes.votingUrl,
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function () {
+                        $(vottingBtnId).addClass('lodder')
+                        $(vottingBtnId).attr('disabled', true);
+                    },
+                    success: function (response) {
+                        $('#poll-vote-form')[0].reset();
+                        if (response.response == 'success') {
+                            pushDate();
+                            showMessage('success', response.message);
+                            $('.poll-heading')[0].scrollIntoView();
+                            reinitPreloader();
+                            pollResultView(response.slug);
+                        } else if (response.response == 'votedone') {
+                            $(formId)[0].reset();
+                            $('.fandomz-poll-widget .option-container-details .card-poll.selected').removeClass('selected');
+                            showMessage('success', response.message);
+                            $('.poll-heading')[0].scrollIntoView();
+                            reinitPreloader();
+                            pollResultView(response.slug);
+                        } else {
+                            showMessage('error', 'something is wrong!');
+                        }
+                    },
+                    complete: function () {
+                        $(vottingBtnId).removeClass('lodder')
+                        $(vottingBtnId).attr('disabled', false);
+                    },
+                    error: function (error) {
+                        var first_input = "";                    
+                        if(error.responseJSON.errors){
+                            $.each(error.responseJSON.errors, function (key, value) {
+                                if (key == 'g-recaptcha-response') {
+                                    key = 'enabledgooglecaptcha';
+                                }
+                                if (first_input == "") first_input = key;
+                                $('.fandomz-poll-widget #' + key).parents('.form-group').find(formErrorSpanClass).removeClass('d-none').text(value);
+                                $('.fandomz-poll-widget #' + key).parents('.form-group').addClass('has-error');
+                                $(formId).find("#" + first_input).focus();
+                            });
+                        }
+                        if(error.responseJSON.message){
+                            showMessage('error', error.responseJSON.message);
+                        }
                     }
-                },
-                complete: function () {
-                    $(vottingBtnId).removeClass('lodder')
-                    $(vottingBtnId).attr('disabled', false);
-                },
-                error: function (error) {
-                    var first_input = "";                    
-                    if(error.responseJSON.errors){
-                        $.each(error.responseJSON.errors, function (key, value) {
-                            if (key == 'g-recaptcha-response') {
-                                key = 'enabledgooglecaptcha';
-                            }
-                            if (first_input == "") first_input = key;
-                            $('.fandomz-poll-widget #' + key).parents('.form-group').find(formErrorSpanClass).removeClass('d-none').text(value);
-                            $('.fandomz-poll-widget #' + key).parents('.form-group').addClass('has-error');
-                            $(formId).find("#" + first_input).focus();
-                        });
-                    }
-                    if(error.responseJSON.message){
-                        showMessage('error', error.responseJSON.message);
-                    }
-                }
-            })
+                });
+            } else {
+                var hour = $('.fandomz-poll-widget #vote_schedule').val();
+                var slug = $('.fandomz-poll-widget #slug').val();                
+                showMessage('success', 'You\'ve completed your vote, vote again in '+hour+' hours');                
+                $('.poll-heading')[0].scrollIntoView();
+                reinitPreloader();
+                pollResultView(slug);
+            }
         } else {
             showMessage('error', 'please select any option');
         }
@@ -282,5 +291,68 @@ $(document).ready(function () {
             error: function (error) {
             }
         });
+    }
+
+    /*setTimeout(function () {
+        console.log('Now date-time:'+moment().format());
+        checkVoteLimit();
+    },1000);*/
+
+    var widget_slug = $(".fandomz-poll-widget").attr('data-slug');
+    widget_slug = "widget_"+widget_slug;
+    
+    function checkVoteLimit(){
+        var hour = $('.fandomz-poll-widget  #vote_schedule').val();        
+        var limit = $('.fandomz-poll-widget #vote_add').val();
+        
+        hour = (typeof hour !== 'undefined' && hour)? parseInt(hour):24;
+        limit = (typeof limit !== 'undefined' && limit)? parseInt(limit):1;
+
+        var dateSubtract = moment().subtract({hours:Math.abs(hour)});
+        var currentDate = moment();
+        var dateArr = new Array();
+
+        var cookie = readCookie(widget_slug);
+        var total = 0;
+        if(typeof cookie !== 'undefined' && cookie && cookie.length){
+            var cookieArr = cookie.split(',');
+            $.each(cookieArr, function(key, date){
+                var dateObj = moment(date);
+                if(dateObj >= dateSubtract){
+                    dateArr.push(date);
+                    total++;
+                }
+            });
+        }
+        console.log(total);
+        return (total < limit)? true : false;
+    }
+    function pushDate(){        
+        var lastDateRemove = moment().subtract({hours:24});// old date remove in cookie
+
+        var dateArr = new Array();
+        var cookie = readCookie(widget_slug);
+        if(typeof cookie !== 'undefined' && cookie){
+            var cookieArr = cookie.split(',');
+            $.each(cookieArr, function(key, date){
+                var dateObj = moment(date);
+                if(dateObj >= lastDateRemove){
+                    dateArr.push(date);
+                }    
+            });
+        }
+        dateArr.push(moment().format());//push current datetime
+        createCookie(widget_slug,dateArr);
+    }
+    function createCookie(name,value) {
+        var date = new Date();            
+            date.setTime(date.getTime()+(24*60*60*1000));
+        var expires_time = date.toGMTString();
+        var expires = "; expires="+expires_time;
+        document.cookie = name+"="+value+expires+"; path=/";
+    }
+    function readCookie(name) {
+        var keyValue = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+        return keyValue ? keyValue[2] : null;        
     }
 });
