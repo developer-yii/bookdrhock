@@ -279,58 +279,50 @@ class PollController extends Controller
             }
         }
 
-        $hours = 12;
-        if (isset($request->vote_schedule) && !empty($request->vote_schedule)) {
-            $hours = (int) $request->vote_schedule;
-        }
+        $pollFind = Poll::where('slug', $request->slug)->where('id', $request->id)->first();
+        if(isset($pollFind->id)){
+            $hours = ($pollFind->vote_schedule)? $pollFind->vote_schedule : 24;
+            $voteAdd = ($pollFind->vote_add)? $pollFind->vote_add : 1;
+            
+            $curruntVotes = PollVote::query()
+                ->where('ip', $clientIp)
+                ->where('poll_id', $request->id)
+                ->where('created_at', '>', Carbon::now()->subHours($hours)->toDateTimeString())
+                ->orderBy('created_at', 'DESC')
+                ->groupBy('created_at')
+                ->get()
+                ->count();
 
-        $voteAdd = 1;
-        if (isset($request->vote_add) && !empty($request->vote_add)) {
-            $voteAdd = (int) $request->vote_add;
-        }
+            $currunt_date = Carbon::now()->toDateTimeString();
+            $insert_array = array();
+            $k = 0;
+            if (isset($curruntVotes) && $curruntVotes < $voteAdd) {
+                foreach (explode(',', $request->selected_options) as $option) {
+                    $insert_array[$k]['poll_id'] = $request->id;
+                    $insert_array[$k]['ip'] = $clientIp;
+                    $insert_array[$k]['poll_options'] = $option;
+                    $insert_array[$k]['created_at'] = $currunt_date;
+                    $insert_array[$k]['updated_at'] = $currunt_date;
+                    $k++;
+                }
 
-        $curruntVotes = PollVote::query()
-            ->where('ip', $clientIp)
-            ->where('poll_id', $request->id)
-            ->where('created_at', '>', Carbon::now()->subHours($hours)->toDateTimeString())
-            ->orderBy('created_at', 'DESC')
-            ->groupBy('created_at')
-            ->get()
-            ->count();
+                if (!empty($insert_array)) {
+                    PollVote::insert($insert_array);
+                    PollOption::whereIn('id',explode(',', $request->selected_options))->increment('user_vote_count');
+                }
 
-        $currunt_date = Carbon::now()->toDateTimeString();
-        $insert_array = array();
-        $k = 0;
-        if (isset($curruntVotes) && $curruntVotes < $voteAdd) {
-            foreach (explode(',', $request->selected_options) as $option) {
-                $insert_array[$k]['poll_id'] = $request->id;
-                $insert_array[$k]['ip'] = $clientIp;
-                $insert_array[$k]['poll_options'] = $option;
-                $insert_array[$k]['created_at'] = $currunt_date;
-                $insert_array[$k]['updated_at'] = $currunt_date;
+                $view = $this->getResultView($request->id,$request->page_type);
 
-                // $model = new PollVote();
-                // $model->user_id = (Auth::user()) ? Auth::user()->id : null;
-                // $model->poll_id = $request->id;
-                // $model->ip = $clientIp;
-                // $model->poll_options = $option;
-                // $model->created_at = $currunt_date;
-                // $model->save();
-                $k++;
+                return response()->json(['response' => 'success', 'message' => 'Your vote submitted successfully', 'data' => $insert_array, 'slug' => $request->slug, 'type' => $request->page_type,'html'=>$view], 200);
+            } else {
+                
+                session()->flash('flash-poll-votedone', 'You Have Completed Your Votes, vote again in ' . $hours . ' hours');
+                $view = $this->getResultView($request->id,$request->page_type);
+
+                return response()->json(['response' => 'votedone', 'message' => 'You\'ve completed your vote, vote again in ' . $hours . ' hours', 'slug' => $request->slug, 'type' => $request->page_type,'html'=>$view], 200);
             }
-
-            if (!empty($insert_array)) {
-                PollVote::insert($insert_array);
-                PollOption::whereIn('id',explode(',', $request->selected_options))->increment('user_vote_count');
-            }
-
-            // $request->session()->flash('flash-poll-voted');
-
-            $view = $this->getResultView($request->id,$request->page_type);
-
-            return response()->json(['response' => 'success', 'message' => 'Your vote submitted successfully', 'data' => $insert_array, 'slug' => $request->slug, 'type' => $request->page_type,'html'=>$view], 200);
         } else {
-            // $request->session()->flash('flash-poll-votedone');
+
             session()->flash('flash-poll-votedone', 'You Have Completed Your Votes, vote again in ' . $hours . ' hours');
             $view = $this->getResultView($request->id,$request->page_type);
 
@@ -620,45 +612,44 @@ class PollController extends Controller
             }
         }
 
-        $hours = 12;
-        if (isset($request->vote_schedule) && !empty($request->vote_schedule)) {
-            $hours = (int) $request->vote_schedule;
-        }
+        $pollFind = Poll::where('slug', $request->slug)->where('id', $request->id)->first();
+        if(isset($pollFind->id)){
+            $hours = ($pollFind->vote_schedule)? $pollFind->vote_schedule : 24;
+            $voteAdd = ($pollFind->vote_add)? $pollFind->vote_add : 1;
 
-        $voteAdd = 1;
-        if (isset($request->vote_add) && !empty($request->vote_add)) {
-            $voteAdd = (int) $request->vote_add;
-        }
+            $curruntVotes = PollVote::query()
+                ->where('ip', $clientIp)
+                ->where('poll_id', $pollFind->id)
+                ->where('created_at', '>', Carbon::now()->subHours($hours)->toDateTimeString())
+                ->orderBy('created_at', 'DESC')
+                ->groupBy('created_at')
+                ->get()
+                ->count();
 
-        $curruntVotes = PollVote::query()
-            ->where('ip', $clientIp)
-            ->where('poll_id', $request->id)
-            ->where('created_at', '>', Carbon::now()->subHours($hours)->toDateTimeString())
-            ->orderBy('created_at', 'DESC')
-            ->groupBy('created_at')
-            ->get()
-            ->count();
-
-        $currunt_date = Carbon::now()->toDateTimeString();
-        $insert_array = array();
-        $k = 0;
-        if (isset($curruntVotes) && $curruntVotes < $voteAdd) {
-            foreach (explode(',', $request->selected_options) as $option) {
-                $insert_array[$k]['poll_id'] = $request->id;
-                $insert_array[$k]['ip'] = $clientIp;
-                $insert_array[$k]['poll_options'] = $option;
-                $insert_array[$k]['created_at'] = $currunt_date;
-                $insert_array[$k]['updated_at'] = $currunt_date;
-                $k++;
-            }
-            if (!empty($insert_array)) {
-                PollVote::insert($insert_array);
-                PollOption::whereIn('id',explode(',', $request->selected_options))->increment('user_vote_count');
+            $currunt_date = Carbon::now()->toDateTimeString();
+            $insert_array = array();
+            $k = 0;
+            if (isset($curruntVotes) && $curruntVotes < $voteAdd) {
+                foreach (explode(',', $request->selected_options) as $option) {
+                    $insert_array[$k]['poll_id'] = $request->id;
+                    $insert_array[$k]['ip'] = $clientIp;
+                    $insert_array[$k]['poll_options'] = $option;
+                    $insert_array[$k]['created_at'] = $currunt_date;
+                    $insert_array[$k]['updated_at'] = $currunt_date;
+                    $k++;
+                }
+                if (!empty($insert_array)) {
+                    PollVote::insert($insert_array);
+                    PollOption::whereIn('id',explode(',', $request->selected_options))->increment('user_vote_count');
+                }            
+                return response()->json(['response' => 'success', 'message' => 'Your vote submitted successfully', 'data' => $insert_array, 'slug' => $request->slug, 'type' => $request->page_type], 200);
+            } else {
+                return response()->json(['response' => 'votedone', 'message' => 'You\'ve completed your vote, vote again in ' . $hours . ' hours', 'slug' => $request->slug, 'type' => $request->page_type], 200);
             }            
-            return response()->json(['response' => 'success', 'message' => 'Your vote submitted successfully', 'data' => $insert_array, 'slug' => $request->slug, 'type' => $request->page_type], 200);
         } else {
             return response()->json(['response' => 'votedone', 'message' => 'You\'ve completed your vote, vote again in ' . $hours . ' hours', 'slug' => $request->slug, 'type' => $request->page_type], 200);
         }
+
     }
     public function getWidgetResultView($slug)
     {
