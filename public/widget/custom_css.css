@@ -768,8 +768,8 @@ preloader
   right: 0;
   bottom: 0;
   width: 100%;
-  height: 800px;
-  background-color: #fff;
+  height: 100%;
+  background-color: rgba(255,255,255,0.9);
   z-index: 999;
 }
 .fandomz-poll-widget #status {
@@ -777,7 +777,7 @@ preloader
   height: 40px;
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 300px;
   margin: -20px 0 0 -20px;
 }
 .fandomz-poll-widget .spinner-chase {
