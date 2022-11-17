@@ -586,7 +586,7 @@ class PollController extends Controller
         if (!verifyWidgetToken($widget_token,$poll_id)) {            
             $old_token = addWidgetToken($poll_id);            
             \Log::info("widget_clientIp:".$clientIp.",old_token:".$old_token.",widget_token:".$widget_token.",poll_id:".$poll_id);
-            return response()->json(['message' => 'something was wrong please try again later!'], 400);
+            return response()->json(['message' => 'something was wrong please try again later!','is_reload'=>true], 400);
         }
 
         $validator = Validator::make($request->all(), [

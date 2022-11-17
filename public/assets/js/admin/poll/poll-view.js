@@ -48,62 +48,66 @@ $(document).ready(function () {
     }
 
     if ($('#clockdiv').length > 0) {
-        if ($('#clockdiv').data('startdatetime') != null || $('#clockdiv').data('enddatetime') != null) {
-            var deadline = deadlineString = headinText = '';
-            if (new Date() > new Date($('#clockdiv').data('enddatetime'))) {
-                deadline = new Date($('#clockdiv').data('startdatetime')).getTime();
-                deadlineString = $('#clockdiv').data('startdatetime');
-                headinText = "Poll ended";
-                $('.poll-options-main').empty().append(
-                    '<a href="' + routes.homeUrl + '" class="btn btn-primary text-capitalize m-0">Running polls</a>');
-            } else if (new Date() > new Date($('#clockdiv').data('startdatetime'))) {
-                deadline = new Date($('#clockdiv').data('enddatetime')).getTime();
-                deadlineString = $('#clockdiv').data('enddatetime');
-                headinText = "time left";
-            } else {
-                deadline = new Date($('#clockdiv').data('startdatetime')).getTime();
-                deadlineString = $('#clockdiv').data('startdatetime');
-                headinText = "comming soon";
-                $('.poll-options-main').empty().append(
-                    '<a href="' + routes.homeUrl + '" class="btn btn-primary text-capitalize m-0">Running polls</a>');
-            }
-            $('.countdown-heading').text(headinText);
+        if ($('#clockdiv').attr('data-startdatetime') != null || $('#clockdiv').attr('data-enddatetime') != null) {                
+                var startdatetimeObj = $('#clockdiv').attr('data-startdatetime');
+                var startdatetimeObjTmp = startdatetimeObj.replace(' ', 'T').split(/[^0-9]/);
+                var startdatetime = new Date(Date.UTC(startdatetimeObjTmp[0], startdatetimeObjTmp[1] - 1, startdatetimeObjTmp[2], startdatetimeObjTmp[3], startdatetimeObjTmp[4], startdatetimeObjTmp[5]));
 
-            // Have to split time funny for IOS and Safari NAN and timezone bug
-            var timeParsed = deadlineString.replace(' ', 'T').split(/[^0-9]/);
-            var countDown = new Date(Date.UTC(timeParsed[0], timeParsed[1] - 1, timeParsed[2], timeParsed[3], timeParsed[4], timeParsed[5]));
+                var enddatetimeObj = $('#clockdiv').attr('data-enddatetime');
+                var enddatetimeObjTmp = enddatetimeObj.replace(' ', 'T').split(/[^0-9]/);
+                var enddatetime = new Date(Date.UTC(enddatetimeObjTmp[0], enddatetimeObjTmp[1] - 1, enddatetimeObjTmp[2], enddatetimeObjTmp[3], enddatetimeObjTmp[4], enddatetimeObjTmp[5]));
 
-            var nowtest = new Date();
-            var timertest = countDown - nowtest;
-            console.log('deadlinestring: ' + deadlineString, 'countDown: ' + countDown, 'timer: ' + timertest);
-
-            var x = setInterval(function () {
-                var now = new Date();
-                var t = countDown - now;
-                var days = Math.floor(t / (1000 * 60 * 60 * 24));
-                var hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                var minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
-                var seconds = Math.floor((t % (1000 * 60)) / 1000);
-
-                document.getElementById("day").innerHTML = days.toString().length == 1 ? '0' + days :
-                    days;
-                document.getElementById("hour").innerHTML = hours.toString().length == 1 ? '0' + hours :
-                    hours;
-                document.getElementById("minute").innerHTML = minutes.toString().length == 1 ? '0' +
-                    minutes :
-                    minutes;
-                document.getElementById("second").innerHTML = (seconds.toString().length == 1) ? '0' +
-                    seconds :
-                    seconds;
-                if (t < 0) {
-                    clearInterval(x);
-                    document.getElementById("day").innerHTML = '00';
-                    document.getElementById("hour").innerHTML = '00';
-                    document.getElementById("minute").innerHTML = '00';
-                    document.getElementById("second").innerHTML = '00';
+                var deadline = deadlineString = headinText = '';
+                if (new Date() > enddatetime) {
+                    deadline = new Date(startdatetime).getTime();
+                    deadlineString = startdatetime;
+                    headinText = "Poll ended";                    
+                    $('.poll-options-main').empty().append('<a href="' + routes.homeUrl + '" class="btn btn-primary text-capitalize m-0">Running polls</a>');
+                } else if (new Date() > startdatetime) {
+                    deadline = new Date(enddatetime).getTime();
+                    deadlineString = enddatetime;
+                    headinText = "time left";
+                } else {
+                    deadline = new Date(startdatetime).getTime();
+                    deadlineString = startdatetime;
+                    headinText = "comming soon";
+                    $('.poll-options-main').empty().append('<a href="' + routes.homeUrl + '" class="btn btn-primary text-capitalize m-0">Running polls</a>');
                 }
-            }, 1000);
-        }
+                $('.countdown-heading').text(headinText);
+                
+                var countDown = deadlineString;
+                var nowtest = new Date();
+                var timertest = countDown - nowtest;
+
+                var x = setInterval(function () {
+                    if ($('#day').length > 0) {
+                        var now = new Date();
+                        var t = countDown - now;
+                        var days = Math.floor(t / (1000 * 60 * 60 * 24));
+                        var hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        var minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
+                        var seconds = Math.floor((t % (1000 * 60)) / 1000);
+
+                        document.getElementById("day").innerHTML = days.toString().length == 1 ? '0' + days :
+                            days;
+                        document.getElementById("hour").innerHTML = hours.toString().length == 1 ? '0' + hours :
+                            hours;
+                        document.getElementById("minute").innerHTML = minutes.toString().length == 1 ? '0' +
+                            minutes :
+                            minutes;
+                        document.getElementById("second").innerHTML = (seconds.toString().length == 1) ? '0' +
+                            seconds :
+                            seconds;                        
+                        if (t < 0) {
+                            clearInterval(x);
+                            document.getElementById("day").innerHTML = '00';
+                            document.getElementById("hour").innerHTML = '00';
+                            document.getElementById("minute").innerHTML = '00';
+                            document.getElementById("second").innerHTML = '00';
+                        }
+                    }
+                }, 1000);
+            }
     }
 
     let formId = '#poll-vote-form',

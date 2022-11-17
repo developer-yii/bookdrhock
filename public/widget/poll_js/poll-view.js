@@ -66,7 +66,7 @@ jQuery(document).ready(function () {
                     deadline = new Date(startdatetime).getTime();
                     deadlineString = startdatetime;
                     headinText = "Poll ended";                    
-                    $('.poll-options-main').empty();
+                    $('.poll-options-main').empty().append('<a href="' + routes.homeUrl + '" class="btn btn-primary text-capitalize m-0">Running polls</a>');
                 } else if (new Date() > startdatetime) {
                     deadline = new Date(enddatetime).getTime();
                     deadlineString = enddatetime;
@@ -75,7 +75,7 @@ jQuery(document).ready(function () {
                     deadline = new Date(startdatetime).getTime();
                     deadlineString = startdatetime;
                     headinText = "comming soon";
-                    $('.poll-options-main').empty();
+                    $('.poll-options-main').empty().append('<a href="' + routes.homeUrl + '" class="btn btn-primary text-capitalize m-0">Running polls</a>');
                 }
                 $('.countdown-heading').text(headinText);
                 
@@ -101,8 +101,7 @@ jQuery(document).ready(function () {
                             minutes;
                         document.getElementById("second").innerHTML = (seconds.toString().length == 1) ? '0' +
                             seconds :
-                            seconds;
-                        $('.fandomz-poll-widget').find('#second').html();
+                            seconds;                        
                         if (t < 0) {
                             clearInterval(x);
                             document.getElementById("day").innerHTML = '00';
@@ -188,13 +187,19 @@ jQuery(document).ready(function () {
                         }
                         if(error.responseJSON.message){
                             showMessage('error', error.responseJSON.message);
+                            var slug = $('.fandomz-poll-widget #slug').val();
+                            if(error.responseJSON.is_reload && slug){
+                                $('.poll-heading')[0].scrollIntoView();
+                                reinitPreloader();
+                                pollResultView(slug);
+                            }
                         }
                     }
                 });
             } else {
                 var hour = $('.fandomz-poll-widget #vote_schedule').val();
-                var slug = $('.fandomz-poll-widget #slug').val();                
-                showMessage('success', 'You\'ve completed your vote, vote again in '+hour+' hours');                
+                var slug = $('.fandomz-poll-widget #slug').val();
+                showMessage('success', 'You\'ve completed your vote, vote again in '+hour+' hours');
                 $('.poll-heading')[0].scrollIntoView();
                 reinitPreloader();
                 pollResultView(slug);
