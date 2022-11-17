@@ -131,10 +131,8 @@ function checkBlockedIP(){
     //$clientIp = "101.110.111.255";
     $ipdat = @json_decode(file_get_contents("http://ip-api.com/json/".$clientIp),true);
     $country = "";
-    if(isset($ipdat['status']) && strtolower($ipdat['status']) == "success"){
-        \Log::info("block-ip: ".$clientIp);
+    if(isset($ipdat['status']) && strtolower($ipdat['status']) == "success"){        
         $country = (isset($ipdat['country']) && $ipdat['country'])? strtolower($ipdat['country']) : "";
-        \Log::info("country-block-ip: ".$country);
     }    
     return ($country && in_array($country, ['china']))? true : false; 
 }
@@ -188,7 +186,7 @@ function verifyWidgetToken($widget_token,$poll_id){
     $keyEnd = "871QY5HN2LUJSW9RTABFC03EIVMKP6Z4";
     
     $encryptionKey = $keyStart.$clientIp.$poll_id.$keyEnd;
-    if( Hash::check( $encryptionKey , $widget_token ) )
+    if( Hash::check( $encryptionKey , trim($widget_token) ) )
     {
         return true;
     }else{
