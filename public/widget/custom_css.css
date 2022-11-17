@@ -165,6 +165,7 @@
     border: 1px solid #000;
     margin: 0 5px;
     padding: 10px 20px;
+    width: 90px;
 }
 .fandomz-poll-widget .option-container .card-poll .image-div {
     max-width: 150px;
@@ -377,17 +378,17 @@
     }
 }
 
-@media (max-width: 400px) {
-    .fandomz-poll-widget div.clockdiv-container {
-        flex-direction: column;
+@media (max-width: 400px) {    
+    .fandomz-poll-widget .poll-timer .web
+    {
+        display: none;
     }
-
+    .fandomz-poll-widget .poll-timer .mob
+    {
+        display: block;   
+    }
     .fandomz-poll-widget div.clockdiv-container>div {
-        width: 100%;
-    }
-
-    .fandomz-poll-widget div.clockdiv-container>div:not(:last-child) {
-        margin-bottom: 10px;
+        width: 70px;
     }
 }
 
@@ -398,6 +399,26 @@
 
     .fandomz-poll-widget .poll-form-container .panel-heading .button-container a:first-child {
         margin-bottom: 10px;
+    }
+}
+
+@media (max-width:330px){
+    .time-box.bg-success.text-light.font-bold {
+        padding: 4px 15px;
+    }
+    .fandomz-poll-widget div.clockdiv-container>div {
+        width: 55px;
+    }
+}
+
+@media (min-width:400px){
+    .fandomz-poll-widget .poll-timer .web
+    {
+        display: block;
+    }
+    .fandomz-poll-widget .poll-timer .mob
+    {
+        display: none;   
     }
 }
 /*
@@ -755,6 +776,8 @@ all bootstrap css
 {
     color: #686868 !important;
 }
+
+
 /*
 preloader
 */
