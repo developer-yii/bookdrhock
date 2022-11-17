@@ -132,8 +132,9 @@ function checkBlockedIP(){
     $ipdat = @json_decode(file_get_contents("http://ip-api.com/json/".$clientIp),true);
     $country = "";
     if(isset($ipdat['status']) && strtolower($ipdat['status']) == "success"){
-        \Log::info($clientIp);
+        \Log::info("block-ip: ".$clientIp);
         $country = (isset($ipdat['country']) && $ipdat['country'])? strtolower($ipdat['country']) : "";
+        \Log::info("country-block-ip: ".$country);
     }    
     return ($country && in_array($country, ['china']))? true : false; 
 }
