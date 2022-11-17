@@ -326,10 +326,8 @@ class PollController extends Controller
             }
         } else {
 
-            session()->flash('flash-poll-votedone', 'You Have Completed Your Votes, vote again in ' . $hours . ' hours');
-            $view = $this->getResultView($request->id,$request->page_type);
-
-            return response()->json(['response' => 'votedone', 'message' => 'You\'ve completed your vote, vote again in ' . $hours . ' hours', 'slug' => $request->slug, 'type' => $request->page_type,'html'=>$view], 200);
+            session()->flash('flash-poll-votedone', 'You Have Completed Your Votes, vote again in 24 hours');
+            return response()->json(['message' => 'You\'ve completed your vote, vote again in 24 hours', 'slug' => $request->slug, 'type' => $request->page_type], 200);
         }
     }
 
@@ -656,7 +654,7 @@ class PollController extends Controller
                 return response()->json(['response' => 'votedone', 'message' => 'You\'ve completed your vote, vote again in ' . $hours . ' hours', 'slug' => $request->slug, 'type' => $request->page_type], 200);
             }            
         } else {
-            return response()->json(['response' => 'votedone', 'message' => 'You\'ve completed your vote, vote again in ' . $hours . ' hours', 'slug' => $request->slug, 'type' => $request->page_type], 200);
+            return response()->json(['response' => 'votedone', 'message' => 'You\'ve completed your vote, vote again in 24 hours', 'slug' => $request->slug, 'type' => $request->page_type], 200);
         }
 
     }
