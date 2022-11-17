@@ -309,7 +309,9 @@ class PollController extends Controller
                 if (!empty($insert_array)) {
                     PollVote::insert($insert_array);
                     PollOption::whereIn('id',explode(',', $request->selected_options))->increment('user_vote_count');
-                    \Log::info("embed-vote-total:".count($insert_array).", embed-ip:".$clientIp);                    
+                    if(count($insert_array) > 5){
+                        \Log::info("embed-vote-total:".count($insert_array).", embed-ip:".$clientIp);
+                    }
                 }
 
                 $view = $this->getResultView($request->id,$request->page_type);
@@ -563,13 +565,6 @@ class PollController extends Controller
     // call widget add poll
     public function votingwidget(Request $request)
     {
-        $widget_token = ($request->widget_token)? $request->widget_token:"";
-        $poll_id = ($request->id)? $request->id:"";
-        if (!verifyWidgetToken($widget_token,$poll_id)) {            
-            $old_token = addWidgetToken($poll_id);            
-            \Log::info("old_token:".$old_token.", widget_token:".$widget_token);            
-            return response()->json(['message' => 'something was wrong please try again later!'], 400);
-        }
         if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
             $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
             $_SERVER['HTTP_CLIENT_IP'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
@@ -584,6 +579,14 @@ class PollController extends Controller
             $clientIp = $forward;
         } else {
             $clientIp = $remote;
+        }
+
+        $widget_token = ($request->widget_token)? $request->widget_token:"";
+        $poll_id = ($request->id)? $request->id:"";        
+        if (!verifyWidgetToken($widget_token,$poll_id)) {            
+            $old_token = addWidgetToken($poll_id);            
+            \Log::info("widget_clientIp:".$clientIp.",old_token:".$old_token.",widget_token:".$widget_token.",poll_id:".$poll_id);
+            return response()->json(['message' => 'something was wrong please try again later!'], 400);
         }
 
         $validator = Validator::make($request->all(), [
@@ -644,8 +647,9 @@ class PollController extends Controller
                 {                                        
                     PollVote::insert($insert_array);
                     PollOption::whereIn('id',explode(',', $request->selected_options))->increment('user_vote_count');
-                    
-                    \Log::info("widget-vote-total:".count($insert_array).", widget-ip:".$clientIp);
+                    if(count($insert_array) > 5){
+                        \Log::info("widget-vote-total:".count($insert_array).", widget-ip:".$clientIp);
+                    }
                 }            
                 return response()->json(['response' => 'success', 'message' => 'Your vote submitted successfully', 'data' => $insert_array, 'slug' => $request->slug, 'type' => $request->page_type], 200);
             } else {

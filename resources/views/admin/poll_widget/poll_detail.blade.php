@@ -17,19 +17,23 @@
             data-enddatetime="{{ isset($poll->end_datetime) && !empty($poll->end_datetime) ? $poll->end_datetime : 'null' }}">
             <div class="time-box bg-success text-light font-bold">
                 <span class="days" id="day">00</span>
-                <div>Days</div>
+                <div class="web">Days</div>
+                <div class="mob">D</div>
             </div>
             <div class="time-box bg-success text-light font-bold">
                 <span class="hours" id="hour">00</span>
-                <div>Hrs</div>
+                <div class="web">Hrs</div>
+                <div class="mob">H</div>
             </div>
             <div class="time-box bg-success text-light font-bold">
                 <span class="minutes" id="minute">00</span>
-                <div>Mins</div>
+                <div class="web">Mins</div>
+                <div class="mob">M</div>
             </div>
             <div class="time-box bg-success text-light font-bold">
                 <span class="seconds" id="second">00</span>
-                <div>Secs</div>
+                <div class="web">Secs</div>
+                <div class="mob">S</div>
             </div>
         </div>
     </div>
