@@ -97,7 +97,7 @@ Route::prefix('poll')->namespace('Admin')->name('poll.')->group(function () {
     Route::post('/voting', 'PollController@Voting')->name('voting');
 });
 
-Route::prefix('pollwidget')->namespace('Admin')->middleware('cors')->group(function () {
+Route::prefix('pollwidget')->namespace('Admin')->group(function () {
     Route::get('/getlist/{slug}', 'PollController@getlist')->name('pollwidget.getlist');
     Route::get('/getlistHtml/{slug}', 'PollController@getlistHtml')->name('pollwidget.getlistHtml');
     Route::post('/votingwidget', 'PollController@votingwidget')->name('pollwidget.votingwidget');
