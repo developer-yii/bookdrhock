@@ -309,6 +309,8 @@ class PollController extends Controller
                 if (!empty($insert_array)) {
                     PollVote::insert($insert_array);
                     PollOption::whereIn('id',explode(',', $request->selected_options))->increment('user_vote_count');
+                    \Log::info("embed-vote-total:".count($insert_array));
+                    \Log::info("embed-ip:".$clientIp);
                 }
 
                 $view = $this->getResultView($request->id,$request->page_type);
@@ -565,7 +567,12 @@ class PollController extends Controller
         $widget_token = ($request->widget_token)? $request->widget_token:"";
         $poll_id = ($request->id)? $request->id:"";
         if (!verifyWidgetToken($widget_token,$poll_id)) {
+            
+            $old_token = addWidgetToken($poll_id);
+            \Log::info("widget_poll_id:".$poll_id);
+            \Log::info("old_token:".$widget_token.", widget_token:".$widget_token);
             \Log::info("widget_token:".$widget_token);
+            
             return response()->json(['message' => 'something was wrong please try again later!'], 400);
         }
         if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
@@ -639,6 +646,7 @@ class PollController extends Controller
                     $k++;
                 }
                 if (!empty($insert_array)) {
+                    \Log::info("widget-vote-total:".count($insert_array));
                     PollVote::insert($insert_array);
                     PollOption::whereIn('id',explode(',', $request->selected_options))->increment('user_vote_count');
                 }            
