@@ -29,6 +29,7 @@
         // Define variable for route path
         var routes = {
             indexUrl: "{{ route('poll') }}",
+            homeUrl: "{{ route('home') }}",
             votingUrl: "{{ route('poll.voting') }}"
         }
         $('.result-view').hide();
