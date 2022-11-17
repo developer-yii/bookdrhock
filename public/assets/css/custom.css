@@ -1065,17 +1065,17 @@ div.clockdiv-container>div {
     }
 }
 
-@media (max-width: 400px) {
-    div.clockdiv-container {
-        flex-direction: column;
+@media (max-width: 400px) {    
+    .poll-timer .web
+    {
+        display: none;
     }
-
+    .poll-timer .mob
+    {
+        display: block;   
+    }
     div.clockdiv-container>div {
-        width: 100%;
-    }
-
-    div.clockdiv-container>div:not(:last-child) {
-        margin-bottom: 10px;
+        width: 70px;
     }
 }
 
@@ -1086,6 +1086,26 @@ div.clockdiv-container>div {
 
     .poll-form-container .panel-heading .button-container a:first-child {
         margin-bottom: 10px;
+    }
+}
+
+@media (max-width:330px){
+    .time-box.bg-success.text-light.font-bold {
+        padding: 4px 15px;
+    }
+    div.clockdiv-container>div {
+        width: 55px;
+    }
+}
+
+@media (min-width:400px){
+    .poll-timer .web
+    {
+        display: block;
+    }
+    .poll-timer .mob
+    {
+        display: none;   
     }
 }
 
