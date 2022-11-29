@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use DataTables;
 use App\Model\Poll;
 use App\Model\PollVote;
+use App\Model\Codeblock;
 use App\Rules\ReCaptcha;
 use App\Model\PollOption;
 use App\Model\PollCategory;
@@ -111,11 +112,13 @@ class PollController extends Controller
         }
         arsort($poll_option_array);
 
+        $codeblock = $this->getOptionCodeblock();
+
         $userrole = Auth::user() ? Auth::user()->user_role : '';
         $type = 'details';
         app('mathcaptcha')->reset();
 
-        return view('admin.poll.view', compact('poll', 'userrole', 'type', 'poll_options', 'poll_option_array'));
+        return view('admin.poll.view', compact('poll', 'userrole', 'type', 'poll_options', 'poll_option_array', 'codeblock'));
     }
 
     public function viewResults($slug)
@@ -143,14 +146,16 @@ class PollController extends Controller
 
         $poll_option_array = [];
         foreach ($poll_options as $list) {
-            $poll_option_array[$list['id']] = $list['admin_vote']+$list['user_vote_count'];
+            $poll_option_array[$list['id']] = $list['admin_vote'] + $list['user_vote_count'];
         }
         arsort($poll_option_array);
 
         $userrole = Auth::user() ? Auth::user()->user_role : '';
         $type = 'results';
 
-        return view('admin.poll.view', compact('poll', 'userrole', 'type', 'poll_options', 'poll_option_array'));
+        $codeblock = $this->getOptionCodeblock();
+
+        return view('admin.poll.view', compact('poll', 'userrole', 'type', 'poll_options', 'poll_option_array', 'codeblock'));
     }
 
     public function embedViewResults($slug)
@@ -178,13 +183,15 @@ class PollController extends Controller
 
         $poll_option_array = [];
         foreach ($poll_options as $list) {
-            $poll_option_array[$list['id']] = $list['admin_vote']+$list['user_vote_count'];
+            $poll_option_array[$list['id']] = $list['admin_vote'] + $list['user_vote_count'];
         }
         arsort($poll_option_array);
 
         $type = 'results';
 
-        return view('admin.poll.embedview', compact('poll', 'type', 'poll_options', 'poll_option_array'));
+        $codeblock = $this->getOptionCodeblock();
+
+        return view('admin.poll.embedview', compact('poll', 'type', 'poll_options', 'poll_option_array','codeblock'));
     }
 
     public function votechangePollOptions(Request $request)
@@ -239,7 +246,9 @@ class PollController extends Controller
         $type = 'details';
         app('mathcaptcha')->reset();
 
-        return view('admin.poll.embedview', compact('poll', 'type', 'poll_options', 'poll_option_array'));
+        $codeblock = $this->getOptionCodeblock();
+
+        return view('admin.poll.embedview', compact('poll', 'type', 'poll_options', 'poll_option_array','codeblock'));
     }
 
     public function Voting(Request $request)
@@ -280,10 +289,10 @@ class PollController extends Controller
         }
 
         $pollFind = Poll::where('slug', $request->slug)->where('id', $request->id)->first();
-        if(isset($pollFind->id)){
-            $hours = ($pollFind->vote_schedule)? $pollFind->vote_schedule : 24;
-            $voteAdd = ($pollFind->vote_add)? $pollFind->vote_add : 1;
-            
+        if (isset($pollFind->id)) {
+            $hours = ($pollFind->vote_schedule) ? $pollFind->vote_schedule : 24;
+            $voteAdd = ($pollFind->vote_add) ? $pollFind->vote_add : 1;
+
             $curruntVotes = PollVote::query()
                 ->where('ip', $clientIp)
                 ->where('poll_id', $request->id)
@@ -308,21 +317,21 @@ class PollController extends Controller
 
                 if (!empty($insert_array)) {
                     PollVote::insert($insert_array);
-                    PollOption::whereIn('id',explode(',', $request->selected_options))->increment('user_vote_count');
-                    if(count($insert_array) > 5){
-                        \Log::info("embed-vote-total:".count($insert_array).", embed-ip:".$clientIp);
+                    PollOption::whereIn('id', explode(',', $request->selected_options))->increment('user_vote_count');
+                    if (count($insert_array) > 5) {
+                        \Log::info("embed-vote-total:" . count($insert_array) . ", embed-ip:" . $clientIp);
                     }
                 }
 
-                $view = $this->getResultView($request->id,$request->page_type);
+                $view = $this->getResultView($request->id, $request->page_type);
 
-                return response()->json(['response' => 'success', 'message' => 'Your vote submitted successfully', 'data' => $insert_array, 'slug' => $request->slug, 'type' => $request->page_type,'html'=>$view], 200);
+                return response()->json(['response' => 'success', 'message' => 'Your vote submitted successfully', 'data' => $insert_array, 'slug' => $request->slug, 'type' => $request->page_type, 'html' => $view], 200);
             } else {
-                
-                session()->flash('flash-poll-votedone', 'You Have Completed Your Votes, vote again in ' . $hours . ' hours');
-                $view = $this->getResultView($request->id,$request->page_type);
 
-                return response()->json(['response' => 'votedone', 'message' => 'You\'ve completed your vote, vote again in ' . $hours . ' hours', 'slug' => $request->slug, 'type' => $request->page_type,'html'=>$view], 200);
+                session()->flash('flash-poll-votedone', 'You Have Completed Your Votes, vote again in ' . $hours . ' hours');
+                $view = $this->getResultView($request->id, $request->page_type);
+
+                return response()->json(['response' => 'votedone', 'message' => 'You\'ve completed your vote, vote again in ' . $hours . ' hours', 'slug' => $request->slug, 'type' => $request->page_type, 'html' => $view], 200);
             }
         } else {
 
@@ -331,7 +340,7 @@ class PollController extends Controller
         }
     }
 
-    public function getResultView($id,$pagetype)
+    public function getResultView($id, $pagetype)
     {
         $poll = Poll::query()
             ->where('id', $id)
@@ -345,16 +354,17 @@ class PollController extends Controller
 
         $poll_option_array = [];
         foreach ($poll_options as $list) {
-            $poll_option_array[$list['id']] = $list['admin_vote']+$list['user_vote_count'];
+            $poll_option_array[$list['id']] = $list['admin_vote'] + $list['user_vote_count'];
         }
         arsort($poll_option_array);
 
         $userrole = '';
         $type = 'results';
 
-        $view = View::make('admin.poll.result_ajax', compact('poll', 'userrole', 'type', 'poll_options', 'poll_option_array','pagetype'))->render();
+        $codeblock = $this->getOptionCodeblock();
+
+        $view = View::make('admin.poll.result_ajax', compact('poll', 'userrole', 'type', 'poll_options', 'poll_option_array', 'pagetype', 'codeblock'))->render();
         return $view;
-            
     }
 
     public function getPollOptions(Request $request)
@@ -531,7 +541,9 @@ class PollController extends Controller
         $type = 'details';
         app('mathcaptcha')->reset();
 
-        return view('admin.poll_widget.poll_list', compact('poll', 'type', 'poll_options', 'poll_option_array'));
+        $codeblock = $this->getOptionCodeblock();
+
+        return view('admin.poll_widget.poll_list', compact('poll', 'type', 'poll_options', 'poll_option_array', 'codeblock'));
     }
     public function getlistHtml($slug)
     {
@@ -557,7 +569,9 @@ class PollController extends Controller
         $type = 'details';
         app('mathcaptcha')->reset();
 
-        return view('admin.poll_widget.poll_list_html', compact('poll', 'type', 'poll_options', 'poll_option_array'));
+        $codeblock = $this->getOptionCodeblock();
+
+        return view('admin.poll_widget.poll_list_html', compact('poll', 'type', 'poll_options', 'poll_option_array', 'codeblock'));
     }
 
     // call widget add poll
@@ -579,32 +593,30 @@ class PollController extends Controller
             $clientIp = $remote;
         }
 
-        $widget_token = ($request->widget_token)? $request->widget_token:"";
-        $poll_id = ($request->id)? $request->id:"";        
-        if (!verifyWidgetToken($widget_token,$poll_id)) {            
-            $old_token = addWidgetToken($poll_id);            
-            \Log::info("widget_clientIp:".$clientIp.",old_token:".$old_token.",widget_token:".$widget_token.",poll_id:".$poll_id);
-            return response()->json(['message' => 'something was wrong please try again later!','is_reload'=>true], 400);
+        $widget_token = ($request->widget_token) ? $request->widget_token : "";
+        $poll_id = ($request->id) ? $request->id : "";
+        if (!verifyWidgetToken($widget_token, $poll_id)) {
+            $old_token = addWidgetToken($poll_id);
+            \Log::info("widget_clientIp:" . $clientIp . ",old_token:" . $old_token . ",widget_token:" . $widget_token . ",poll_id:" . $poll_id);
+            return response()->json(['message' => 'something was wrong please try again later!', 'is_reload' => true], 400);
         }
 
         $validator = Validator::make($request->all(), [
-          'selected_options' => 'required',
+            'selected_options' => 'required',
             'mathcaptcha_ctm' => 'required_if:enabledmathcaptcha,==,"enabledmathcaptcha"',
             'g-recaptcha-response' => ['required_if:enabledgooglecaptcha,==,"enabledgooglecaptcha"', new ReCaptcha]
-        ],[
+        ], [
             'mathcaptcha.mathcaptcha' => 'Your answer is wrong.',
             'mathcaptcha_ctm.required_if' => 'Please give answer.',
             'g-recaptcha-response.required_if' => 'Please valid google recaptcha.'
         ]);
-        if (!$validator->passes())
-        {
-            $err=$validator->errors()->toArray();
+        if (!$validator->passes()) {
+            $err = $validator->errors()->toArray();
             $data = [];
-            foreach ($err as $key => $value)
-            {
-                $data[$key]=$value[0];
+            foreach ($err as $key => $value) {
+                $data[$key] = $value[0];
             }
-            return response()->json(['errors'=>$data],400);
+            return response()->json(['errors' => $data], 400);
         }
         if (isset($request->enabledmathcaptcha) && !empty($request->enabledmathcaptcha)) {
             if (isset($request->match_captcha_firstnumb) && !empty($request->match_captcha_firstnumb) && isset($request->match_captcha_secoundnumb) && !empty($request->match_captcha_secoundnumb)) {
@@ -616,9 +628,9 @@ class PollController extends Controller
         }
 
         $pollFind = Poll::where('slug', $request->slug)->where('id', $request->id)->first();
-        if(isset($pollFind->id)){
-            $hours = ($pollFind->vote_schedule)? $pollFind->vote_schedule : 24;
-            $voteAdd = ($pollFind->vote_add)? $pollFind->vote_add : 1;
+        if (isset($pollFind->id)) {
+            $hours = ($pollFind->vote_schedule) ? $pollFind->vote_schedule : 24;
+            $voteAdd = ($pollFind->vote_add) ? $pollFind->vote_add : 1;
 
             $curruntVotes = PollVote::query()
                 ->where('ip', $clientIp)
@@ -641,22 +653,20 @@ class PollController extends Controller
                     $insert_array[$k]['updated_at'] = $currunt_date;
                     $k++;
                 }
-                if (!empty($insert_array)) 
-                {                                        
+                if (!empty($insert_array)) {
                     PollVote::insert($insert_array);
-                    PollOption::whereIn('id',explode(',', $request->selected_options))->increment('user_vote_count');
-                    if(count($insert_array) > 5){
-                        \Log::info("widget-vote-total:".count($insert_array).", widget-ip:".$clientIp);
+                    PollOption::whereIn('id', explode(',', $request->selected_options))->increment('user_vote_count');
+                    if (count($insert_array) > 5) {
+                        \Log::info("widget-vote-total:" . count($insert_array) . ", widget-ip:" . $clientIp);
                     }
-                }            
+                }
                 return response()->json(['response' => 'success', 'message' => 'Your vote submitted successfully', 'data' => $insert_array, 'slug' => $request->slug, 'type' => $request->page_type], 200);
             } else {
                 return response()->json(['response' => 'votedone', 'message' => 'You\'ve completed your vote, vote again in ' . $hours . ' hours', 'slug' => $request->slug, 'type' => $request->page_type], 200);
-            }            
+            }
         } else {
             return response()->json(['response' => 'votedone', 'message' => 'You\'ve completed your vote, vote again in 24 hours', 'slug' => $request->slug, 'type' => $request->page_type], 200);
         }
-
     }
     public function getWidgetResultView($slug)
     {
@@ -664,24 +674,50 @@ class PollController extends Controller
         $poll = Poll::query()
             ->where('slug', $slug)
             ->first();
-        $poll_id = (isset($poll->id))? $poll->id:"";
+        $poll_id = (isset($poll->id)) ? $poll->id : "";
         $poll_options = PollOption::query()
             ->where('poll_id', $poll_id)
             ->get()
             ->keyBy('id')
-            ->toArray();        
+            ->toArray();
         $poll_option_array = [];
-        if(!empty($poll_options)){
+        if (!empty($poll_options)) {
             foreach ($poll_options as $list) {
-                $poll_option_array[$list['id']] = $list['admin_vote']+$list['user_vote_count'];
+                $poll_option_array[$list['id']] = $list['admin_vote'] + $list['user_vote_count'];
             }
-            arsort($poll_option_array);            
+            arsort($poll_option_array);
         }
         $userrole = '';
         $type = 'results';
 
-        $view = View::make('admin.poll_widget.poll_result_ajax', compact('poll', 'userrole', 'type', 'poll_options', 'poll_option_array','pagetype'))->render();
-        return response()->json(['response' => 'success','html' => $view], 200);
-            
+        $codeblock = $this->getOptionCodeblock();
+
+        $view = View::make('admin.poll_widget.poll_result_ajax', compact('poll', 'userrole', 'type', 'poll_options', 'poll_option_array', 'pagetype', 'codeblock'))->render();
+        return response()->json(['response' => 'success', 'html' => $view,], 200);
+    }
+
+    public function getOptionCodeblock()
+    {
+        $codeblock = [];
+
+        $abovefirst = Codeblock::where('type', 'above first option')->first();
+        if (isset($abovefirst) && !empty($abovefirst)) {
+            $codeblock['abovefirst'] = $abovefirst->codeblock;
+        }
+
+        $abovemiddle = Codeblock::where('type', 'above middle option')->first();
+        if (isset($abovemiddle) && !empty($abovemiddle)) {
+            $codeblock['abovemiddle'] = $abovemiddle->codeblock;
+        }
+
+        $abovelast = Codeblock::where('type', 'above last option')->first();
+        if (isset($abovelast) && !empty($abovelast)) {
+            $codeblock['abovelast'] = $abovelast->codeblock;
+        }
+
+        if (isset($codeblock) && !empty($codeblock)) {
+            return $codeblock;
+        }
+        return '';
     }
 }

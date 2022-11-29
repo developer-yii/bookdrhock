@@ -2,7 +2,7 @@
 @section('content')
     <div class="bg-white card poll-view-card rounded-0 position-relative w-100 m-1 poll-view" id="poll_list_{{ $poll->slug }}">
         @php $type = isset($type) && !empty($type) ? $type : 'details' @endphp
-        @include('admin.poll_widget.poll_detail', ['type' => $type])
+        @include('admin.poll_widget.poll_detail', ['type' => $type,'codeblock' => $codeblock])
     </div>
     <div class="result-view bg-white card poll-view-card rounded-0 position-relative w-100 m-1 result-view" id="poll_result_{{ $poll->slug }}"></div>
 @endsection

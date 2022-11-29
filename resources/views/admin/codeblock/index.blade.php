@@ -44,6 +44,45 @@
                         </div>
                         <!--row-->
                     @endif
+                    @if (isset($above_first_option_codeblock) && !empty($above_first_option_codeblock))
+                        <!--row-->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="above_first_option_codeblock"
+                                        class="control-label">{{ __('Insert code above the first option') }}</label>
+                                    <textarea name="above_first_option_codeblock" id="above_first_option_codeblock" class="form-control w-100" rows="10">{!! $above_first_option_codeblock->codeblock ? $above_first_option_codeblock->codeblock : '' !!}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!--row-->
+                    @endif
+                    @if (isset($above_middle_option_codeblock) && !empty($above_middle_option_codeblock))
+                        <!--row-->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="above_middle_option_codeblock"
+                                        class="control-label">{{ __('Insert code above the middle option') }}</label>
+                                    <textarea name="above_middle_option_codeblock" id="above_middle_option_codeblock" class="form-control w-100" rows="10">{!! $above_middle_option_codeblock->codeblock ? $above_middle_option_codeblock->codeblock : '' !!}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!--row-->
+                    @endif
+                    @if (isset($above_last_option_codeblock) && !empty($above_last_option_codeblock))
+                        <!--row-->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="above_last_option_codeblock"
+                                        class="control-label">{{ __('Insert code above the last option') }}</label>
+                                    <textarea name="above_last_option_codeblock" id="above_last_option_codeblock" class="form-control w-100" rows="10">{!! $above_last_option_codeblock->codeblock ? $above_last_option_codeblock->codeblock : '' !!}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!--row-->
+                    @endif
                     @if (isset($footer_codeblock) && !empty($footer_codeblock))
                         <!--row-->
                         <div class="row">

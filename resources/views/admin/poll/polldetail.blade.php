@@ -58,7 +58,29 @@
         @endif
     @endif
     <div class="option-container @if (isset($type) && !empty($type) && $type == 'details') option-container-details @endif mt-5">
+        {{ round(count($poll_option_array) / 2) }}
         @foreach ($poll_option_array as $option_id => $option_vote)
+            @if ($loop->first && $loop->iteration < 2)
+                @if (isset($codeblock) && !empty($codeblock) && !empty($codeblock['abovefirst']))
+                    <div class="firstoption-codeblock">
+                        {!! $codeblock['abovefirst'] !!}
+                    </div>
+                @endif
+            @endif
+            @if ($loop->iteration == round(count($poll_option_array) / 2) && $loop->iteration > 1)
+                @if (isset($codeblock) && !empty($codeblock) && !empty($codeblock['abovemiddle']))
+                    <div class="firstoption-codeblock">
+                        {!! $codeblock['abovemiddle'] !!}
+                    </div>
+                @endif
+            @endif
+            @if ($loop->last && $loop->iteration > 1)
+                @if (isset($codeblock) && !empty($codeblock) && !empty($codeblock['abovelast']))
+                    <div class="lastoption-codeblock">
+                        {!! $codeblock['abovelast'] !!}
+                    </div>
+                @endif
+            @endif
             <div class="card-poll d-flex align-items-center mb-3 imagelight-box">
                 <input type="hidden" class="option_id" name="option_id_{{ $loop->iteration }}"
                     id="option_id_{{ $loop->iteration }}" value="{{ $poll_options[$option_id]['id'] }}">
@@ -90,7 +112,7 @@
     </div>
     @if (isset($type) && !empty($type) && $type == 'details')
         @if (isset($poll->captcha_type) && !empty($poll->captcha_type) && $poll->captcha_type == 1)
-            @if(!checkBlockedIP())
+            @if (!checkBlockedIP())
                 <div class="google-recaptcha-div mt-5">
                     <div class="form-group">
                         <input type="hidden" name="enabledgooglecaptcha" id="enabledgooglecaptcha"
@@ -100,7 +122,7 @@
                         <span class="help-block error-span"></span>
                     </div>
                 </div>
-            @endif    
+            @endif
         @elseif(isset($poll->captcha_type) && !empty($poll->captcha_type) && $poll->captcha_type == 2)
             <div class="form-group">
                 <input type="hidden" name="enabledmathcaptcha" id="enabledmathcaptcha" class="enabledmathcaptcha"
@@ -142,11 +164,11 @@
 @if (isset($type) && !empty($type) && $type == 'results')
     <div class="card-bottom mt-4">
         @if (isset($pagetype) && !empty($pagetype))
-        <a href="{{ ($pagetype!='normal') ? route('poll.embedView', $poll->slug) : route('poll.view', $poll->slug) }}"
-            class="btn btn-primary">Go to poll page</a>
+            <a href="{{ $pagetype != 'normal' ? route('poll.embedView', $poll->slug) : route('poll.view', $poll->slug) }}"
+                class="btn btn-primary">Go to poll page</a>
         @else
-        <a href="{{ request()->routeIs('poll.voting') ? route('poll.embedView', $poll->slug) : route('poll.view', $poll->slug) }}"
-            class="btn btn-primary">Go to poll page</a>
+            <a href="{{ request()->routeIs('poll.voting') ? route('poll.embedView', $poll->slug) : route('poll.view', $poll->slug) }}"
+                class="btn btn-primary">Go to poll page</a>
         @endif
     </div>
 @endif

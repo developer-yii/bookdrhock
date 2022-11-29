@@ -30,7 +30,7 @@
                                 </div>
                             @endif
                             @php $type = isset($type) && !empty($type) ? $type : 'details' @endphp
-                            @include('admin.poll.polldetail', ['type' => $type])
+                            @include('admin.poll.polldetail', ['type' => $type,'codeblock' => $codeblock])
                         </div>
                     </div>
                 </div>
@@ -53,7 +53,7 @@
                                 </div>
                             @endif
                             @php $type = isset($type) && !empty($type) ? $type : 'details' @endphp
-                            @include('admin.poll.polldetail', ['type' => $type])
+                            @include('admin.poll.polldetail', ['type' => $type, 'codeblock' => $codeblock])
                         </div>
                     </div>
                 </div>
