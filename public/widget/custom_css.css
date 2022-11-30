@@ -208,7 +208,7 @@
     border-style: solid;
 }
 .fandomz-poll-widget .option-container .card-poll.selected:after {
-    opacity: 1;
+    opacity: 1 !important;
 }
 .fandomz-poll-widget .option-container .card-poll.selected {
     background-color: #eceeef;
