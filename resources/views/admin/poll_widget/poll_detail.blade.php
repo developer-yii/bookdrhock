@@ -40,14 +40,15 @@
 @endif
 @if (isset($type) && !empty($type) && $type == 'details')
     <form action="#" method="POST" id="poll-vote-form" class="form-horizontal">
-    <input type="hidden" name="widget_token" value="{{addWidgetToken($poll->id)}}">
+        <input type="hidden" name="widget_token" value="{{ addWidgetToken($poll->id) }}">
 @endif
 <input type="hidden" name="id" id="id" value="{{ $poll['id'] }}">
 <input type="hidden" name="slug" id="slug" value="{{ $poll->slug }}">
 <input type="hidden" name="vote_add" id="vote_add" value="{{ $poll->vote_add }}">
 <input type="hidden" name="vote_schedule" id="vote_schedule" value="{{ $poll->vote_schedule }}">
 <input type="hidden" name="page_type" id="page_type" value="embeded">
-<div class="poll-options-main option-view-{{ $type }} text-center  @if (isset($type) && !empty($type) && $type == 'details') mt-5 @endif">
+<div
+    class="poll-options-main option-view-{{ $type }} text-center  @if (isset($type) && !empty($type) && $type == 'details') mt-5 @endif">
     @if (isset($type) && !empty($type) && $type == 'details')
         @if (isset($poll->option_select) && !empty($poll->option_select) && count($poll_options) > $poll->option_select)
             <p class="sub-text">You can choose {{ convert_number($poll->option_select) }} option</p>
@@ -57,6 +58,27 @@
     @endif
     <div class="option-container @if (isset($type) && !empty($type) && $type == 'details') option-container-details @endif mt-5">
         @foreach ($poll_option_array as $option_id => $option_vote)
+            @if ($loop->first && $loop->iteration < 2)
+                @if (isset($codeblock) && !empty($codeblock) && !empty($codeblock['abovefirst']))
+                    <div class="firstoption-codeblock">
+                        {!! $codeblock['abovefirst'] !!}
+                    </div>
+                @endif
+            @endif
+            @if ($loop->iteration == round(count($poll_option_array) / 2) && $loop->iteration > 1)
+                @if (isset($codeblock) && !empty($codeblock) && !empty($codeblock['abovemiddle']))
+                    <div class="firstoption-codeblock">
+                        {!! $codeblock['abovemiddle'] !!}
+                    </div>
+                @endif
+            @endif
+            @if ($loop->last && $loop->iteration > 1)
+                @if (isset($codeblock) && !empty($codeblock) && !empty($codeblock['abovelast']))
+                    <div class="lastoption-codeblock">
+                        {!! $codeblock['abovelast'] !!}
+                    </div>
+                @endif
+            @endif
             <div class="card-poll d-flex align-items-center mb-3 imagelight-box">
                 <input type="hidden" class="option_id" name="option_id_{{ $loop->iteration }}"
                     id="option_id_{{ $loop->iteration }}" value="{{ $poll_options[$option_id]['id'] }}">
@@ -88,16 +110,17 @@
     </div>
     @if (isset($type) && !empty($type) && $type == 'details')
         @if (isset($poll->captcha_type) && !empty($poll->captcha_type) && $poll->captcha_type == 1)
-            @if(!checkBlockedIP())
+            @if (!checkBlockedIP())
                 <div class="google-recaptcha-div mt-5">
                     <div class="form-group">
                         <input type="hidden" name="enabledgooglecaptcha" id="enabledgooglecaptcha"
                             class="enabledgooglecaptcha" value="enabledgooglecaptcha">
-                        <div class="g-recaptcha" data-sitekey="{{ env('GOOGLE_RECAPTCHA_KEY') }}" id="g-recaptcha"></div>
+                        <div class="g-recaptcha" data-sitekey="{{ env('GOOGLE_RECAPTCHA_KEY') }}" id="g-recaptcha">
+                        </div>
                         <span class="help-block error-span"></span>
                     </div>
                 </div>
-            @endif    
+            @endif
         @elseif(isset($poll->captcha_type) && !empty($poll->captcha_type) && $poll->captcha_type == 2)
             <div class="form-group">
                 <input type="hidden" name="enabledmathcaptcha" id="enabledmathcaptcha" class="enabledmathcaptcha"

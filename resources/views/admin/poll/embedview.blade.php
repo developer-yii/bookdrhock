@@ -10,7 +10,7 @@
 @section('content')
     <div class="bg-white card poll-view-card rounded-0 position-relative w-100 m-1 poll-view">
         @php $type = isset($type) && !empty($type) ? $type : 'details' @endphp
-        @include('admin.poll.polldetail', ['type' => $type])
+        @include('admin.poll.polldetail', ['type' => $type,'codeblock' => $codeblock])
     </div>
     <div class="result-view bg-white card poll-view-card rounded-0 position-relative w-100 m-1 result-view"></div>
 @endsection
