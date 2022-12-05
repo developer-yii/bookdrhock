@@ -1,4 +1,7 @@
 @extends('layouts.site')
+@section('title', (is_object($category) ? $category->name : $category) . '- FANDOMZ')
+{{-- @section('meta_description', '') --}}
+@section('meta_keywords', '')
 
 @section('content')
     <section id="wrapper" class="category-single category-{{ is_object($category) ? $category->name : $category }}">

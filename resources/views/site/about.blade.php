@@ -1,4 +1,7 @@
 @extends('layouts.site')
+@section('title', 'ABOUT - FANDOMZ')
+@section('meta_description', 'Fandomz is a survey/poll hosting and publishing service. The platform was established for publishers to create polls and surveys and for users to easily and securely vote on any kind of poll or survey on the internet.')
+@section('meta_keywords', '')
 
 @section('content')
     <section id="wrapper" class="about">

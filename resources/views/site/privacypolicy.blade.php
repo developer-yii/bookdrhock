@@ -1,4 +1,7 @@
 @extends('layouts.site')
+@section('title', 'Privacy Policy - FANDOMZ')
+@section('meta_description', '')
+@section('meta_keywords', '')
 
 @section('content')
     <section id="wrapper" class="privacypolicy">
