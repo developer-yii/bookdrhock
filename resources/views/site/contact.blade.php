@@ -1,4 +1,7 @@
 @extends('layouts.site')
+@section('title', 'CONTACT - FANDOMZ')
+@section('meta_description', 'For enquiries on advertisement,polls publishing and hosting or more please email us.')
+@section('meta_keywords', '')
 
 @section('content')
     <section id="wrapper" class="contact">

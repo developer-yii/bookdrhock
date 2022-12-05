@@ -1,4 +1,10 @@
 @extends('layouts.site')
+@section('title', $poll->title)
+@section('meta_description', str_replace('&nbsp;', ' ', preg_replace("/\r|\n/", '', strip_tags($poll->description))))
+@section('meta_keywords', '')
+
+<!--Str::limit(Str::replaceArray('&amp;', [''], Str::replaceArray('&nbsp;', [''], strip_tags($poll->description))), 100)-->
+
 
 @push('extraStyle')
     <!--alerts CSS -->
