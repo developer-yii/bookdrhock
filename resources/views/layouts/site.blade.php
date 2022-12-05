@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="@yield('meta_description', 'Fandomz')">
-    <meta name="keywords" content="">
+    <meta name="description" content="@yield('meta_description', 'Fnandomz.org the ultimate ranker! Participate and explore polls and surveys all over the world. Host and publish your polls!')">
+    <meta name="keywords" content="@yield('meta_keywords', 'Top 10 Best, Top 10 most beautiful, Kpop voting site, Turkish drama polls, Thai drama polls')">
     <meta name="author" content="">
 
     <!-- CSRF Token -->
@@ -14,7 +14,7 @@
 
     <link rel="icon" type="image/jpg" sizes="16x16" href="{{ asset('assets/images/favicon.jpg') }}">
     <!--<title>{{ config('app.name', 'Fandomz') }}</title>-->
-    <title>@yield('title', 'Fandomz')</title>
+    <title>@yield('title', 'FANDOMZ - Polls/Survey Publishing')</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">

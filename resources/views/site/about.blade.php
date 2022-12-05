@@ -1,5 +1,4 @@
 @extends('layouts.site')
-@section('title', 'About')
 
 @section('content')
     <section id="wrapper" class="about">
