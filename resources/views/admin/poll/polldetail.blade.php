@@ -58,7 +58,6 @@
         @endif
     @endif
     <div class="option-container @if (isset($type) && !empty($type) && $type == 'details') option-container-details @endif mt-5">
-        {{ round(count($poll_option_array) / 2) }}
         @foreach ($poll_option_array as $option_id => $option_vote)
             @if ($loop->first && $loop->iteration < 2)
                 @if (isset($codeblock) && !empty($codeblock) && !empty($codeblock['abovefirst']))
