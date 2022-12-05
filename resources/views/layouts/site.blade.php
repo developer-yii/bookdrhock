@@ -163,7 +163,7 @@
                         </a>
                     </div>
                     <p class="text-justify pr-5">
-                        {{ __('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent porta eget purus vitae fringilla. Morbi porta at elit a efficitur. Nam facilisis tellus sed orci finibus maximus.') }}
+                        {{ __('Fandomz.org is a survey/poll hosting and publishing service. The best service for publishers to create polls and surveys and for users to easily and securely vote on any kind of poll or survey on the internet.') }}
                     </p>
                 </div>
 
