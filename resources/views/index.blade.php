@@ -9,7 +9,7 @@
         <div class="banner d-flex align-items-center">
             <div class="container">
                 <div class="row">
-                    <h1 class="font-bold text-white text-capitalize">welcome to the bookdrhock</h1>
+                    <h1 class="font-bold text-white text-capitalize">Welcome To Fandomz</h1>
                 </div>
             </div>
         </div>
