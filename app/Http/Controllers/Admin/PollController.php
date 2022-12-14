@@ -191,7 +191,7 @@ class PollController extends Controller
 
         $codeblock = $this->getOptionCodeblock();
 
-        return view('admin.poll.embedview', compact('poll', 'type', 'poll_options', 'poll_option_array','codeblock'));
+        return view('admin.poll.embedview', compact('poll', 'type', 'poll_options', 'poll_option_array', 'codeblock'));
     }
 
     public function votechangePollOptions(Request $request)
@@ -199,11 +199,15 @@ class PollController extends Controller
         if (isset($request->id) && !empty($request->id) && isset($request->title) && !empty(isset($request->title))) {
             $request->validate([
                 'vote' => 'required|numeric',
-                'add_remove' => 'required'
+                'add_remove' => 'required',
+                'add_remove_user' => 'required',
+                'vote_user' => 'required|numeric'
             ]);
 
             $model = PollOption::find($request->id);
             $model->admin_vote = ($request->add_remove == 'add') ? ($model->admin_vote + $request->vote) : ($model->admin_vote - $request->vote);
+            $model->user_extra_vote_action = (isset($request->add_remove_user) && !empty($request->add_remove_user)) ? $request->add_remove_user : 'add';
+            $model->user_extra_votes = (isset($request->vote_user) && !empty($request->vote_user)) ? $request->vote_user : '0';
             $model->save();
 
             return response()->json(['response' => 'success', 'message' => 'Option vote update successfully.',], 200);
@@ -248,7 +252,7 @@ class PollController extends Controller
 
         $codeblock = $this->getOptionCodeblock();
 
-        return view('admin.poll.embedview', compact('poll', 'type', 'poll_options', 'poll_option_array','codeblock'));
+        return view('admin.poll.embedview', compact('poll', 'type', 'poll_options', 'poll_option_array', 'codeblock'));
     }
 
     public function Voting(Request $request)
@@ -307,6 +311,18 @@ class PollController extends Controller
             $k = 0;
             if (isset($curruntVotes) && $curruntVotes < $voteAdd) {
                 foreach (explode(',', $request->selected_options) as $option) {
+                    $optionExtraVote = PollOption::find($option);
+                    $voteNo = 1;
+                    if (isset($optionExtraVote->id) && $optionExtraVote->user_extra_vote_action == "add") {
+                        $voteNo += ($optionExtraVote->user_extra_votes) ? $optionExtraVote->user_extra_votes : 0;
+                    } else if (isset($optionExtraVote->id) && $optionExtraVote->user_extra_vote_action == "remove") {
+                        $voteNo -= ($optionExtraVote->user_extra_votes) ? $optionExtraVote->user_extra_votes : 0;
+                    }
+                    if (isset($optionExtraVote->id)) {
+                        $updateVote = ($optionExtraVote->user_vote_count + $voteNo);
+                        $optionExtraVote->user_vote_count = ($updateVote > 0) ? $updateVote : 0;
+                        $optionExtraVote->save();
+                    }
                     $insert_array[$k]['poll_id'] = $request->id;
                     $insert_array[$k]['ip'] = $clientIp;
                     $insert_array[$k]['poll_options'] = $option;
@@ -317,7 +333,7 @@ class PollController extends Controller
 
                 if (!empty($insert_array)) {
                     PollVote::insert($insert_array);
-                    PollOption::whereIn('id', explode(',', $request->selected_options))->increment('user_vote_count');
+                    //PollOption::whereIn('id', explode(',', $request->selected_options))->increment('user_vote_count');
                     if (count($insert_array) > 5) {
                         \Log::info("embed-vote-total:" . count($insert_array) . ", embed-ip:" . $clientIp);
                     }
@@ -646,6 +662,18 @@ class PollController extends Controller
             $k = 0;
             if (isset($curruntVotes) && $curruntVotes < $voteAdd) {
                 foreach (explode(',', $request->selected_options) as $option) {
+                    $optionExtraVote = PollOption::find($option);
+                    $voteNo = 1;
+                    if (isset($optionExtraVote->id) && $optionExtraVote->user_extra_vote_action == "add") {
+                        $voteNo += ($optionExtraVote->user_extra_votes) ? $optionExtraVote->user_extra_votes : 0;
+                    } else if (isset($optionExtraVote->id) && $optionExtraVote->user_extra_vote_action == "remove") {
+                        $voteNo -= ($optionExtraVote->user_extra_votes) ? $optionExtraVote->user_extra_votes : 0;
+                    }
+                    if (isset($optionExtraVote->id)) {
+                        $updateVote = ($optionExtraVote->user_vote_count + $voteNo);
+                        $optionExtraVote->user_vote_count = ($updateVote > 0) ? $updateVote : 0;
+                        $optionExtraVote->save();
+                    }
                     $insert_array[$k]['poll_id'] = $request->id;
                     $insert_array[$k]['ip'] = $clientIp;
                     $insert_array[$k]['poll_options'] = $option;
@@ -655,7 +683,7 @@ class PollController extends Controller
                 }
                 if (!empty($insert_array)) {
                     PollVote::insert($insert_array);
-                    PollOption::whereIn('id', explode(',', $request->selected_options))->increment('user_vote_count');
+                    // PollOption::whereIn('id', explode(',', $request->selected_options))->increment('user_vote_count');
                     if (count($insert_array) > 5) {
                         \Log::info("widget-vote-total:" . count($insert_array) . ", widget-ip:" . $clientIp);
                     }
