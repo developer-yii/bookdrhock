@@ -97,7 +97,7 @@ $(document).ready(function () {
                     name: 'image',
                     render: function (data, type, full, meta) {
                         if (data != '-') {
-                            return '<img src="' + data + '" alt="' + full.title + '" width="50px" height="50px">';
+                            return '<img src="' + data + '" alt="' + full.title + '" width="50px" height="50px" style="object-fit: cover;">';
                         } else {
                             return '-';
                         }
@@ -148,6 +148,7 @@ $(document).ready(function () {
         $(pollOptionVoteeditFormDiv).hide();
         $(pollOptionVoteChangeForm)[0].reset();
         $(formErrorSpanClass).text('');
+        $('.form-group.has-error').removeClass('has-error');
         viewPollOptionDatatable(table.row($(this).parents('tr')).data().id);
     })
 
@@ -158,8 +159,15 @@ $(document).ready(function () {
         $(pollOptionVoteeditFormDiv).show();
         $(pollOptionVoteChangeForm)[0].reset();
         $(formErrorSpanClass).text('');
+        $('.form-group.has-error').removeClass('has-error');
         $.each(pollOptionDatatable.row($(this).parents('tr')).data(), function (key, value) {
-            $(pollOptionVoteChangeForm).find('#' + key).val(value);
+            if (key == 'user_extra_vote_action') {
+                $(pollOptionVoteChangeForm).find('#add_remove_user').val(value);
+            } else if (key == 'user_extra_votes') {
+                $(pollOptionVoteChangeForm).find('#vote_user').val(value);
+            } else {
+                $(pollOptionVoteChangeForm).find('#' + key).val(value);
+            }
         })
     })
 

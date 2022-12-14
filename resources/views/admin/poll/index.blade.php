@@ -117,33 +117,60 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="add_remove" class="control-label">Add or remove*</label>
-                                            <select name="add_remove" id="add_remove"
-                                                class="custom-select width-equal col-12">
-                                                <option value="add">Add</option>
-                                                <option value="remove">Remove</option>
-                                            </select>
-                                            <span class="help-block error-span"></span>
+                                <div class="admin-add-bulk-vote">
+                                    <h4 class="font-weight-bold">Add direct vote</h4>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="add_remove" class="control-label">Add or remove*</label>
+                                                <select name="add_remove" id="add_remove"
+                                                    class="custom-select width-equal col-12">
+                                                    <option value="add">Add</option>
+                                                    <option value="remove">Remove</option>
+                                                </select>
+                                                <span class="help-block error-span"></span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="vote" class="control-label">Vote*</label>
-                                            <input type="text" name="vote" id="vote" value=""
-                                                class="form-control">
-                                            <span class="help-block error-span"></span>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="vote" class="control-label">Vote*</label>
+                                                <input type="text" name="vote" id="vote" value="0"
+                                                    class="form-control">
+                                                <span class="help-block error-span"></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12 d-flex align-items-center justify-content-between">
-                                        <button type="button" class="btn btn-primary"
-                                            id="votechange-poll">Submit</button>
-                                        <button type="button" class="btn btn-secondary" id="optionlistTable">Back to
-                                            list</button>
+                                <div class="admin-add-bulk-vote mt-3 mb-2">
+                                    <h4 class="font-weight-bold">Add extra vote when user's add vote</h4>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="add_remove_user" class="control-label">Add or remove*</label>
+                                                <select name="add_remove_user" id="add_remove_user"
+                                                    class="custom-select width-equal col-12">
+                                                    <option value="add">Add</option>
+                                                    <option value="remove">Remove</option>
+                                                </select>
+                                                <span class="help-block error-span"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="vote_user" class="control-label">Vote*</label>
+                                                <input type="text" name="vote_user" id="vote_user" value="0"
+                                                    class="form-control">
+                                                <span class="help-block error-span"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 d-flex align-items-center justify-content-between">
+                                            <button type="button" class="btn btn-primary"
+                                                id="votechange-poll">Submit</button>
+                                            <button type="button" class="btn btn-secondary" id="optionlistTable">Back to
+                                                list</button>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
