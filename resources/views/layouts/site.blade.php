@@ -189,6 +189,8 @@
                                 href="{{ route('site.contact') }}">Contact Us</a></li>
                         <li class="{{ request()->routeIs('site.privacyPolicy') ? 'active' : '' }}"><a
                                 href="{{ route('site.privacyPolicy') }}">Privacy Policy</a></li>
+                        <li class="{{ request()->routeIs('site.sitemap') ? 'active' : '' }}"><a
+                                href="{{ route('site.sitemap') }}">Sitemap</a></li>
                     </ul>
                 </div>
             </div>
