@@ -182,6 +182,9 @@ $(document).ready(function () {
                             if (key == 'g-recaptcha-response') {
                                 key = 'enabledgooglecaptcha';
                             }
+                            if (key == 'h-captcha-response') {
+                                key = 'enabledhcaptcha';
+                            }
                             if (first_input == "") first_input = key;
                             $('#' + key).parents('.form-group').find(formErrorSpanClass).removeClass('d-none').text(value);
                             $('#' + key).parents('.form-group').addClass('has-error');

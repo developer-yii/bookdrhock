@@ -147,6 +147,15 @@
                     </div>
                 </div>
             </div>
+        @elseif(isset($poll->captcha_type) && !empty($poll->captcha_type) && $poll->captcha_type == 3)
+            @if (!checkBlockedIP())
+                <div class="form-group">
+                    <input type="hidden" name="enabledhcaptcha" id="enabledhcaptcha" class="enabledhcaptcha"
+                        value="enabledhcaptcha">
+                    <div class="h-captcha" data-sitekey="{{ env('HCAPTCHA_SITEKEY') }}" id="h-captcha"></div>
+                    <span class="help-block error-span"></span>
+                </div>
+            @endif
         @endif
         <div class="btn-container mt-5 d-flex align-items-center justify-content-center">
             <a href="javascript:void(0)" class="link pr-4 text-capitalize fandomz_result_list">results</a>

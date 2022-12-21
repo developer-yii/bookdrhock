@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use DataTables;
 use App\Model\Poll;
 use App\Model\PollVote;
+use App\Rules\HCaptcha;
 use App\Model\Codeblock;
 use App\Rules\ReCaptcha;
 use App\Model\PollOption;
@@ -273,14 +274,32 @@ class PollController extends Controller
             $clientIp = $remote;
         }
 
-        $request->validate([
-            'selected_options' => 'required',
-            'mathcaptcha_ctm' => 'required_if:enabledmathcaptcha,==,"enabledmathcaptcha"',
-            'g-recaptcha-response' => ['required_if:enabledgooglecaptcha,==,"enabledgooglecaptcha"', new ReCaptcha]
-        ], [
+        if (isset($request->enabledgooglecaptcha) && $request->enabledgooglecaptcha == "enabledgooglecaptcha") {
+            $rule = [
+                'selected_options' => 'required',
+                'g-recaptcha-response' => ['required', new ReCaptcha],
+            ];
+        } elseif (isset($request->enabledmathcaptcha) && $request->enabledmathcaptcha == "enabledmathcaptcha") {
+            $rule = [
+                'selected_options' => 'required',
+                'mathcaptcha_ctm' => 'required',
+            ];
+        } elseif (isset($request->enabledhcaptcha) && $request->enabledhcaptcha == "enabledhcaptcha") {
+            $rule = [
+                'selected_options' => 'required',
+                'h-captcha-response' => ['required', new HCaptcha],
+            ];
+        } else {
+            $rule = [
+                'selected_options' => 'required',
+            ];
+        }
+
+        $request->validate($rule, [
             'mathcaptcha.mathcaptcha' => 'Your answer is wrong.',
-            'mathcaptcha_ctm.required_if' => 'Please give answer.',
-            'g-recaptcha-response.required_if' => 'Please valid google recaptcha.'
+            'mathcaptcha_ctm.required' => 'Please give answer.',
+            'g-recaptcha-response.required' => 'Please valid google recaptcha.',
+            'h-captcha-response.required' => 'Please valid hcaptcha.'
         ]);
 
         if (isset($request->enabledmathcaptcha) && !empty($request->enabledmathcaptcha)) {
@@ -617,15 +636,41 @@ class PollController extends Controller
             return response()->json(['message' => 'something was wrong please try again later!', 'is_reload' => true], 400);
         }
 
-        $validator = Validator::make($request->all(), [
-            'selected_options' => 'required',
-            'mathcaptcha_ctm' => 'required_if:enabledmathcaptcha,==,"enabledmathcaptcha"',
-            'g-recaptcha-response' => ['required_if:enabledgooglecaptcha,==,"enabledgooglecaptcha"', new ReCaptcha]
-        ], [
+        if (isset($request->enabledgooglecaptcha) && $request->enabledgooglecaptcha == "enabledgooglecaptcha") {
+            $rule = [
+                'selected_options' => 'required',
+                'g-recaptcha-response' => ['required', new ReCaptcha],
+            ];
+        } elseif (isset($request->enabledmathcaptcha) && $request->enabledmathcaptcha == "enabledmathcaptcha") {
+            $rule = [
+                'selected_options' => 'required',
+                'mathcaptcha_ctm' => 'required',
+            ];
+        } elseif (isset($request->enabledhcaptcha) && $request->enabledhcaptcha == "enabledhcaptcha") {
+            $rule = [
+                'selected_options' => 'required',
+                'h-captcha-response' => ['required', new HCaptcha],
+            ];
+        } else {
+            $rule = [
+                'selected_options' => 'required',
+            ];
+        }
+
+        // $request->validate($rule, [
+        //     'mathcaptcha.mathcaptcha' => 'Your answer is wrong.',
+        //     'mathcaptcha_ctm.required' => 'Please give answer.',
+        //     'g-recaptcha-response.required' => 'Please valid google recaptcha.',
+        //     'h-captcha-response.required' => 'Please valid hcaptcha.'
+        // ]);
+
+        $validator = Validator::make($request->all(), $rule, [
             'mathcaptcha.mathcaptcha' => 'Your answer is wrong.',
-            'mathcaptcha_ctm.required_if' => 'Please give answer.',
-            'g-recaptcha-response.required_if' => 'Please valid google recaptcha.'
+            'mathcaptcha_ctm.required' => 'Please give answer.',
+            'g-recaptcha-response.required' => 'Please valid google recaptcha.',
+            'h-captcha-response.required' => 'Please valid hcaptcha.'
         ]);
+
         if (!$validator->passes()) {
             $err = $validator->errors()->toArray();
             $data = [];
@@ -634,6 +679,7 @@ class PollController extends Controller
             }
             return response()->json(['errors' => $data], 400);
         }
+
         if (isset($request->enabledmathcaptcha) && !empty($request->enabledmathcaptcha)) {
             if (isset($request->match_captcha_firstnumb) && !empty($request->match_captcha_firstnumb) && isset($request->match_captcha_secoundnumb) && !empty($request->match_captcha_secoundnumb)) {
                 if ($request->mathcaptcha_ctm != ($request->match_captcha_firstnumb + $request->match_captcha_secoundnumb))

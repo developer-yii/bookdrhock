@@ -116,7 +116,7 @@
                     <div class="form-group">
                         <input type="hidden" name="enabledgooglecaptcha" id="enabledgooglecaptcha"
                             class="enabledgooglecaptcha" value="enabledgooglecaptcha">
-                        <div class="g-recaptcha" data-sitekey="{{ env('GOOGLE_RECAPTCHA_KEY') }}">
+                        <div class="g-recaptcha" data-sitekey="{{ env('GOOGLE_RECAPTCHA_KEY') }}" id="g-recaptcha">
                         </div>
                         <span class="help-block error-span"></span>
                     </div>
@@ -148,6 +148,15 @@
                     </div>
                 </div>
             </div>
+        @elseif(isset($poll->captcha_type) && !empty($poll->captcha_type) && $poll->captcha_type == 3)
+            @if (!checkBlockedIP())
+                <div class="form-group">
+                    <input type="hidden" name="enabledhcaptcha" id="enabledhcaptcha"
+                        class="enabledhcaptcha" value="enabledhcaptcha">
+                    <div class="h-captcha" data-sitekey="{{ env('HCAPTCHA_SITEKEY') }}" id="h-captcha"></div>
+                    <span class="help-block error-span"></span>
+                </div>
+            @endif
         @endif
         <div class="btn-container mt-5 d-flex align-items-center justify-content-center">
             <a href="{{ request()->routeIs('poll.embedView') ? route('poll.embedViewResults', $poll->slug) : route('poll.viewResults', $poll->slug) }}"
