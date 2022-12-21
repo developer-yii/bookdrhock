@@ -91,9 +91,9 @@ Route::prefix('admin')->middleware('auth')->namespace('Admin')->group(function (
 
 Route::prefix('poll')->namespace('Admin')->name('poll.')->group(function () {
     Route::get('/{slug}', 'PollController@view')->name('view');
-    Route::get('/embed/{slug}/results', 'PollController@embedViewResults')->name('embedViewResults');
+    // Route::get('/embed/{slug}/results', 'PollController@embedViewResults')->name('embedViewResults');
     Route::get('/{slug}/results', 'PollController@viewResults')->name('viewResults');
-    Route::get('/embed/{slug}', 'PollController@embedView')->name('embedView');
+    // Route::get('/embed/{slug}', 'PollController@embedView')->name('embedView');
     Route::post('/voting', 'PollController@Voting')->name('voting');
 });
 
