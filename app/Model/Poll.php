@@ -20,6 +20,7 @@ class Poll extends Model
         '0' => 'No captcha',
         '1' => 'Google recaptcha',
         '2' => 'Maths captcha',
+        '3' => 'hCaptcha',
     ];
 
     public static $voteHours = [

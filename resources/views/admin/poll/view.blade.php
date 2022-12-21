@@ -31,7 +31,7 @@
                                 </div>
                             @endif
                             @php $type = isset($type) && !empty($type) ? $type : 'details' @endphp
-                            @include('admin.poll.polldetail', ['type' => $type,'codeblock' => $codeblock])
+                            @include('admin.poll.polldetail', ['type' => $type, 'codeblock' => $codeblock])
                         </div>
                     </div>
                 </div>
@@ -65,8 +65,28 @@
 @endsection
 
 @push('extraScript')
-    <!-- Google-recaptcha  -->
+    {{-- <!-- Google-recaptcha  -->
     <script src='https://www.google.com/recaptcha/api.js'></script>
+
+    <!-- Hrecaptcha  -->
+    <script src="https://js.hcaptcha.com/1/api.js"></script> --}}
+
+    <script>
+        jQuery(document).ready(function() {
+            if ($('#g-recaptcha').length) {
+                var oScriptElem = document.createElement("script");
+                oScriptElem.type = "text/javascript";
+                oScriptElem.src = 'https://www.google.com/recaptcha/api.js';
+                document.head.appendChild(oScriptElem, document.head.getElementsByTagName("script")[0]);
+            }
+            if ($('#h-captcha').length) {
+                var oScriptElem = document.createElement("script");
+                oScriptElem.type = "text/javascript";
+                oScriptElem.src = 'https://js.hcaptcha.com/1/api.js';
+                document.head.appendChild(oScriptElem, document.head.getElementsByTagName("script")[0]);
+            }
+        });
+    </script>
 
     <!-- Sweet-Alert  -->
     <script src="{{ asset('plugins/sweetalert/sweetalert.min.js') }}" type="text/javascript"></script>
@@ -82,7 +102,8 @@
             votingUrl: "{{ route('poll.voting') }}"
         }
         $('.result-view').hide();
-        function pollResultRedirect(slug,data) {
+
+        function pollResultRedirect(slug, data) {
             // url = "{{ route('poll.viewResults', ':slug') }}";
             // url = url.replace(':slug', slug);
             // window.location.href = url;

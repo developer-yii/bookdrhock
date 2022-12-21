@@ -1,43 +1,45 @@
 jQuery(document).ready(function () {
     if ($('.fandomz-poll-widget #poll-vote-form').length > 0) {
         $('.fandomz-poll-widget #poll-vote-form')[0].reset();
-    }        
+    }
 
-    $('.fandomz-poll-widget').on('click', '.option-container-details .card-poll', function (e) {    
+    $('.fandomz-poll-widget').on('click', '.option-container-details .card-poll', function (e) {
         e.preventDefault();
         if (maximumVoteInNumber > 0 && $('.option-container-details .card-poll.selected').length == maximumVoteInNumber && !$(this).hasClass('selected')) {
             if (maximumVoteInNumber == 1) {
                 $('.fandomz-poll-widget .option-container-details .card-poll').removeClass('selected');
                 $(this).addClass('selected');
-            } else {                
+            } else {
                 showMessage('error', 'You can choose ' + maximumVoteInWord + ' option only')
             }
         } else {
             $(this).toggleClass('selected');
         }
     });
-    
+
     $('.fandomz-poll-widget').on('click', '.option-container-details .imagelight-box a', function (e) {
         e.preventDefault();
         $(this).parents('.card-poll').toggleClass('selected');
-    });    
+    });
     // call auto load
     setTimeout(function () {
         setFancyboxImg();
         setClockdiv();
         setLazyloadImg();
-    },1000);
-    function setLazyloadImg(){
+    }, 1000);
+
+    function setLazyloadImg() {
         if ($(".lazyload").length > 0) {
             $(".lazyload").lazyload({
-                 event: "lazyload",
-                 effect: "fadeIn",
-                 effectspeed: 2000
-               })
-             .trigger("lazyload");
+                    event: "lazyload",
+                    effect: "fadeIn",
+                    effectspeed: 2000
+                })
+                .trigger("lazyload");
         }
     }
-    function setFancyboxImg(){
+
+    function setFancyboxImg() {
         if ($('.fandomz-poll-widget .imagelight-box').length > 0) {
             var count = 0;
             $(".fandomz-poll-widget .imagelight-box a").each(function () {
@@ -47,12 +49,13 @@ jQuery(document).ready(function () {
                 $(this).attr("title", $(this).find("img").attr("alt"));
             });
             $(".imagelight-box a").fancybox();
-        }        
+        }
     }
-    function setClockdiv(){
+
+    function setClockdiv() {
         if ($('#clockdiv').length > 0) {
             if ($('#clockdiv').attr('data-startdatetime') != null || $('#clockdiv').attr('data-enddatetime') != null) {
-                
+
                 var startdatetimeObj = $('#clockdiv').attr('data-startdatetime');
                 var startdatetimeObjTmp = startdatetimeObj.replace(' ', 'T').split(/[^0-9]/);
                 var startdatetime = new Date(Date.UTC(startdatetimeObjTmp[0], startdatetimeObjTmp[1] - 1, startdatetimeObjTmp[2], startdatetimeObjTmp[3], startdatetimeObjTmp[4], startdatetimeObjTmp[5]));
@@ -65,7 +68,7 @@ jQuery(document).ready(function () {
                 if (new Date() > enddatetime) {
                     deadline = new Date(startdatetime).getTime();
                     deadlineString = startdatetime;
-                    headinText = "Poll ended";                    
+                    headinText = "Poll ended";
                     $('.poll-options-main').empty().append('<a href="' + routes.homeUrl + '" class="btn btn-primary text-capitalize m-0">Running polls</a>');
                 } else if (new Date() > startdatetime) {
                     deadline = new Date(enddatetime).getTime();
@@ -78,7 +81,7 @@ jQuery(document).ready(function () {
                     $('.poll-options-main').empty().append('<a href="' + routes.homeUrl + '" class="btn btn-primary text-capitalize m-0">Running polls</a>');
                 }
                 $('.countdown-heading').text(headinText);
-                
+
                 var countDown = deadlineString;
                 var nowtest = new Date();
                 var timertest = countDown - nowtest;
@@ -101,7 +104,7 @@ jQuery(document).ready(function () {
                             minutes;
                         document.getElementById("second").innerHTML = (seconds.toString().length == 1) ? '0' +
                             seconds :
-                            seconds;                        
+                            seconds;
                         if (t < 0) {
                             clearInterval(x);
                             document.getElementById("day").innerHTML = '00';
@@ -118,18 +121,18 @@ jQuery(document).ready(function () {
     let formId = '.fandomz-poll-widget #poll-vote-form',
         formErrorSpanClass = '.error-span',
         vottingBtnId = '#fandomz_submit_voting';
-       
-    $('.fandomz-poll-widget').on('keypress',"input",function(e){        
-        if (e.keyCode == 13) {            
+
+    $('.fandomz-poll-widget').on('keypress', "input", function (e) {
+        if (e.keyCode == 13) {
             $('.fandomz-poll-widget #fandomz_submit_voting').click();
             return false;
         }
         return true;
-    });    
+    });
     // Add or Update Poll
-    $('.fandomz-poll-widget').on('click',vottingBtnId,function(e){    
+    $('.fandomz-poll-widget').on('click', vottingBtnId, function (e) {
         e.preventDefault();
-        if ($('.fandomz-poll-widget .option-container-details .card-poll.selected').length > 0) {            
+        if ($('.fandomz-poll-widget .option-container-details .card-poll.selected').length > 0) {
             let formData = new FormData($(formId)['0']);
             let selectOptions = [];
             $(".fandomz-poll-widget .option-container-details .card-poll.selected").each(function () {
@@ -137,8 +140,8 @@ jQuery(document).ready(function () {
             });
             formData.append('selected_options', selectOptions);
             $(formErrorSpanClass).addClass('d-none').text('');
-            $(formId).find('input').parents('.form-group').removeClass('has-error');            
-            if(checkVoteLimit()){
+            $(formId).find('input').parents('.form-group').removeClass('has-error');
+            if (checkVoteLimit()) {
                 $.ajax({
                     url: routes.votingUrl,
                     method: 'POST',
@@ -173,11 +176,14 @@ jQuery(document).ready(function () {
                         $(vottingBtnId).attr('disabled', false);
                     },
                     error: function (error) {
-                        var first_input = "";                    
-                        if(error.responseJSON.errors){
+                        var first_input = "";
+                        if (error.responseJSON.errors) {
                             $.each(error.responseJSON.errors, function (key, value) {
                                 if (key == 'g-recaptcha-response') {
                                     key = 'enabledgooglecaptcha';
+                                }
+                                if (key == 'h-captcha-response') {
+                                    key = 'enabledhcaptcha';
                                 }
                                 if (first_input == "") first_input = key;
                                 $('.fandomz-poll-widget #' + key).parents('.form-group').find(formErrorSpanClass).removeClass('d-none').text(value);
@@ -185,10 +191,10 @@ jQuery(document).ready(function () {
                                 $(formId).find("#" + first_input).focus();
                             });
                         }
-                        if(error.responseJSON.message){
+                        if (error.responseJSON.message) {
                             showMessage('error', error.responseJSON.message);
                             var slug = $('.fandomz-poll-widget #slug').val();
-                            if(error.responseJSON.is_reload && slug){
+                            if (error.responseJSON.is_reload && slug) {
                                 $('.poll-heading')[0].scrollIntoView();
                                 reinitPreloader();
                                 pollResultView(slug);
@@ -199,7 +205,7 @@ jQuery(document).ready(function () {
             } else {
                 var hour = $('.fandomz-poll-widget #vote_schedule').val();
                 var slug = $('.fandomz-poll-widget #slug').val();
-                showMessage('success', 'You\'ve completed your vote, vote again in '+hour+' hours');
+                showMessage('success', 'You\'ve completed your vote, vote again in ' + hour + ' hours');
                 $('.poll-heading')[0].scrollIntoView();
                 reinitPreloader();
                 pollResultView(slug);
@@ -208,9 +214,9 @@ jQuery(document).ready(function () {
             showMessage('error', 'please select any option');
         }
     });
-    
+
     let ResultListID = ".fandomz_result_list";
-    $('.fandomz-poll-widget').on('click',ResultListID,function(e){
+    $('.fandomz-poll-widget').on('click', ResultListID, function (e) {
         e.preventDefault();
         var slug = $('#slug').val();
         $('.poll-heading')[0].scrollIntoView();
@@ -219,7 +225,7 @@ jQuery(document).ready(function () {
     });
 
     let pollListID = ".fandomz_poll_list";
-    $('.fandomz-poll-widget').on('click',pollListID,function(e){
+    $('.fandomz-poll-widget').on('click', pollListID, function (e) {
         e.preventDefault();
         var slug = $('#slug').val();
         $('.poll-heading')[0].scrollIntoView();
@@ -227,39 +233,39 @@ jQuery(document).ready(function () {
         getpollList(slug);
     });
 
-    function pollListView(slug,data) {
-        $('#poll_list_'+slug).show();
-        $('#poll_list_'+slug).html(data);
+    function pollListView(slug, data) {
+        $('#poll_list_' + slug).show();
+        $('#poll_list_' + slug).html(data);
 
-        $('#poll_result_'+slug).hide();
-        $('#poll_result_'+slug).html("");
+        $('#poll_result_' + slug).hide();
+        $('#poll_result_' + slug).html("");
 
-        setTimeout(function () {            
-            if ( $('.fandomz-poll-widget #g-recaptcha').length ) {    
-                recaptcha_1 = grecaptcha.render('g-recaptcha', {
-                  'sitekey' : recaptcha_key
-                });
-            }
+        setTimeout(function () {
+            onloadCallback();
+            onloadCallbackH();
+
             setFancyboxImg();
             setClockdiv();
             setLazyloadImg();
-        },1000);  
+        }, 1000);
     }
-    function pollResultRedirect(slug,data) {
-        $('#poll_list_'+slug).hide();
-        $('#poll_list_'+slug).html("");
-        
-        $('#poll_result_'+slug).show();        
-        $('#poll_result_'+slug).html(data);
+
+    function pollResultRedirect(slug, data) {
+        $('#poll_list_' + slug).hide();
+        $('#poll_list_' + slug).html("");
+
+        $('#poll_result_' + slug).show();
+        $('#poll_result_' + slug).html(data);
 
         setTimeout(function () {
-            setFancyboxImg();            
+            setFancyboxImg();
             setLazyloadImg();
-        },1000);
+        }, 1000);
     }
-    function pollResultView(slug){
+
+    function pollResultView(slug) {
         $.ajax({
-            url: routes.resultsUrl+"/"+slug,
+            url: routes.resultsUrl + "/" + slug,
             method: 'GET',
             contentType: false,
             processData: false,
@@ -271,15 +277,15 @@ jQuery(document).ready(function () {
                 initPreloader();
                 $(ResultListID).removeClass('lodder')
                 $(ResultListID).attr('disabled', false);
-                pollResultRedirect(slug,response.html);
+                pollResultRedirect(slug, response.html);
             },
-            error: function (error) {
-            }
+            error: function (error) {}
         });
     }
-    function getpollList(slug){
+
+    function getpollList(slug) {
         $.ajax({
-            url: routes.indexUrl+"/"+slug,
+            url: routes.indexUrl + "/" + slug,
             method: 'GET',
             contentType: false,
             processData: false,
@@ -291,10 +297,9 @@ jQuery(document).ready(function () {
                 initPreloader();
                 $(pollListID).removeClass('lodder')
                 $(pollListID).attr('disabled', false);
-                pollListView(slug,response);
+                pollListView(slug, response);
             },
-            error: function (error) {
-            }
+            error: function (error) {}
         });
     }
 
@@ -304,60 +309,67 @@ jQuery(document).ready(function () {
     },1000);*/
 
     var widget_slug = $(".fandomz-poll-widget").attr('data-slug');
-    widget_slug = "widget_"+widget_slug;
-    
-    function checkVoteLimit(){
-        var hour = $('.fandomz-poll-widget  #vote_schedule').val();        
-        var limit = $('.fandomz-poll-widget #vote_add').val();
-        
-        hour = (typeof hour !== 'undefined' && hour)? parseInt(hour):24;
-        limit = (typeof limit !== 'undefined' && limit)? parseInt(limit):1;
+    widget_slug = "widget_" + widget_slug;
 
-        var dateSubtract = moment().subtract({hours:Math.abs(hour)});
+    function checkVoteLimit() {
+        var hour = $('.fandomz-poll-widget  #vote_schedule').val();
+        var limit = $('.fandomz-poll-widget #vote_add').val();
+
+        hour = (typeof hour !== 'undefined' && hour) ? parseInt(hour) : 24;
+        limit = (typeof limit !== 'undefined' && limit) ? parseInt(limit) : 1;
+
+        var dateSubtract = moment().subtract({
+            hours: Math.abs(hour)
+        });
         var currentDate = moment();
         var dateArr = new Array();
 
         var cookie = readCookie(widget_slug);
         var total = 0;
-        if(typeof cookie !== 'undefined' && cookie && cookie.length){
+        if (typeof cookie !== 'undefined' && cookie && cookie.length) {
             var cookieArr = cookie.split(',');
-            $.each(cookieArr, function(key, date){
+            $.each(cookieArr, function (key, date) {
                 var dateObj = moment(date);
-                if(dateObj >= dateSubtract){
+                if (dateObj >= dateSubtract) {
                     dateArr.push(date);
                     total++;
                 }
             });
         }
         console.log(total);
-        return (total < limit)? true : false;
+        return (total < limit) ? true : false;
     }
-    function pushDate(){        
-        var lastDateRemove = moment().subtract({hours:24});// old date remove in cookie
+
+    function pushDate() {
+        var lastDateRemove = moment().subtract({
+            hours: 24
+        }); // old date remove in cookie
 
         var dateArr = new Array();
         var cookie = readCookie(widget_slug);
-        if(typeof cookie !== 'undefined' && cookie){
+        if (typeof cookie !== 'undefined' && cookie) {
             var cookieArr = cookie.split(',');
-            $.each(cookieArr, function(key, date){
+            $.each(cookieArr, function (key, date) {
                 var dateObj = moment(date);
-                if(dateObj >= lastDateRemove){
+                if (dateObj >= lastDateRemove) {
                     dateArr.push(date);
-                }    
+                }
             });
         }
-        dateArr.push(moment().format());//push current datetime
-        createCookie(widget_slug,dateArr);
+        dateArr.push(moment().format()); //push current datetime
+        createCookie(widget_slug, dateArr);
     }
-    function createCookie(name,value) {
-        var date = new Date();            
-            date.setTime(date.getTime()+(24*60*60*1000));
+
+    function createCookie(name, value) {
+        var date = new Date();
+        date.setTime(date.getTime() + (24 * 60 * 60 * 1000));
         var expires_time = date.toGMTString();
-        var expires = "; expires="+expires_time;
-        document.cookie = name+"="+value+expires+"; path=/";
+        var expires = "; expires=" + expires_time;
+        document.cookie = name + "=" + value + expires + "; path=/";
     }
+
     function readCookie(name) {
         var keyValue = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-        return keyValue ? keyValue[2] : null;        
+        return keyValue ? keyValue[2] : null;
     }
 });
