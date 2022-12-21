@@ -67,8 +67,7 @@
             </div>
 
             <!-- /.container-fluid -->
-            <footer class="footer text-center"> {{ date('Y') }} &copy; Fandomz by <a href="https://amcodr.com/"
-                    target="_blank">Amcodr IT Solutions</a>.</footer>
+            <footer class="footer text-center"> {{ date('Y') }} &copy; Fandomz.</footer>
         </div>
         <!-- /#page-wrapper -->
     </div>
