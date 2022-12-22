@@ -20,5 +20,5 @@
         var maximumVoteInWord =
             "{{ isset($poll->option_select) && !empty($poll->option_select) && $poll->option_select > 0 ? convert_number($poll->option_select) : 0 }}"
     </script>
-    <script src="{{ asset('widget/poll_js/poll-view-min.js?20221221') }}" type="text/javascript"></script>
+    <script src="{{ asset('widget/poll_js/poll-view-min.js?22122022') }}" type="text/javascript"></script>
 @endpush
