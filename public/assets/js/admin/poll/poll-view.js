@@ -62,7 +62,8 @@ $(document).ready(function () {
                     deadline = new Date(startdatetime).getTime();
                     deadlineString = startdatetime;
                     headinText = "Poll ended";                    
-                    $('.poll-options-main').empty().append('<a href="' + routes.homeUrl + '" class="btn btn-primary text-capitalize m-0">Running polls</a>');
+                    $('.poll-options-main').empty().append('');
+                    // <a href="' + routes.homeUrl + '" class="btn btn-primary text-capitalize m-0">Running polls</a>
                 } else if (new Date() > startdatetime) {
                     deadline = new Date(enddatetime).getTime();
                     deadlineString = enddatetime;
@@ -71,7 +72,8 @@ $(document).ready(function () {
                     deadline = new Date(startdatetime).getTime();
                     deadlineString = startdatetime;
                     headinText = "comming soon";
-                    $('.poll-options-main').empty().append('<a href="' + routes.homeUrl + '" class="btn btn-primary text-capitalize m-0">Running polls</a>');
+                    $('.poll-options-main').empty().append('');
+                    // <a href="' + routes.homeUrl + '" class="btn btn-primary text-capitalize m-0">Running polls</a>
                 }
                 $('.countdown-heading').text(headinText);
                 
