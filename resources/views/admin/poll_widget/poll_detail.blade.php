@@ -168,7 +168,7 @@
 @if (isset($type) && !empty($type) && $type == 'details')
     </form>
 @endif
-@if (isset($type) && !empty($type) && $type == 'results')
+@if (isset($type) && !empty($type) && $type == 'results' && $poll->status == '1')
     <div class="card-bottom mt-4">
         <a href="javascript:void(0)" class="btn btn-primary fandomz_poll_list">Go to poll page</a>
     </div>

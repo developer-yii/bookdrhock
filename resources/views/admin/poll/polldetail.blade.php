@@ -169,7 +169,7 @@
 @if (isset($type) && !empty($type) && $type == 'details')
     </form>
 @endif
-@if (isset($type) && !empty($type) && $type == 'results')
+@if (isset($type) && !empty($type) && $type == 'results' && $poll->status == '1')
     <div class="card-bottom mt-4">
         @if (isset($pagetype) && !empty($pagetype))
             <a href="{{ $pagetype != 'normal' ? route('poll.embedView', $poll->slug) : route('poll.view', $poll->slug) }}"
