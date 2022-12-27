@@ -317,7 +317,7 @@ class PollController extends Controller
         }
 
         $pollFind = Poll::where('slug', $request->slug)->where('id', $request->id)->first();
-        if (isset($pollFind->id)) {
+        if (isset($pollFind->id) && $pollFind->status == '1') {
             $hours = ($pollFind->vote_schedule) ? $pollFind->vote_schedule : 24;
             $voteAdd = ($pollFind->vote_add) ? $pollFind->vote_add : 1;
 
@@ -705,7 +705,7 @@ class PollController extends Controller
         }
 
         $pollFind = Poll::where('slug', $request->slug)->where('id', $request->id)->first();
-        if (isset($pollFind->id)) {
+        if (isset($pollFind->id) && $pollFind->status == '1') {
             $hours = ($pollFind->vote_schedule) ? $pollFind->vote_schedule : 24;
             $voteAdd = ($pollFind->vote_add) ? $pollFind->vote_add : 1;
 
