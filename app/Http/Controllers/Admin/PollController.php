@@ -119,7 +119,12 @@ class PollController extends Controller
         $type = 'details';
         app('mathcaptcha')->reset();
 
-        return view('admin.poll.view', compact('poll', 'userrole', 'type', 'poll_options', 'poll_option_array', 'codeblock'));
+        if ($poll->status) {
+            return view('admin.poll.view', compact('poll', 'userrole', 'type', 'poll_options', 'poll_option_array', 'codeblock'));
+        } else {
+            $type = 'results';
+            return view('admin.poll.view', compact('poll', 'userrole', 'type', 'poll_options', 'poll_option_array', 'codeblock'));
+        }
     }
 
     public function viewResults($slug)
@@ -478,6 +483,7 @@ class PollController extends Controller
         $modelP->category = $request->category;
         $modelP->vote_schedule = $request->vote_schedule;
         $modelP->popular_tag = ($request->popular_tag == 'on') ? true : false;
+        $modelP->status = (isset($request->status) && $request->status == 'on') ? 0 : 1;
         $modelP->captcha_type = $request->captcha_type;
         $modelP->vote_add = $request->vote_add;
         $modelP->option_select = $request->option_select;
@@ -578,7 +584,16 @@ class PollController extends Controller
 
         $codeblock = $this->getOptionCodeblock();
 
-        return view('admin.poll_widget.poll_list', compact('poll', 'type', 'poll_options', 'poll_option_array', 'codeblock'));
+        if ($poll->status) {
+            return view('admin.poll_widget.poll_list', compact('poll', 'type', 'poll_options', 'poll_option_array', 'codeblock'));
+        } else {
+            $type = 'results';
+            $pagetype = "embeded";
+            $userrole = '';
+            return view('admin.poll_widget.poll_list', compact('poll', 'userrole', 'type', 'poll_options', 'poll_option_array', 'pagetype', 'codeblock'));
+            // $view = View::make('admin.poll_widget.poll_result_ajax', compact('poll', 'userrole', 'type', 'poll_options', 'poll_option_array', 'pagetype', 'codeblock'))->render();
+            // return response()->json(['response' => 'success', 'html' => $view,], 200);
+        }
     }
     public function getlistHtml($slug)
     {

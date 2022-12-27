@@ -262,6 +262,19 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <label for="status"
+                                                class="control-label mb-0 pr-2">{{ __('Poll closed?') }}</label>
+                                            <input type="checkbox" name="status" id="status" class="js-switch"
+                                                data-color="#13dafe" @if (isset($poll[0]->status) && $poll[0]->status == '0') checked @endif>
+                                        </div>
+                                        <span class="help-block error-span"></span>
+                                    </div>
+                                </div>
+                            </div>
                             @if (isset($categories) && !empty($categories))
                                 <!--row-->
                                 <div class="row">
@@ -381,7 +394,7 @@
                         </div>
                         <div class="panel-footer">
                             <button type="button" class="btn btn-primary w-100"
-                                id="addorupdate-poll">{{ __('Submit') }}</button>
+                                id="addorupdate-poll">{{ __('Update') }}</button>
                         </div>
                     </div>
                 </div>
@@ -431,5 +444,5 @@
             window.location.href = url;
         }
     </script>
-    <script src="{{ addAdminJsLink('poll/poll-create.js') }}" type="text/javascript"></script>
+    <script src="{{ addAdminJsLink('poll/poll-create.js?27122022') }}" type="text/javascript"></script>
 @endpush

@@ -37,6 +37,11 @@ $(document).ready(function () {
         new Switchery($('#popular_tag')[0], $('#popular_tag').data());
     }
 
+    if ($("#status").length > 0) {
+        // Switchery
+        new Switchery($('#status')[0], $('#status').data());
+    }
+
     if ($("#poll-form").length > 0) {
         // Basic
         $('.dropify').dropify();
