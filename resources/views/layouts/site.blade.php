@@ -74,11 +74,11 @@
                                     </ul>
                                 </li>
                             @endif
-                            <li class="nav-item px-lg-2 {{ request()->routeIs('site.about') ? 'active' : '' }}"> <a
+                            <!-- <li class="nav-item px-lg-2 {{ request()->routeIs('site.about') ? 'active' : '' }}"> <a
                                     class="nav-link" href="{{ route('site.about') }}"><span
                                         class="d-inline-block d-lg-none icon-width"><i
                                             class="ti-arrow-circle-right pr-3"></i></i></span>{{ __('About') }}</a>
-                            </li>
+                            </li> -->
                             <li class="nav-item px-lg-2 {{ request()->routeIs('site.contact') ? 'active' : '' }}"> <a
                                     class="nav-link" href="{{ route('site.contact') }}"><span
                                         class="d-inline-block d-lg-none icon-width"><i
@@ -153,7 +153,7 @@
     @endif
 
     <!-- Site footer -->
-    <footer class="site-footer">
+    <!-- <footer class="site-footer">
         <div class="container">
             <div class="row">
                 <div class="col-sm-12 col-md-6">
@@ -211,7 +211,7 @@
                 </div>
             </div>
         </div>
-    </footer>
+    </footer> -->
 
     <!-- jQuery -->
     <script src="{{ asset('plugins/jquery/dist/jquery.min.js') }}" type="text/javascript"></script>
